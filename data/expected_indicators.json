@@ -1,0 +1,933 @@
+{
+  "tanggal_data": "2026-10-08",
+  "batas_tertahan_hari_kerja": 5,
+  "target_publikasi_persen": 95,
+  "pemeriksaan_data": {
+    "persamaan_total": true,
+    "dokumen_id_unik": true,
+    "uke2_ada_di_referensi": true,
+    "uke1_turunan_uke2": true,
+    "status_valid": true,
+    "riwayat_sesuai_status": true,
+    "tanggal_logis": true,
+    "snapshot_persamaan_total": true
+  },
+  "ringkasan": {
+    "total_aset": 5063,
+    "entri": 2776,
+    "menu_program": 2287,
+    "terpublikasi": 2687,
+    "terpublikasi_entri": 1507,
+    "terpublikasi_menu_program": 1180,
+    "persen_publish": 53.1,
+    "kekurangan_menuju_target": 2123,
+    "dalam_proses_entri": 1202,
+    "tidak_tayang": 1174,
+    "tidak_tayang_entri": 67,
+    "tidak_tayang_menu_program": 1107,
+    "tertahan_lebih_dari_5_hk": 790
+  },
+  "status_entri": {
+    "PUBLISH": 1507,
+    "PIC_UKE": 860,
+    "DRAFT": 223,
+    "OPERATOR_KONTEN": 64,
+    "TERVALIDASI": 55,
+    "UNPUBLISH": 35,
+    "DITOLAK_OPERATOR": 25,
+    "DITOLAK_PIC": 7
+  },
+  "tahap": {
+    "DRAFT": {
+      "jumlah": 223,
+      "lebih_dari_5_hk": 150,
+      "persen_melewati": 67.3,
+      "rata_rata_tertahan_hk": 8.2
+    },
+    "OPERATOR_KONTEN": {
+      "jumlah": 64,
+      "lebih_dari_5_hk": 28,
+      "persen_melewati": 43.8,
+      "rata_rata_tertahan_hk": 4.2
+    },
+    "PIC_UKE": {
+      "jumlah": 860,
+      "lebih_dari_5_hk": 590,
+      "persen_melewati": 68.6,
+      "rata_rata_tertahan_hk": 10.9
+    },
+    "TERVALIDASI": {
+      "jumlah": 55,
+      "lebih_dari_5_hk": 22,
+      "persen_melewati": 40.0,
+      "rata_rata_tertahan_hk": 4.3
+    }
+  },
+  "uke1": {
+    "Inspektorat Utama": {
+      "total": 53,
+      "publish": 18,
+      "persen_publish": 34.0,
+      "dalam_proses": 32,
+      "lebih_dari_5_hk": 32,
+      "rata_rata_tertahan_hk": 13.1,
+      "uke2": {
+        "Inspektorat Bidang Akuntabilitas Keuangan": {
+          "total": 19,
+          "publish": 4,
+          "persen_publish": 21.1,
+          "dalam_proses": 14,
+          "lebih_dari_5_hk": 14,
+          "rata_rata_tertahan_hk": 12.1,
+          "status": "Melewati batas"
+        },
+        "Inspektorat Bidang Investigasi": {
+          "total": 11,
+          "publish": 4,
+          "persen_publish": 36.4,
+          "dalam_proses": 6,
+          "lebih_dari_5_hk": 6,
+          "rata_rata_tertahan_hk": 18.0,
+          "status": "Melewati batas"
+        },
+        "Inspektorat Bidang Kinerja Kelembagaan": {
+          "total": 23,
+          "publish": 10,
+          "persen_publish": 43.5,
+          "dalam_proses": 12,
+          "lebih_dari_5_hk": 12,
+          "rata_rata_tertahan_hk": 11.8,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Ekonomi dan Transformasi Digital": {
+      "total": 186,
+      "publish": 113,
+      "persen_publish": 60.8,
+      "dalam_proses": 71,
+      "lebih_dari_5_hk": 38,
+      "rata_rata_tertahan_hk": 8.9,
+      "uke2": {
+        "Direktorat Data Pembangunan dan Pemerintah Digital": {
+          "total": 24,
+          "publish": 14,
+          "persen_publish": 58.3,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 11.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Ekonomi Syariah dan Badan Usaha Milik Negara": {
+          "total": 31,
+          "publish": 19,
+          "persen_publish": 61.3,
+          "dalam_proses": 12,
+          "lebih_dari_5_hk": 12,
+          "rata_rata_tertahan_hk": 14.2,
+          "status": "Melewati batas"
+        },
+        "Direktorat Industri, Perdagangan, dan Peningkatan Investasi": {
+          "total": 21,
+          "publish": 16,
+          "persen_publish": 76.2,
+          "dalam_proses": 5,
+          "lebih_dari_5_hk": 2,
+          "rata_rata_tertahan_hk": 6.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Infrastruktur, Ekosistem, dan Keamanan Digital": {
+          "total": 25,
+          "publish": 17,
+          "persen_publish": 68.0,
+          "dalam_proses": 8,
+          "lebih_dari_5_hk": 6,
+          "rata_rata_tertahan_hk": 12.0,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pariwisata, Ekonomi Kreatif, dan Ekonomi Digital": {
+          "total": 55,
+          "publish": 35,
+          "persen_publish": 63.6,
+          "dalam_proses": 19,
+          "lebih_dari_5_hk": 8,
+          "rata_rata_tertahan_hk": 7.7,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Ekonomi dan Transformasi Digital": {
+          "total": 30,
+          "publish": 12,
+          "persen_publish": 40.0,
+          "dalam_proses": 17,
+          "lebih_dari_5_hk": 6,
+          "rata_rata_tertahan_hk": 4.1,
+          "status": "Mendekati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Infrastruktur": {
+      "total": 205,
+      "publish": 116,
+      "persen_publish": 56.6,
+      "dalam_proses": 85,
+      "lebih_dari_5_hk": 48,
+      "rata_rata_tertahan_hk": 8.3,
+      "uke2": {
+        "Direktorat Kemitraan dan Keterpaduan Pembangunan Infrastruktur": {
+          "total": 24,
+          "publish": 16,
+          "persen_publish": 66.7,
+          "dalam_proses": 8,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 4.4,
+          "status": "Mendekati batas"
+        },
+        "Direktorat Konektivitas dan Infrastruktur Logistik": {
+          "total": 36,
+          "publish": 18,
+          "persen_publish": 50.0,
+          "dalam_proses": 16,
+          "lebih_dari_5_hk": 8,
+          "rata_rata_tertahan_hk": 9.2,
+          "status": "Melewati batas"
+        },
+        "Direktorat Perumahan dan Infrastruktur Kawasan Permukiman": {
+          "total": 25,
+          "publish": 7,
+          "persen_publish": 28.0,
+          "dalam_proses": 18,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 8.9,
+          "status": "Melewati batas"
+        },
+        "Direktorat Sumber Daya Air": {
+          "total": 51,
+          "publish": 32,
+          "persen_publish": 62.7,
+          "dalam_proses": 18,
+          "lebih_dari_5_hk": 8,
+          "rata_rata_tertahan_hk": 7.6,
+          "status": "Melewati batas"
+        },
+        "Direktorat Transmisi, Ketenagalistrikan, Kedirgantaraan, dan Antariksa": {
+          "total": 39,
+          "publish": 23,
+          "persen_publish": 59.0,
+          "dalam_proses": 15,
+          "lebih_dari_5_hk": 9,
+          "rata_rata_tertahan_hk": 6.5,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Infrastruktur": {
+          "total": 30,
+          "publish": 20,
+          "persen_publish": 66.7,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 13.1,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pangan, Sumber Daya Alam, dan Lingkungan Hidup": {
+      "total": 235,
+      "publish": 89,
+      "persen_publish": 37.9,
+      "dalam_proses": 137,
+      "lebih_dari_5_hk": 88,
+      "rata_rata_tertahan_hk": 9.3,
+      "uke2": {
+        "Direktorat Kehutanan dan Konservasi Sumber Daya Air": {
+          "total": 31,
+          "publish": 11,
+          "persen_publish": 35.5,
+          "dalam_proses": 18,
+          "lebih_dari_5_hk": 15,
+          "rata_rata_tertahan_hk": 9.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Kelautan dan Perikanan": {
+          "total": 41,
+          "publish": 9,
+          "persen_publish": 22.0,
+          "dalam_proses": 31,
+          "lebih_dari_5_hk": 31,
+          "rata_rata_tertahan_hk": 14.6,
+          "status": "Melewati batas"
+        },
+        "Direktorat Lingkungan Hidup": {
+          "total": 49,
+          "publish": 16,
+          "persen_publish": 32.7,
+          "dalam_proses": 31,
+          "lebih_dari_5_hk": 23,
+          "rata_rata_tertahan_hk": 10.6,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pangan dan Pertanian": {
+          "total": 43,
+          "publish": 18,
+          "persen_publish": 41.9,
+          "dalam_proses": 23,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 6.4,
+          "status": "Melewati batas"
+        },
+        "Direktorat Sumber Daya Energi, Mineral, dan Pertambangan": {
+          "total": 56,
+          "publish": 30,
+          "persen_publish": 53.6,
+          "dalam_proses": 24,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 4.5,
+          "status": "Mendekati batas"
+        },
+        "Sekretariat Deputi Bidang Pangan, Sumber Daya Alam, dan Lingkungan Hidup": {
+          "total": 15,
+          "publish": 5,
+          "persen_publish": 33.3,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 2,
+          "rata_rata_tertahan_hk": 5.9,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pembangunan Kewilayahan": {
+      "total": 223,
+      "publish": 142,
+      "persen_publish": 63.7,
+      "dalam_proses": 79,
+      "lebih_dari_5_hk": 49,
+      "rata_rata_tertahan_hk": 9.0,
+      "uke2": {
+        "Direktorat Pembangunan Indonesia Barat": {
+          "total": 43,
+          "publish": 34,
+          "persen_publish": 79.1,
+          "dalam_proses": 9,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 11.1,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pembangunan Indonesia Timur": {
+          "total": 36,
+          "publish": 18,
+          "persen_publish": 50.0,
+          "dalam_proses": 17,
+          "lebih_dari_5_hk": 11,
+          "rata_rata_tertahan_hk": 8.7,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pemerintahan, Keuangan Daerah, dan Transfer ke Daerah": {
+          "total": 28,
+          "publish": 18,
+          "persen_publish": 64.3,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 7.7,
+          "status": "Melewati batas"
+        },
+        "Direktorat Perdesaan, Daerah Afirmasi, dan Transmigrasi": {
+          "total": 45,
+          "publish": 34,
+          "persen_publish": 75.6,
+          "dalam_proses": 11,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 11.7,
+          "status": "Melewati batas"
+        },
+        "Direktorat Tata Ruang, Perkotaan, Pertanahan, dan Penanggulangan Bencana": {
+          "total": 59,
+          "publish": 30,
+          "persen_publish": 50.8,
+          "dalam_proses": 28,
+          "lebih_dari_5_hk": 13,
+          "rata_rata_tertahan_hk": 6.8,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Pembangunan Kewilayahan": {
+          "total": 12,
+          "publish": 8,
+          "persen_publish": 66.7,
+          "dalam_proses": 4,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 16.8,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pembangunan Manusia dan Kebudayaan": {
+      "total": 229,
+      "publish": 133,
+      "persen_publish": 58.1,
+      "dalam_proses": 92,
+      "lebih_dari_5_hk": 58,
+      "rata_rata_tertahan_hk": 8.8,
+      "uke2": {
+        "Direktorat Agama, Kebudayaan, Pemuda, dan Olahraga": {
+          "total": 48,
+          "publish": 27,
+          "persen_publish": 56.2,
+          "dalam_proses": 20,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 8.2,
+          "status": "Melewati batas"
+        },
+        "Direktorat Keluarga, Pengasuhan, Perempuan, dan Anak": {
+          "total": 52,
+          "publish": 32,
+          "persen_publish": 61.5,
+          "dalam_proses": 19,
+          "lebih_dari_5_hk": 11,
+          "rata_rata_tertahan_hk": 7.1,
+          "status": "Melewati batas"
+        },
+        "Direktorat Kesehatan dan Gizi Masyarakat": {
+          "total": 43,
+          "publish": 22,
+          "persen_publish": 51.2,
+          "dalam_proses": 20,
+          "lebih_dari_5_hk": 12,
+          "rata_rata_tertahan_hk": 10.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pendidikan Dasar dan Menengah": {
+          "total": 38,
+          "publish": 24,
+          "persen_publish": 63.2,
+          "dalam_proses": 14,
+          "lebih_dari_5_hk": 9,
+          "rata_rata_tertahan_hk": 6.4,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pendidikan Tinggi, Ilmu Pengetahuan, dan Teknologi": {
+          "total": 32,
+          "publish": 18,
+          "persen_publish": 56.2,
+          "dalam_proses": 14,
+          "lebih_dari_5_hk": 11,
+          "rata_rata_tertahan_hk": 10.1,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Pembangunan Manusia dan Kebudayaan": {
+          "total": 16,
+          "publish": 10,
+          "persen_publish": 62.5,
+          "dalam_proses": 5,
+          "lebih_dari_5_hk": 5,
+          "rata_rata_tertahan_hk": 14.0,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pemberdayaan Masyarakat, Kependudukan, dan Ketenagakerjaan": {
+      "total": 177,
+      "publish": 93,
+      "persen_publish": 52.5,
+      "dalam_proses": 80,
+      "lebih_dari_5_hk": 53,
+      "rata_rata_tertahan_hk": 10.8,
+      "uke2": {
+        "Direktorat Kemandirian Sosial dan Ekonomi": {
+          "total": 47,
+          "publish": 17,
+          "persen_publish": 36.2,
+          "dalam_proses": 29,
+          "lebih_dari_5_hk": 25,
+          "rata_rata_tertahan_hk": 11.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Kependudukan dan Jaminan Sosial": {
+          "total": 28,
+          "publish": 11,
+          "persen_publish": 39.3,
+          "dalam_proses": 16,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 7.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Ketenagakerjaan": {
+          "total": 22,
+          "publish": 13,
+          "persen_publish": 59.1,
+          "dalam_proses": 9,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 11.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Koperasi dan Usaha Mikro, Kecil, dan Menengah": {
+          "total": 37,
+          "publish": 25,
+          "persen_publish": 67.6,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 10,
+          "rata_rata_tertahan_hk": 17.4,
+          "status": "Melewati batas"
+        },
+        "Direktorat Penanggulangan Kemiskinan dan Kesejahteraan Sosial": {
+          "total": 22,
+          "publish": 15,
+          "persen_publish": 68.2,
+          "dalam_proses": 7,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 9.9,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Pemberdayaan Masyarakat, Kependudukan, dan Ketenagakerjaan": {
+          "total": 21,
+          "publish": 12,
+          "persen_publish": 57.1,
+          "dalam_proses": 9,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 7.1,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pembiayaan dan Investasi Pembangunan": {
+      "total": 239,
+      "publish": 130,
+      "persen_publish": 54.4,
+      "dalam_proses": 102,
+      "lebih_dari_5_hk": 69,
+      "rata_rata_tertahan_hk": 10.3,
+      "uke2": {
+        "Direktorat Alokasi Anggaran Pembangunan Pusat dan Daerah": {
+          "total": 51,
+          "publish": 24,
+          "persen_publish": 47.1,
+          "dalam_proses": 25,
+          "lebih_dari_5_hk": 25,
+          "rata_rata_tertahan_hk": 13.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pembiayaan Strategis dan Inovatif": {
+          "total": 32,
+          "publish": 17,
+          "persen_publish": 53.1,
+          "dalam_proses": 14,
+          "lebih_dari_5_hk": 14,
+          "rata_rata_tertahan_hk": 14.4,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pembiayaan dan Hibah Dalam Negeri": {
+          "total": 56,
+          "publish": 32,
+          "persen_publish": 57.1,
+          "dalam_proses": 23,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 4.6,
+          "status": "Mendekati batas"
+        },
+        "Direktorat Pembiayaan dan Hibah Luar Negeri": {
+          "total": 43,
+          "publish": 25,
+          "persen_publish": 58.1,
+          "dalam_proses": 17,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 3.5,
+          "status": "Dalam batas"
+        },
+        "Direktorat Strategi Pembiayaan dan Investasi Pembangunan": {
+          "total": 47,
+          "publish": 28,
+          "persen_publish": 59.6,
+          "dalam_proses": 18,
+          "lebih_dari_5_hk": 18,
+          "rata_rata_tertahan_hk": 16.4,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Pembiayaan dan Investasi Pembangunan": {
+          "total": 10,
+          "publish": 4,
+          "persen_publish": 40.0,
+          "dalam_proses": 5,
+          "lebih_dari_5_hk": 5,
+          "rata_rata_tertahan_hk": 12.0,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Pengendalian, Evaluasi, dan Manajemen Risiko Pembangunan": {
+      "total": 261,
+      "publish": 105,
+      "persen_publish": 40.2,
+      "dalam_proses": 148,
+      "lebih_dari_5_hk": 109,
+      "rata_rata_tertahan_hk": 11.4,
+      "uke2": {
+        "Direktorat Pengendalian dan Evaluasi Kebijakan Strategis I": {
+          "total": 43,
+          "publish": 20,
+          "persen_publish": 46.5,
+          "dalam_proses": 22,
+          "lebih_dari_5_hk": 18,
+          "rata_rata_tertahan_hk": 10.3,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pengendalian dan Evaluasi Kebijakan Strategis II": {
+          "total": 38,
+          "publish": 21,
+          "persen_publish": 55.3,
+          "dalam_proses": 16,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 4.6,
+          "status": "Mendekati batas"
+        },
+        "Direktorat Pengendalian dan Evaluasi Kebijakan Strategis III": {
+          "total": 54,
+          "publish": 22,
+          "persen_publish": 40.7,
+          "dalam_proses": 30,
+          "lebih_dari_5_hk": 18,
+          "rata_rata_tertahan_hk": 10.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pengendalian dan Evaluasi Kebijakan Strategis IV": {
+          "total": 58,
+          "publish": 16,
+          "persen_publish": 27.6,
+          "dalam_proses": 41,
+          "lebih_dari_5_hk": 40,
+          "rata_rata_tertahan_hk": 15.7,
+          "status": "Melewati batas"
+        },
+        "Direktorat Sistem dan Manajemen Risiko": {
+          "total": 44,
+          "publish": 14,
+          "persen_publish": 31.8,
+          "dalam_proses": 27,
+          "lebih_dari_5_hk": 18,
+          "rata_rata_tertahan_hk": 10.0,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Pengendalian, Evaluasi, dan Manajemen Risiko Pembangunan": {
+          "total": 24,
+          "publish": 12,
+          "persen_publish": 50.0,
+          "dalam_proses": 12,
+          "lebih_dari_5_hk": 12,
+          "rata_rata_tertahan_hk": 12.1,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Perencanaan Makro Pembangunan": {
+      "total": 183,
+      "publish": 119,
+      "persen_publish": 65.0,
+      "dalam_proses": 61,
+      "lebih_dari_5_hk": 40,
+      "rata_rata_tertahan_hk": 10.0,
+      "uke2": {
+        "Direktorat Perencanaan Ekonomi Makro dan Pengembangan Model Pembangunan": {
+          "total": 37,
+          "publish": 28,
+          "persen_publish": 75.7,
+          "dalam_proses": 8,
+          "lebih_dari_5_hk": 2,
+          "rata_rata_tertahan_hk": 4.0,
+          "status": "Mendekati batas"
+        },
+        "Direktorat Perencanaan Fiskal, Moneter, dan Sektor Keuangan": {
+          "total": 22,
+          "publish": 10,
+          "persen_publish": 45.5,
+          "dalam_proses": 12,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 12.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Perencanaan Hilirisasi dan Kerjasama Ekonomi Internasional": {
+          "total": 23,
+          "publish": 12,
+          "persen_publish": 52.2,
+          "dalam_proses": 10,
+          "lebih_dari_5_hk": 5,
+          "rata_rata_tertahan_hk": 7.6,
+          "status": "Melewati batas"
+        },
+        "Direktorat Perencanaan Peningkatan Produktivitas dan Pembangunan Tematik": {
+          "total": 37,
+          "publish": 28,
+          "persen_publish": 75.7,
+          "dalam_proses": 8,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 8.0,
+          "status": "Melewati batas"
+        },
+        "Direktorat Sinergi dan Tata Kelola Perencanaan Pembangunan": {
+          "total": 54,
+          "publish": 33,
+          "persen_publish": 61.1,
+          "dalam_proses": 21,
+          "lebih_dari_5_hk": 20,
+          "rata_rata_tertahan_hk": 11.9,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Perencanaan Makro Pembangunan": {
+          "total": 10,
+          "publish": 8,
+          "persen_publish": 80.0,
+          "dalam_proses": 2,
+          "lebih_dari_5_hk": 2,
+          "rata_rata_tertahan_hk": 16.0,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Kedeputian Bidang Politik, Hukum, HAM, Pertahanan, dan Keamanan": {
+      "total": 220,
+      "publish": 114,
+      "persen_publish": 51.8,
+      "dalam_proses": 99,
+      "lebih_dari_5_hk": 62,
+      "rata_rata_tertahan_hk": 10.2,
+      "uke2": {
+        "Direktorat Hubungan Luar Negeri": {
+          "total": 46,
+          "publish": 28,
+          "persen_publish": 60.9,
+          "dalam_proses": 16,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 5.6,
+          "status": "Melewati batas"
+        },
+        "Direktorat Ideologi, Kebangsaan, Politik, dan Demokrasi": {
+          "total": 53,
+          "publish": 23,
+          "persen_publish": 43.4,
+          "dalam_proses": 29,
+          "lebih_dari_5_hk": 29,
+          "rata_rata_tertahan_hk": 16.0,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pembangunan Hukum, Hak Asasi Manusia, Imigrasi, dan Pemasyarakatan": {
+          "total": 43,
+          "publish": 23,
+          "persen_publish": 53.5,
+          "dalam_proses": 20,
+          "lebih_dari_5_hk": 6,
+          "rata_rata_tertahan_hk": 7.8,
+          "status": "Melewati batas"
+        },
+        "Direktorat Pertahanan dan Keamanan": {
+          "total": 35,
+          "publish": 19,
+          "persen_publish": 54.3,
+          "dalam_proses": 14,
+          "lebih_dari_5_hk": 4,
+          "rata_rata_tertahan_hk": 6.1,
+          "status": "Melewati batas"
+        },
+        "Direktorat Transformasi Birokrasi dan Pemerintahan": {
+          "total": 27,
+          "publish": 15,
+          "persen_publish": 55.6,
+          "dalam_proses": 11,
+          "lebih_dari_5_hk": 7,
+          "rata_rata_tertahan_hk": 7.7,
+          "status": "Melewati batas"
+        },
+        "Sekretariat Deputi Bidang Politik, Hukum, Hak Asasi Manusia, Pertahanan, dan Keamanan": {
+          "total": 16,
+          "publish": 6,
+          "persen_publish": 37.5,
+          "dalam_proses": 9,
+          "lebih_dari_5_hk": 9,
+          "rata_rata_tertahan_hk": 14.8,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    },
+    "Sekretariat Kementerian PPN/Sekretariat Utama Bappenas": {
+      "total": 565,
+      "publish": 335,
+      "persen_publish": 59.3,
+      "dalam_proses": 216,
+      "lebih_dari_5_hk": 144,
+      "rata_rata_tertahan_hk": 9.0,
+      "uke2": {
+        "Biro Hubungan Masyarakat, Kearsipan, dan Tata Usaha Pimpinan": {
+          "total": 39,
+          "publish": 30,
+          "persen_publish": 76.9,
+          "dalam_proses": 9,
+          "lebih_dari_5_hk": 9,
+          "rata_rata_tertahan_hk": 9.4,
+          "status": "Melewati batas"
+        },
+        "Biro Hukum": {
+          "total": 55,
+          "publish": 32,
+          "persen_publish": 58.2,
+          "dalam_proses": 22,
+          "lebih_dari_5_hk": 20,
+          "rata_rata_tertahan_hk": 14.1,
+          "status": "Melewati batas"
+        },
+        "Biro Perencanaan, Organisasi, dan Tata Laksana": {
+          "total": 26,
+          "publish": 18,
+          "persen_publish": 69.2,
+          "dalam_proses": 6,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 6.3,
+          "status": "Melewati batas"
+        },
+        "Biro Sumber Daya Manusia": {
+          "total": 30,
+          "publish": 14,
+          "persen_publish": 46.7,
+          "dalam_proses": 16,
+          "lebih_dari_5_hk": 3,
+          "rata_rata_tertahan_hk": 2.9,
+          "status": "Dalam batas"
+        },
+        "Biro Umum": {
+          "total": 50,
+          "publish": 19,
+          "persen_publish": 38.0,
+          "dalam_proses": 28,
+          "lebih_dari_5_hk": 28,
+          "rata_rata_tertahan_hk": 13.0,
+          "status": "Melewati batas"
+        },
+        "Pusat Analisis Kebijakan dan Kinerja": {
+          "total": 121,
+          "publish": 96,
+          "persen_publish": 79.3,
+          "dalam_proses": 23,
+          "lebih_dari_5_hk": 6,
+          "rata_rata_tertahan_hk": 3.7,
+          "status": "Dalam batas"
+        },
+        "Pusat Pembinaan, Pendidikan, dan Pelatihan Sumber Daya Manusia Perencanaan Pembangunan": {
+          "total": 103,
+          "publish": 47,
+          "persen_publish": 45.6,
+          "dalam_proses": 53,
+          "lebih_dari_5_hk": 46,
+          "rata_rata_tertahan_hk": 10.2,
+          "status": "Melewati batas"
+        },
+        "Pusat Sistem, Data, dan Informasi Perencanaan Pembangunan": {
+          "total": 141,
+          "publish": 79,
+          "persen_publish": 56.0,
+          "dalam_proses": 59,
+          "lebih_dari_5_hk": 29,
+          "rata_rata_tertahan_hk": 8.1,
+          "status": "Melewati batas"
+        }
+      },
+      "status": "Melewati batas"
+    }
+  },
+  "dokumen_baru_per_bulan_2026": {
+    "2026-01": 22,
+    "2026-02": 6,
+    "2026-03": 11,
+    "2026-04": 21,
+    "2026-05": 108,
+    "2026-06": 22,
+    "2026-07": 74,
+    "2026-08": 40,
+    "2026-09": 200,
+    "2026-10": 12
+  },
+  "rata_rata_bulanan_bulan_lengkap": 56.0,
+  "dokumen_per_menu_program": {
+    "JDIH": 1812,
+    "RPJMN": 128,
+    "RKP": 96,
+    "MUSRENBANG": 82,
+    "RKPD": 55,
+    "SDGs": 48,
+    "RPJPN": 14,
+    "LAMPID": 12,
+    "RENJA": 11,
+    "REPELITA": 10,
+    "RPJPD": 10,
+    "PROPENAS": 9
+  },
+  "snapshot_bulanan": [
+    {
+      "tanggal_snapshot": "2026-07-31",
+      "total_aset": 4594,
+      "terpublikasi": 2250,
+      "dalam_proses_entri": 1067,
+      "tidak_tayang": 1277,
+      "tertahan_lebih_dari_5_hk": 996
+    },
+    {
+      "tanggal_snapshot": "2026-08-31",
+      "total_aset": 4739,
+      "terpublikasi": 2415,
+      "dalam_proses_entri": 1030,
+      "tidak_tayang": 1294,
+      "tertahan_lebih_dari_5_hk": 944
+    },
+    {
+      "tanggal_snapshot": "2026-09-30",
+      "total_aset": 5023,
+      "terpublikasi": 2599,
+      "dalam_proses_entri": 1162,
+      "tidak_tayang": 1262,
+      "tertahan_lebih_dari_5_hk": 695
+    },
+    {
+      "tanggal_snapshot": "2026-10-08",
+      "total_aset": 5063,
+      "terpublikasi": 2687,
+      "dalam_proses_entri": 1202,
+      "tidak_tayang": 1174,
+      "tertahan_lebih_dari_5_hk": 790
+    }
+  ],
+  "perubahan_dibanding_akhir_bulan_lalu": {
+    "total_aset": 40,
+    "terpublikasi": 88,
+    "dalam_proses_entri": 40,
+    "tidak_tayang": -88,
+    "tertahan_lebih_dari_5_hk": 95
+  },
+  "kualitas": {
+    "skor_rata_rata": 70.3,
+    "skor_per_dimensi": {
+      "dimensi_1": 73.9,
+      "dimensi_2": 69.8,
+      "dimensi_3": 64.6,
+      "dimensi_4": 68.2,
+      "dimensi_5": 76.3,
+      "dimensi_6": 60.2,
+      "dimensi_7": 79.1
+    },
+    "sebaran_skor": {
+      "di_bawah_50": 484,
+      "50_69": 1738,
+      "70_84": 2090,
+      "85_ke_atas": 751
+    },
+    "masalah": {
+      "metadata_belum_lengkap": 412,
+      "tanpa_pic": 96,
+      "belum_diperbarui_12_bulan": 538,
+      "kandidat_duplikat": 74,
+      "file_tidak_terbaca": 38
+    },
+    "ambang_kelengkapan": 60
+  }
+}

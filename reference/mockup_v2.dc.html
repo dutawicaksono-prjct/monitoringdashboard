@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Dasbor Monitoring KOMENS</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit}
+select{font-family:inherit}
+</style>
+</helmet>
+<div style="font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #13212C; background: #F2F4F6; min-height: 100%; font-size: 14px; line-height: 1.45">
+
+  <!-- HEADER -->
+  <header style="background: #0B2A3C; color: #FFFFFF; padding: 20px 28px">
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; max-width: 1360px; margin: 0 auto">
+      <div style="min-width: 0">
+        <div style="font-size: 12.5px; color: #B9CCD8">Pengetahuan Anda › Dasbor Monitoring</div>
+        <h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 800; line-height: 1.2">Monitoring Aset Pengetahuan KOMENS</h1>
+        <div style="font-size: 13px; color: #B9CCD8; margin-top: 4px">Pusdatinrenbang · Tim Pengelolaan Informasi dan Pengetahuan</div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+        <span style="background: #FFE3B8; color: #5A3300; font-weight: 700; font-size: 12.5px; padding: 6px 12px; border-radius: 999px">Data dummy · ilustrasi</span>
+        <button style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #5E8199; background: transparent; color: #FFFFFF; font-weight: 600; font-size: 14px; cursor: pointer">Unduh laporan</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TABS + FILTERS -->
+  <div style="background: #FFFFFF; border-bottom: 1px solid #DDE3E8">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 0 28px; display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between">
+      <nav style="display: flex; flex-wrap: wrap" aria-label="Tampilan dasbor">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.go }}" aria-current="{{ t.current }}" style="padding: 0 18px; min-height: 48px; background: none; border: none; font-size: 14.5px; cursor: pointer; {{ t.style }}">{{ t.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 8px 0">
+        <label style="display: flex; flex-direction: column; font-size: 12px; color: #5B6B78; font-weight: 600; gap: 2px">Periode
+          <select style="min-height: 36px; border: 1px solid #C5CED6; border-radius: 6px; padding: 0 10px; font-size: 14px; color: #13212C; background: #FFFFFF"><option>Tahun 2026</option><option>Tahun 2025</option></select>
+        </label>
+        <label style="display: flex; flex-direction: column; font-size: 12px; color: #5B6B78; font-weight: 600; gap: 2px">UKE I
+          <select style="min-height: 36px; max-width: 250px; border: 1px solid #C5CED6; border-radius: 6px; padding: 0 10px; font-size: 14px; color: #13212C; background: #FFFFFF"><option>Semua UKE I</option><option>Sekretariat Kementerian PPN/Sekretariat Utama Bappenas</option><option>Kedeputian Bidang Perencanaan Makro Pembangunan</option><option>Kedeputian Bidang Pembangunan Kewilayahan</option><option>Kedeputian Bidang Ekonomi dan Transformasi Digital</option><option>Kedeputian Bidang Politik, Hukum, HAM, Pertahanan, dan Keamanan</option><option>Kedeputian Bidang Pemberdayaan Masyarakat, Kependudukan, dan Ketenagakerjaan</option><option>Kedeputian Bidang Pembangunan Manusia dan Kebudayaan</option><option>Kedeputian Bidang Pangan, Sumber Daya Alam, dan Lingkungan Hidup</option><option>Kedeputian Bidang Infrastruktur</option><option>Kedeputian Bidang Pembiayaan dan Investasi Pembangunan</option><option>Kedeputian Bidang Pengendalian, Evaluasi, dan Manajemen Risiko Pembangunan</option><option>Inspektorat Utama</option></select>
+        </label>
+        <label style="display: flex; flex-direction: column; font-size: 12px; color: #5B6B78; font-weight: 600; gap: 2px">UKE II
+          <select style="min-height: 36px; max-width: 250px; border: 1px solid #C5CED6; border-radius: 6px; padding: 0 10px; font-size: 14px; color: #13212C; background: #FFFFFF"><option>Semua UKE II</option></select>
+        </label>
+        <label style="display: flex; flex-direction: column; font-size: 12px; color: #5B6B78; font-weight: 600; gap: 2px">Sumber data
+          <select style="min-height: 36px; border: 1px solid #C5CED6; border-radius: 6px; padding: 0 10px; font-size: 14px; color: #13212C; background: #FFFFFF"><option>Entri manual + Menu Program</option><option>Entri manual</option><option>Menu Program</option></select>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <main style="max-width: 1360px; margin: 0 auto; padding: 24px 28px 40px; display: flex; flex-direction: column; gap: 24px">
+
+    <!-- ============ TAB 1: RINGKASAN PIMPINAN ============ -->
+    <sc-if value="{{ isRingkasan }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+
+        <section aria-label="Perlu perhatian" style="display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 13px; font-weight: 700; color: #5B6B78; text-transform: uppercase; letter-spacing: 0.06em">Perlu perhatian</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <sc-for list="{{ insights }}" as="i" hint-placeholder-count="3">
+              <button onClick="{{ i.go }}" style="flex: 1 1 300px; min-width: 0; text-align: left; background: #FFF4EA; border: 1px solid #F0C9A8; border-radius: 12px; padding: 14px 16px; cursor: pointer; color: #13212C; display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 12px; font-weight: 700; color: #8A3510">{{ i.k }}</span>
+                <span style="font-size: 14.5px; font-weight: 600">{{ i.t }}</span>
+                <span style="font-size: 13px; font-weight: 700; color: #0B2A3C; text-decoration: underline">{{ i.a }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+
+        <section aria-label="Indikator utama" style="display: flex; flex-wrap: wrap; gap: 16px">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+            <div style="flex: 1 1 230px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+              <div style="font-size: 13px; font-weight: 600; color: #5B6B78">{{ k.label }}</div>
+              <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-size: 34px; font-weight: 800; line-height: 1.1; color: #13212C">{{ k.value }}</span><span style="font-size: 16px; font-weight: 600; color: #5B6B78">{{ k.unit }}</span></div>
+              <sc-if value="{{ k.hasBar }}" hint-placeholder-val="{{ false }}">
+                <div style="position: relative; margin: 6px 0 2px">
+                  <div style="height: 10px; border-radius: 5px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ k.barW }}%; background: {{ accent }}"></div></div>
+                  <div style="position: absolute; left: 95%; top: -4px; bottom: -4px; border-left: 2px solid #13212C"></div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: #33434F; text-align: right">Target 95%</div>
+              </sc-if>
+              <div style="font-size: 13px; font-weight: 700; color: #13212C">{{ k.sub }}</div>
+              <div style="font-size: 12.5px; color: #5B6B78">{{ k.note }}</div>
+            </div>
+          </sc-for>
+        </section>
+
+        <section id="capaian" style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 800">Capaian publikasi per UKE I terhadap target 95%</h2>
+            <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Dokumen entri (manual dan interoperabilitas tanpa kategori program), diurutkan dari capaian terendah. Menu Program tidak memiliki UKE I/UKE II karena dikategorikan menurut substansi.</div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 3px; background: {{ accent }}"></span>Capaian 50% atau lebih</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #C2561C"></span>Capaian di bawah 50%</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 0; height: 14px; border-left: 2px solid #13212C"></span>Target 95%</span>
+          </div>
+          <sc-for list="{{ ukeChart }}" as="g" hint-placeholder-count="12">
+            <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding-top: 10px; border-top: 1px solid #E7ECF0">
+              <div style="flex: 1 1 260px; min-width: 0; font-size: 13.5px; font-weight: 600">{{ g.name }}</div>
+              <div style="flex: 2 1 300px; min-width: 0; display: flex; align-items: center; gap: 12px">
+                <div style="position: relative; flex: 1 1 0; min-width: 0">
+                  <div style="height: 14px; border-radius: 7px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ g.w }}%; background: {{ g.color }}"></div></div>
+                  <div style="position: absolute; left: 95%; top: -3px; bottom: -3px; border-left: 2px solid #13212C"></div>
+                </div>
+                <span style="flex: 0 0 150px; font-size: 13px"><b>{{ g.pct }}</b> · {{ g.cnt }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+
+        <section id="rekap" style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 800">Rekapitulasi angka per sumber data</h2>
+            <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Seluruh angka dihitung dari semua menu: entri manual dan Menu Program. Total dokumen KOMENS = entri manual + Menu Program.</div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 3px; background: {{ accent }}"></span>Terpublikasi</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #9EC4D9"></span>Dalam proses (hanya entri)</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #C2561C"></span>Tidak tayang (ditolak / UnPublish)</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="width: 0; height: 14px; border-left: 2px solid #13212C"></span>Target publish 95%</span>
+          </div>
+          <sc-for list="{{ rekap }}" as="r" hint-placeholder-count="3">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; padding-top: 12px; border-top: 1px solid #E7ECF0">
+              <div style="flex: 0 0 150px; min-width: 0"><div style="font-weight: 800; font-size: 15px">{{ r.src }}</div><div style="font-size: 13px; color: #5B6B78">{{ r.total }} dokumen</div></div>
+              <div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+                <div style="position: relative">
+                  <div style="display: flex; height: 16px; border-radius: 8px; overflow: hidden; background: #E7ECF0">
+                    <div style="height: 100%; width: {{ r.wPub }}%; background: {{ accent }}"></div>
+                    <div style="height: 100%; width: {{ r.wProses }}%; background: #9EC4D9"></div>
+                    <div style="height: 100%; width: {{ r.wMasalah }}%; background: #C2561C"></div>
+                  </div>
+                  <div style="position: absolute; left: 95%; top: -3px; bottom: -3px; border-left: 2px solid #13212C"></div>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px"><span><b>{{ r.pub }}</b> publish ({{ r.pct }})</span><span><b>{{ r.proses }}</b> {{ r.prosesLabel }}</span><span><b>{{ r.masalah }}</b> {{ r.masalahLabel }}</span></div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="background: #FFF4EA; border-radius: 8px; padding: 12px 14px; font-size: 13px">
+            <b>Catatan analis:</b> Menu Program hanya memiliki status Publish dan UnPublish. Sebanyak 1.107 dokumen Menu Program berstatus UnPublish (48,4%), setara 52% dari kekurangan 2.123 dokumen menuju target 95%. Perlu dipastikan apakah dokumen tersebut memang sengaja tidak ditayangkan atau belum dipublikasikan.
+          </div>
+        </section>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+
+          <section style="flex: 2 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div>
+              <h2 style="margin: 0; font-size: 17px; font-weight: 800">Dokumen baru per bulan, 2026</h2>
+              <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Entri manual · 516 dokumen baru Jan–Okt · Okt* = parsial (s.d. 8 Okt)</div>
+            </div>
+            <div style="position: relative; height: 224px; display: flex; gap: 8px; align-items: stretch; border-bottom: 1px solid #C5CED6">
+              <div style="position: absolute; left: 0; right: 0; bottom: 50px; border-top: 2px dashed #5B6B78"></div>
+              <div style="position: absolute; right: 0; bottom: 54px; background: #FFFFFF; padding: 0 6px; font-size: 12px; font-weight: 600; color: #5B6B78">Rata-rata Jan–Sep: 56 per bulan</div>
+              <sc-for list="{{ months }}" as="m" hint-placeholder-count="10">
+                <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px">
+                  <span style="font-size: 12.5px; font-weight: 700">{{ m.v }}</span>
+                  <div style="width: 100%; max-width: 44px; border-radius: 6px 6px 0 0; height: {{ m.h }}px; background: {{ m.bg }}"></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <sc-for list="{{ months }}" as="m" hint-placeholder-count="10">
+                <div style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 12.5px; color: #5B6B78; font-weight: 600">{{ m.label }}</div>
+              </sc-for>
+            </div>
+            <div style="background: #EEF4F8; border-radius: 8px; padding: 12px 14px; font-size: 13px">
+              <b>Catatan analis:</b> lonjakan September (200) dan Mei (108) jauh di atas rata-rata. Perlu ditelusuri apakah berasal dari impor massal atau kinerja entri yang sebenarnya, agar tren tidak disalahartikan.
+            </div>
+          </section>
+
+          <section style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div>
+              <h2 style="margin: 0; font-size: 17px; font-weight: 800">Dokumen per Menu Program</h2>
+              <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Total 2.287 dokumen · diurutkan dari terbanyak</div>
+            </div>
+            <button onClick="{{ toggleJdih }}" aria-pressed="{{ noJdih }}" style="align-self: flex-start; min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #5E8199; background: #FFFFFF; color: #0B2A3C; font-weight: 700; font-size: 13.5px; cursor: pointer">{{ jdihLabel }}</button>
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <sc-for list="{{ mpRows }}" as="r" hint-placeholder-count="7">
+                <div style="display: grid; grid-template-columns: 104px minmax(0, 1fr) 96px; gap: 10px; align-items: center">
+                  <span style="font-size: 13.5px; font-weight: 600">{{ r.name }}</span>
+                  <div style="height: 12px; border-radius: 6px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ r.w }}%; background: {{ accent }}"></div></div>
+                  <span style="font-size: 13px; text-align: right"><b>{{ r.cnt }}</b> · {{ r.pct }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background: #EEF4F8; border-radius: 8px; padding: 12px 14px; font-size: 13px">
+              <b>Catatan analis:</b> JDIH menyumbang 79,2% dokumen Menu Program, sehingga menu lain tampak nyaris tak terlihat jika digabung. Gunakan tombol di atas untuk skala terpisah.
+            </div>
+          </section>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ TAB 2: KONTROL ALUR KERJA ============ -->
+    <sc-if value="{{ isAlur }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+
+        <section style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 800">Alur kerja entri manual: di mana dokumen tertahan?</h2>
+            <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">2.776 dokumen entri manual · batas maksimal tertahan di setiap tahap: <b>5 hari kerja</b> sejak perubahan status terakhir (tanpa akhir pekan dan hari libur)</div>
+          </div>
+          <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding-top: 12px; border-top: 1px solid #E7ECF0">
+              <div style="flex: 0 0 200px; min-width: 0; display: flex; gap: 12px; align-items: center">
+                <span style="flex: 0 0 28px; width: 28px; height: 28px; border-radius: 14px; background: #0B2A3C; color: #FFFFFF; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">{{ s.n }}</span>
+                <div><div style="font-weight: 800; font-size: 14.5px">{{ s.name }}</div><div style="font-size: 12.5px; color: #5B6B78">{{ s.desc }}</div></div>
+              </div>
+              <div style="flex: 1 1 240px; min-width: 0; display: flex; align-items: center; gap: 12px">
+                <div style="flex: 1 1 0; min-width: 0; height: 20px; border-radius: 10px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ s.w }}%; background: {{ s.color }}"></div></div>
+                <span style="flex: 0 0 120px; font-size: 13px"><b style="font-size: 15px">{{ s.cnt }}</b> · {{ s.pct }}</span>
+              </div>
+              <div style="flex: 0 0 270px; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 13px; font-weight: 700">{{ s.line1 }}</span>
+                <span style="font-size: 12.5px; color: #5B6B78">{{ s.line2 }}</span>
+              </div>
+              <span style="flex: 0 0 auto; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; {{ s.chip }}">{{ s.status }}</span>
+            </div>
+          </sc-for>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; padding-top: 12px; border-top: 1px solid #E7ECF0">
+            <b>Keluar dari alur:</b>
+            <sc-for list="{{ exits }}" as="e" hint-placeholder-count="3"><span>{{ e.name }}: <b>{{ e.cnt }}</b></span></sc-for>
+          </div>
+          <div style="background: #FFF4EA; border-radius: 8px; padding: 12px 14px; font-size: 13px">
+            <b>Catatan analis:</b> tahap PIC UKE memuat 860 dokumen, dan 590 di antaranya (68,6%) sudah melewati batas 5 hari kerja dengan rata-rata tertahan 12 hari kerja. Tahap Draft juga melewati batas (rata-rata 9 hari kerja). Secara keseluruhan 790 dokumen tertahan lebih dari 5 hari kerja.
+          </div>
+        </section>
+
+        <section aria-label="Aksi cepat" style="display: flex; flex-wrap: wrap; gap: 16px">
+          <sc-for list="{{ actions }}" as="a" hint-placeholder-count="3">
+            <div style="flex: 1 1 260px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+              <div style="font-size: 13px; font-weight: 600; color: #5B6B78">{{ a.label }}</div>
+              <div style="font-size: 32px; font-weight: 800; line-height: 1.1">{{ a.value }}</div>
+              <button style="align-self: flex-start; min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #5E8199; background: #FFFFFF; color: #0B2A3C; font-weight: 700; font-size: 13.5px; cursor: pointer">{{ a.cta }}</button>
+            </div>
+          </sc-for>
+        </section>
+
+        <section style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: flex-start; justify-content: space-between">
+            <div style="flex: 1 1 360px; min-width: 0">
+              <h2 style="margin: 0; font-size: 17px; font-weight: 800">Ketepatan waktu per UKE I dan UKE II</h2>
+              <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Entri manual · diurutkan dari dokumen tertahan lebih dari 5 hari kerja terbanyak · klik UKE I untuk membuka UKE II</div>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button onClick="{{ openAll }}" style="min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #5E8199; background: #FFFFFF; color: #0B2A3C; font-weight: 700; font-size: 13.5px; cursor: pointer">Buka semua</button>
+              <button onClick="{{ closeAll }}" style="min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #5E8199; background: #FFFFFF; color: #0B2A3C; font-weight: 700; font-size: 13.5px; cursor: pointer">Tutup semua</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 12.5px; color: #33434F">
+            <span>Status mengikuti rata-rata lama tertahan:</span><span><b>Dalam batas</b> kurang dari 4 hari kerja</span><span><b>Mendekati batas</b> 4–5 hari kerja</span><span><b>Melewati batas</b> lebih dari 5 hari kerja</span>
+          </div>
+          <div style="overflow-x: auto">
+            <div style="min-width: 940px; display: flex; flex-direction: column">
+              <div style="display: grid; grid-template-columns: minmax(240px, 2.6fr) 70px minmax(150px, 1.6fr) 90px 100px 100px 130px; gap: 12px; padding: 8px 4px; font-size: 12.5px; font-weight: 700; color: #5B6B78; border-bottom: 2px solid #C5CED6">
+                <span>Unit kerja</span><span>Total</span><span>Terpublikasi</span><span>Dalam proses</span><span>Tertahan lebih dari 5 hari kerja</span><span>Rata-rata tertahan (hari kerja)</span><span>Status</span>
+              </div>
+              <sc-for list="{{ tableRows }}" as="u" hint-placeholder-count="14">
+                <div style="display: grid; grid-template-columns: minmax(240px, 2.6fr) 70px minmax(150px, 1.6fr) 90px 100px 100px 130px; gap: 12px; padding: 8px 4px; align-items: center; border-bottom: 1px solid #E7ECF0; font-size: 13.5px; {{ u.rowStyle }}">
+                  <span style="min-width: 0">
+                    <sc-if value="{{ u.isParent }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ u.toggle }}" aria-expanded="{{ u.expanded }}" style="display: flex; gap: 8px; align-items: flex-start; text-align: left; min-height: 44px; background: none; border: none; padding: 0; cursor: pointer; color: #13212C; font-size: 13.5px; font-weight: 700">
+                        <span style="flex: 0 0 14px">{{ u.caret }}</span>
+                        <span><span style="display: block">{{ u.name }}</span><span style="display: block; font-weight: 500; font-size: 12.5px; color: #5B6B78">{{ u.sub }}</span></span>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{ u.isChild }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: block; padding-left: 22px; font-weight: 500">{{ u.name }}</span>
+                    </sc-if>
+                  </span>
+                  <span>{{ u.total }}</span>
+                  <span style="display: flex; align-items: center; gap: 8px"><span style="flex: 1 1 0; min-width: 0; height: 10px; border-radius: 5px; background: #E7ECF0; overflow: hidden"><span style="display: block; height: 100%; width: {{ u.w }}%; background: {{ accent }}"></span></span><span style="flex: 0 0 52px; font-size: 12.5px">{{ u.pct }}</span></span>
+                  <span>{{ u.proses }}</span>
+                  <span style="font-weight: 700">{{ u.br }}</span>
+                  <span>{{ u.age }}</span>
+                  <span style="justify-self: start; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; {{ u.chip }}">{{ u.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <!-- ============ TAB 3: KUALITAS ASET ============ -->
+    <sc-if value="{{ isKualitas }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+          <section style="flex: 1 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between">
+              <div>
+                <h2 style="margin: 0; font-size: 17px; font-weight: 800">Skor kualitas metadata</h2>
+                <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Rata-rata tujuh dimensi (Bruce &amp; Hillman) · 0–100</div>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-size: 44px; font-weight: 800; line-height: 1">72</span><span style="font-size: 18px; font-weight: 600; color: #5B6B78">/100</span></div>
+            </div>
+            <sc-for list="{{ dims }}" as="d" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 150px minmax(0, 1fr) 150px; gap: 10px; align-items: center">
+                <span style="font-size: 13.5px; font-weight: 600">{{ d.name }}</span>
+                <div style="height: 12px; border-radius: 6px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ d.score }}%; background: {{ d.color }}"></div></div>
+                <span style="font-size: 13px; font-weight: 700; {{ d.flagStyle }}">{{ d.score }} {{ d.flag }}</span>
+              </div>
+            </sc-for>
+            <div style="background: #FFF4EA; border-radius: 8px; padding: 12px 14px; font-size: 13px">
+              <b>Catatan analis:</b> dimensi terlemah adalah ketepatan waktu (58) dan asal-usul (64). Keduanya terkait pembaruan dokumen dan pencatatan sumber, dan paling mudah ditindaklanjuti lewat aturan pembaruan berkala.
+            </div>
+          </section>
+
+          <section style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div>
+              <h2 style="margin: 0; font-size: 17px; font-weight: 800">Sebaran skor per dokumen</h2>
+              <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Dari total 5.063 dokumen KOMENS</div>
+            </div>
+            <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr) 110px; gap: 10px; align-items: center">
+                <span style="font-size: 13.5px; font-weight: 600">{{ b.name }}</span>
+                <div style="height: 14px; border-radius: 7px; background: #E7ECF0; overflow: hidden"><div style="height: 100%; width: {{ b.w }}%; background: {{ b.color }}"></div></div>
+                <span style="font-size: 13px; text-align: right"><b>{{ b.cnt }}</b> · {{ b.pct }}</span>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+
+        <section style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 800">Masalah kualitas yang perlu dibersihkan</h2>
+            <div style="font-size: 13px; color: #5B6B78; margin-top: 2px">Klik daftar untuk melihat dokumen yang bermasalah dan menugaskan perbaikan</div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px">
+            <sc-for list="{{ issues }}" as="q" hint-placeholder-count="5">
+              <div style="flex: 1 1 210px; min-width: 0; border: 1px solid #DDE3E8; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+                <div style="font-size: 13px; font-weight: 600; color: #5B6B78">{{ q.label }}</div>
+                <div style="font-size: 30px; font-weight: 800; line-height: 1.1">{{ q.value }}</div>
+                <div style="font-size: 12.5px; color: #5B6B78">{{ q.pct }} dari total dokumen</div>
+                <button style="align-self: flex-start; margin-top: 6px; min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #5E8199; background: #FFFFFF; color: #0B2A3C; font-weight: 700; font-size: 13.5px; cursor: pointer">Lihat daftar</button>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <!-- DEFINISI INDIKATOR (semua tampilan) -->
+    <section style="background: #FFFFFF; border: 1px solid #DDE3E8; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 800">Definisi indikator</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 32px; font-size: 13px; color: #33434F">
+        <div style="flex: 1 1 280px; min-width: 0"><b>Entri manual:</b> data yang diinput langsung oleh pengguna. Bersama data interoperabilitas tanpa kategori program, menjadi dasar atribusi UKE I dan UKE II.</div>
+        <div style="flex: 1 1 280px; min-width: 0"><b>Menu Program:</b> pemetaan kategori program pada aplikasi KOMENS; diisi manual atau lewat interoperabilitas data dari aplikasi lain. Tidak memiliki UKE I/UKE II maupun alur proses; hanya berstatus Publish atau UnPublish.</div>
+        <div style="flex: 1 1 280px; min-width: 0"><b>Dokumen KOMENS:</b> seluruh dokumen, baik yang dalam proses entri, Menu Program, maupun yang sudah publish.</div>
+        <div style="flex: 1 1 280px; min-width: 0"><b>Terpublikasi (gabungan):</b> publish dari entri manual ditambah publish dari Menu Program.</div>
+        <div style="flex: 1 1 280px; min-width: 0"><b>Target publikasi:</b> 95% dari total dokumen KOMENS berstatus publish.</div>
+        <div style="flex: 1 1 280px; min-width: 0"><b>Tertahan lebih dari 5 hari kerja:</b> dokumen dalam proses yang sudah lebih dari 5 hari kerja (tanpa akhir pekan dan hari libur) sejak perubahan status terakhir; batas maksimal per tahap.</div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0E5A7E","options":["#0E5A7E","#1F5F4A","#3B4A9E"]},"$preview":{"width":1360,"height":1960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const tab = st.tab || 'ringkasan';
+    const noJdih = !!st.noJdih;
+    const accent = this.props.accent ?? '#0E5A7E';
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const pc = (x) => (Math.round(x * 10) / 10).toFixed(1).replace('.', ',') + '%';
+    const go = (t) => () => this.setState({ tab: t });
+    const orange = '#C2561C';
+
+    // Data dummy per UKE II: [nama, total, publish, dalam proses, bermasalah, tertahan > 5 hari kerja, rata-rata tertahan (hari)]
+    const U = [["Sekretariat Kementerian PPN/Sekretariat Utama Bappenas",[["Biro Hubungan Masyarakat, Kearsipan, dan Tata Usaha Pimpinan",39,30,9,0,9,12],["Biro Sumber Daya Manusia",30,14,16,0,3,3],["Biro Hukum",55,32,22,1,20,11],["Biro Perencanaan, Organisasi, dan Tata Laksana",26,18,6,2,3,7],["Biro Umum",50,19,28,3,28,13],["Pusat Pembinaan, Pendidikan, dan Pelatihan Sumber Daya Manusia Perencanaan Pembangunan",103,47,53,3,46,12],["Pusat Sistem, Data, dan Informasi Perencanaan Pembangunan",141,79,59,3,29,7],["Pusat Analisis Kebijakan dan Kinerja",121,96,23,2,6,5]]],["Kedeputian Bidang Perencanaan Makro Pembangunan",[["Sekretariat Deputi Bidang Perencanaan Makro Pembangunan",10,8,2,0,2,13],["Direktorat Perencanaan Ekonomi Makro dan Pengembangan Model Pembangunan",37,28,8,1,2,4],["Direktorat Perencanaan Fiskal, Moneter, dan Sektor Keuangan",22,10,12,0,7,8],["Direktorat Perencanaan Hilirisasi dan Kerjasama Ekonomi Internasional",23,12,10,1,5,6],["Direktorat Perencanaan Peningkatan Produktivitas dan Pembangunan Tematik",37,28,8,1,4,8],["Direktorat Sinergi dan Tata Kelola Perencanaan Pembangunan",54,33,21,0,20,11]]],["Kedeputian Bidang Pembangunan Kewilayahan",[["Sekretariat Deputi Bidang Pembangunan Kewilayahan",12,8,4,0,4,13],["Direktorat Pemerintahan, Keuangan Daerah, dan Transfer ke Daerah",28,18,10,0,4,6],["Direktorat Perdesaan, Daerah Afirmasi, dan Transmigrasi",45,34,11,0,10,11],["Direktorat Tata Ruang, Perkotaan, Pertanahan, dan Penanggulangan Bencana",59,30,28,1,13,6],["Direktorat Pembangunan Indonesia Barat",43,34,9,0,7,10],["Direktorat Pembangunan Indonesia Timur",36,18,17,1,11,9]]],["Kedeputian Bidang Ekonomi dan Transformasi Digital",[["Sekretariat Deputi Bidang Ekonomi dan Transformasi Digital",30,12,17,1,6,6],["Direktorat Industri, Perdagangan, dan Peningkatan Investasi",21,16,5,0,2,5],["Direktorat Pariwisata, Ekonomi Kreatif, dan Ekonomi Digital",55,35,19,1,8,5],["Direktorat Ekonomi Syariah dan Badan Usaha Milik Negara",31,19,12,0,12,13],["Direktorat Infrastruktur, Ekosistem, dan Keamanan Digital",25,17,8,0,6,10],["Direktorat Data Pembangunan dan Pemerintah Digital",24,14,10,0,4,6]]],["Kedeputian Bidang Politik, Hukum, HAM, Pertahanan, dan Keamanan",[["Sekretariat Deputi Bidang Politik, Hukum, Hak Asasi Manusia, Pertahanan, dan Keamanan",16,6,9,1,9,12],["Direktorat Ideologi, Kebangsaan, Politik, dan Demokrasi",53,23,29,1,29,13],["Direktorat Transformasi Birokrasi dan Pemerintahan",27,15,11,1,7,8],["Direktorat Pembangunan Hukum, Hak Asasi Manusia, Imigrasi, dan Pemasyarakatan",43,23,20,0,6,4],["Direktorat Hubungan Luar Negeri",46,28,16,2,7,6],["Direktorat Pertahanan dan Keamanan",35,19,14,2,4,6]]],["Kedeputian Bidang Pemberdayaan Masyarakat, Kependudukan, dan Ketenagakerjaan",[["Sekretariat Deputi Bidang Pemberdayaan Masyarakat, Kependudukan, dan Ketenagakerjaan",21,12,9,0,4,7],["Direktorat Penanggulangan Kemiskinan dan Kesejahteraan Sosial",22,15,7,0,3,7],["Direktorat Ketenagakerjaan",22,13,9,0,4,6],["Direktorat Kependudukan dan Jaminan Sosial",28,11,16,1,7,6],["Direktorat Kemandirian Sosial dan Ekonomi",47,17,29,1,25,10],["Direktorat Koperasi dan Usaha Mikro, Kecil, dan Menengah",37,25,10,2,10,13]]],["Kedeputian Bidang Pembangunan Manusia dan Kebudayaan",[["Sekretariat Deputi Bidang Pembangunan Manusia dan Kebudayaan",16,10,5,1,5,13],["Direktorat Kesehatan dan Gizi Masyarakat",43,22,20,1,12,8],["Direktorat Pendidikan Dasar dan Menengah",38,24,14,0,9,8],["Direktorat Pendidikan Tinggi, Ilmu Pengetahuan, dan Teknologi",32,18,14,0,11,10],["Direktorat Keluarga, Pengasuhan, Perempuan, dan Anak",52,32,19,1,11,8],["Direktorat Agama, Kebudayaan, Pemuda, dan Olahraga",48,27,20,1,10,7]]],["Kedeputian Bidang Pangan, Sumber Daya Alam, dan Lingkungan Hidup",[["Sekretariat Deputi Bidang Pangan, Sumber Daya Alam, dan Lingkungan Hidup",15,5,10,0,2,3],["Direktorat Pangan dan Pertanian",43,18,23,2,10,7],["Direktorat Kelautan dan Perikanan",41,9,31,1,31,13],["Direktorat Sumber Daya Energi, Mineral, dan Pertambangan",56,30,24,2,7,4],["Direktorat Lingkungan Hidup",49,16,31,2,23,9],["Direktorat Kehutanan dan Konservasi Sumber Daya Air",31,11,18,2,15,10]]],["Kedeputian Bidang Infrastruktur",[["Sekretariat Deputi Bidang Infrastruktur",30,20,10,0,10,12],["Direktorat Kemitraan dan Keterpaduan Pembangunan Infrastruktur",24,16,8,0,3,6],["Direktorat Konektivitas dan Infrastruktur Logistik",36,18,16,2,8,6],["Direktorat Sumber Daya Air",51,32,18,1,8,7],["Direktorat Perumahan dan Infrastruktur Kawasan Permukiman",25,7,18,0,10,8],["Direktorat Transmisi, Ketenagalistrikan, Kedirgantaraan, dan Antariksa",39,23,15,1,9,8]]],["Kedeputian Bidang Pembiayaan dan Investasi Pembangunan",[["Sekretariat Deputi Bidang Pembiayaan dan Investasi Pembangunan",10,4,5,1,5,12],["Direktorat Strategi Pembiayaan dan Investasi Pembangunan",47,28,18,1,18,13],["Direktorat Alokasi Anggaran Pembangunan Pusat dan Daerah",51,24,25,2,25,12],["Direktorat Pembiayaan dan Hibah Luar Negeri",43,25,17,1,3,4],["Direktorat Pembiayaan dan Hibah Dalam Negeri",56,32,23,1,4,3],["Direktorat Pembiayaan Strategis dan Inovatif",32,17,14,1,14,12]]],["Kedeputian Bidang Pengendalian, Evaluasi, dan Manajemen Risiko Pembangunan",[["Sekretariat Deputi Bidang Pengendalian, Evaluasi, dan Manajemen Risiko Pembangunan",24,12,12,0,12,13],["Direktorat Sistem dan Manajemen Risiko",44,14,27,3,18,8],["Direktorat Pengendalian dan Evaluasi Kebijakan Strategis I",43,20,22,1,18,11],["Direktorat Pengendalian dan Evaluasi Kebijakan Strategis II",38,21,16,1,3,4],["Direktorat Pengendalian dan Evaluasi Kebijakan Strategis III",54,22,30,2,18,7],["Direktorat Pengendalian dan Evaluasi Kebijakan Strategis IV",58,16,41,1,40,12]]],["Inspektorat Utama",[["Inspektorat Bidang Akuntabilitas Keuangan",19,4,14,1,14,12],["Inspektorat Bidang Kinerja Kelembagaan",23,10,12,1,12,13],["Inspektorat Bidang Investigasi",11,4,6,1,6,13]]]];
+
+    const stat = (avg, proses) => proses === 0
+      ? { s: 'Tidak ada antrean', chip: 'background: #E7ECF0; color: #33434F;' }
+      : (avg > 5
+        ? { s: 'Melewati batas', chip: 'background: #FBE0D2; color: #8A3510;' }
+        : (avg >= 4
+          ? { s: 'Mendekati batas', chip: 'background: #FFF0C9; color: #6B4A00;' }
+          : { s: 'Dalam batas', chip: 'background: #DCEFE3; color: #1F5B38;' }));
+
+    const groups = U.map((g, gi) => {
+      const rows = g[1];
+      const sum = (k) => rows.reduce((a, r) => a + r[k], 0);
+      const proses = sum(3);
+      const avg = proses ? Math.round(rows.reduce((a, r) => a + r[6] * r[3], 0) / proses) : 0;
+      return { gi, name: g[0], rows, total: sum(1), pub: sum(2), proses, bad: sum(4), br: sum(5), avg };
+    });
+
+    const tabs = [['ringkasan', 'Ringkasan Pimpinan'], ['alur', 'Kontrol Alur Kerja'], ['kualitas', 'Kualitas Aset']].map(([id, label]) => ({
+      label,
+      go: go(id),
+      current: tab === id ? 'page' : 'false',
+      style: 'border-bottom: 3px solid ' + (tab === id ? accent : 'transparent') + '; color: ' + (tab === id ? accent : '#5B6B78') + '; font-weight: ' + (tab === id ? 800 : 600) + ';'
+    }));
+
+    const insights = [
+      { k: 'Alur kerja', t: '590 dokumen tertahan lebih dari 5 hari kerja di tahap PIC UKE; secara total 790 dokumen melewati batas.', a: 'Buka kontrol alur kerja', go: go('alur') },
+      { k: 'Target publikasi', t: 'Capaian publish 53,1% dari target 95%; masih kurang 2.123 dokumen.', a: 'Lihat capaian per UKE I', go: () => {
+        this.setState({ tab: 'ringkasan' });
+        try { const el = document.getElementById('capaian'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } } catch (e) { /* abaikan */ }
+      } },
+      { k: 'Kualitas metadata', t: '538 dokumen belum diperbarui lebih dari 12 bulan; ketepatan waktu skor terendah (58).', a: 'Buka kualitas aset', go: go('kualitas') }
+    ];
+
+    const kpis = [
+      { label: 'Total aset pengetahuan', value: '5.063', unit: '', sub: '+312 dibanding bulan lalu', note: 'Entri manual 2.776 + Menu Program 2.287', hasBar: false, barW: 0 },
+      { label: 'Terpublikasi (gabungan)', value: '2.687', unit: '', sub: '53,1% dari total · selisih 41,9 poin dari target', note: 'Entri 1.507 + Program 1.180 · kurang 2.123 dokumen untuk mencapai 95%', hasBar: true, barW: 53.1 },
+      { label: 'Dalam proses (entri)', value: '1.202', unit: '', sub: '23,7% dari total', note: 'Menu Program tidak memiliki alur proses', hasBar: false, barW: 0 },
+      { label: 'Tertahan lebih dari 5 hari kerja', value: '790', unit: '', sub: '65,7% dari 1.202 dokumen dalam proses', note: 'Entri · batas maksimal 5 hari kerja per tahap', hasBar: false, barW: 0 },
+      { label: 'Skor kualitas metadata', value: '72', unit: '/100', sub: '+3 poin dibanding bulan lalu', note: 'Rata-rata tujuh dimensi', hasBar: false, barW: 0 }
+    ];
+
+    const ukeChart = groups.map((g) => {
+      const p = g.pub / g.total * 100;
+      return { p, name: g.name, pct: pc(p), w: p.toFixed(1), cnt: fmt(g.pub) + ' dari ' + fmt(g.total), color: p < 50 ? orange : accent };
+    }).sort((a, b) => a.p - b.p);
+
+    const rekap = [
+      { src: 'Entri manual', total: '2.776', pub: '1.507', proses: '1.202', prosesLabel: 'dalam proses', masalah: '67', masalahLabel: 'ditolak / UnPublish', pct: '54,3%', wPub: 54.3, wProses: 43.3, wMasalah: 2.4 },
+      { src: 'Menu Program', total: '2.287', pub: '1.180', proses: '—', prosesLabel: 'tanpa alur proses', masalah: '1.107', masalahLabel: 'UnPublish', pct: '51,6%', wPub: 51.6, wProses: 0, wMasalah: 48.4 },
+      { src: 'Total KOMENS', total: '5.063', pub: '2.687', proses: '1.202', prosesLabel: 'dalam proses', masalah: '1.174', masalahLabel: 'tidak tayang', pct: '53,1%', wPub: 53.1, wProses: 23.7, wMasalah: 23.2 }
+    ];
+
+    const monthData = [['Jan', 22], ['Feb', 6], ['Mar', 11], ['Apr', 21], ['Mei', 108], ['Jun', 22], ['Jul', 74], ['Agu', 40], ['Sep', 200], ['Okt*', 12]];
+    const months = monthData.map(([label, v]) => ({
+      label, v,
+      h: Math.max(3, Math.round(v / 200 * 170)),
+      bg: label === 'Okt*' ? '#9EC4D9' : accent
+    }));
+
+    const mp = [['JDIH', 1812], ['RPJMN', 128], ['RKP', 96], ['Musrenbang', 82], ['RKPD', 55], ['SDGs', 48], ['6 menu lainnya', 66]];
+    const mpList = mp.filter((r) => !(noJdih && r[0] === 'JDIH'));
+    const mx = Math.max.apply(null, mpList.map((r) => r[1]));
+    const mpRows = mpList.map((r) => ({ name: r[0], cnt: fmt(r[1]), pct: pc(r[1] / 2287 * 100), w: (r[1] / mx * 100).toFixed(1) }));
+
+    // [no, nama, keterangan, jumlah, tertahan > 5 hari kerja, rata-rata hari, hambatan utama, selesai]
+    const stageDefs = [
+      ['1', 'Draft', 'Disusun pengusul', 223, 150, 9, false, false],
+      ['2', 'Operator Konten', 'Pemeriksaan awal', 64, 28, 4, false, false],
+      ['3', 'PIC UKE', 'Verifikasi unit kerja', 860, 590, 12, true, false],
+      ['4', 'Tervalidasi', 'Menunggu publikasi', 55, 22, 3, false, false],
+      ['5', 'Publish', 'Tayang di KOMENS', 1507, 0, 0, false, true]
+    ];
+    const stages = stageDefs.map(([n, name, desc, cnt, br, avg, hot, done]) => {
+      const sx = stat(avg, cnt);
+      return {
+        n, name, desc,
+        cnt: fmt(cnt), pct: pc(cnt / 2776 * 100),
+        w: (cnt / 1507 * 100).toFixed(1),
+        color: done ? accent : (avg > 5 ? orange : '#7FAFC9'),
+        line1: done ? 'Selesai' : fmt(br) + ' dokumen > 5 hari kerja (' + pc(br / cnt * 100) + ')',
+        line2: done ? 'Mencapai 54,3% dari entri manual' : 'Rata-rata tertahan ' + avg + ' hari kerja',
+        status: done ? 'Selesai' : sx.s,
+        chip: done ? 'background: #DCEFE3; color: #1F5B38;' : sx.chip
+      };
+    });
+    const exits = [{ name: 'Ditolak Operator Konten', cnt: 25 }, { name: 'Ditolak PIC UKE', cnt: 7 }, { name: 'UnPublish', cnt: 35 }];
+
+    const actions = [
+      { label: 'Tertahan lebih dari 5 hari kerja di tahap PIC UKE', value: '590', cta: 'Kirim pengingat ke PIC UKE' },
+      { label: 'Ditolak dan belum direvisi', value: '19', cta: 'Lihat daftar dokumen' },
+      { label: 'Tervalidasi, belum dipublikasikan lebih dari 5 hari kerja', value: '22', cta: 'Lihat daftar dokumen' }
+    ];
+
+    // Tabel UKE I (induk) dan UKE II (anak)
+    const sortedG = groups.slice().sort((a, b) => b.br - a.br);
+    const open = st.open || { [sortedG[0].gi]: true };
+    const rowOf = (name, sub, total, pub, proses, br, avg) => {
+      const sx = stat(avg, proses);
+      return {
+        name, sub, total, proses, br,
+        w: (pub / total * 100).toFixed(1),
+        pct: pc(pub / total * 100),
+        age: proses === 0 ? '—' : avg + ' hari',
+        status: sx.s, chip: sx.chip
+      };
+    };
+    const tableRows = [];
+    sortedG.forEach((g) => {
+      const isOpen = !!open[g.gi];
+      const base = rowOf(g.name, g.rows.length + ' UKE II', g.total, g.pub, g.proses, g.br, g.avg);
+      tableRows.push(Object.assign(base, {
+        isParent: true, isChild: false,
+        rowStyle: 'background: #FFFFFF; font-weight: 700;',
+        caret: isOpen ? '▾' : '▸',
+        expanded: isOpen ? 'true' : 'false',
+        toggle: () => this.setState({ open: Object.assign({}, open, { [g.gi]: !isOpen }) })
+      }));
+      if (isOpen) {
+        g.rows.slice().sort((a, b) => b[5] - a[5]).forEach((r) => {
+          tableRows.push(Object.assign(rowOf(r[0], '', r[1], r[2], r[3], r[5], r[6]), {
+            isParent: false, isChild: true,
+            rowStyle: 'background: #F6F8F9;', caret: '', expanded: 'false', toggle: () => {}
+          }));
+        });
+      }
+    });
+    const openAll = () => { const o = {}; groups.forEach((g) => { o[g.gi] = true; }); this.setState({ open: o }); };
+    const closeAll = () => this.setState({ open: {} });
+
+    const dimRaw = [['Kelengkapan', 78], ['Akurasi', 71], ['Asal-usul (provenance)', 64], ['Kesesuaian standar', 69], ['Konsistensi logis', 80], ['Ketepatan waktu', 58], ['Aksesibilitas', 84]];
+    const dims = dimRaw.map(([name, score]) => ({
+      name, score,
+      color: score < 65 ? orange : accent,
+      flag: score < 65 ? 'Prioritas perbaikan' : '',
+      flagStyle: score < 65 ? 'color: #8A3510;' : 'color: #13212C;'
+    }));
+
+    const bucketRaw = [['Di bawah 50', 480, orange], ['50–69', 1690, '#9EC4D9'], ['70–84', 2110, accent], ['85 ke atas', 783, accent]];
+    const buckets = bucketRaw.map(([name, cnt, color]) => ({ name, cnt: fmt(cnt), pct: pc(cnt / 5063 * 100), w: (cnt / 2110 * 100).toFixed(1), color }));
+
+    const issueRaw = [['Metadata wajib belum lengkap', 412], ['Tanpa PIC / pemilik', 96], ['Belum diperbarui lebih dari 12 bulan', 538], ['Kandidat duplikat', 74], ['File tidak terbaca (OCR gagal)', 38]];
+    const issues = issueRaw.map(([label, v]) => ({ label, value: fmt(v), pct: pc(v / 5063 * 100) }));
+
+    return {
+      accent, tabs, insights, kpis, ukeChart, rekap, months, mpRows, noJdih,
+      toggleJdih: () => this.setState({ noJdih: !noJdih }),
+      jdihLabel: noJdih ? 'Tampilkan JDIH kembali' : 'Sembunyikan JDIH (skala terpisah)',
+      stages, exits, actions, tableRows, openAll, closeAll, dims, buckets, issues,
+      isRingkasan: tab === 'ringkasan', isAlur: tab === 'alur', isKualitas: tab === 'kualitas'
+    };
+  }
+}
+</script>
+</body>
+</html>
