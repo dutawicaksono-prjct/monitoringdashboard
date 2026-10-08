@@ -1,7 +1,7 @@
 {
   "name": "komens-dashboard",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b",
-    "uji:penerimaan": "node scripts/uji-penerimaan.mjs"
+    "uji:penerimaan": "node scripts/uji-penerimaan.mjs",
+    "periksa-data": "vite-node scripts/periksa-data.ts --",
+    "snapshot": "vite-node scripts/perbarui-snapshot.ts --"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "^5.1.0",

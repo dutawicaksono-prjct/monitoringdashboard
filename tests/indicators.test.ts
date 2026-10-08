@@ -98,3 +98,17 @@ describe('aturan rinci', () => {
     expect(pd.status_valid).toBe(false);
   });
 });
+
+describe('validasi berkas', () => {
+  it('kolom wajib yang hilang menghasilkan pesan yang jelas', () => {
+    const tanpaKolom = baca('dokumen.csv').replace('hash_konten,', 'hash,');
+    expect(() =>
+      bacaDataset({
+        dokumen: tanpaKolom,
+        riwayat_status: baca('riwayat_status.csv'),
+        unit_kerja: baca('unit_kerja.csv'),
+        hari_libur: baca('hari_libur.csv'),
+      }),
+    ).toThrow('dokumen.csv: kolom wajib tidak ditemukan: hash_konten.');
+  });
+});

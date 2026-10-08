@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { TANGGAL_DATA } from './config';
+import { TANGGAL_DATA, TAUTAN_MASUKAN } from './config';
+import { version as VERSI } from '../package.json';
+import { tanggalPanjang } from './format';
 import { FILTER_AWAL, hitungIndikator, pilihDokumen, siapkan, type Dataset, type Filter } from './indicators';
 import { muatDataset } from './muatData';
 import { AlurKerja } from './components/AlurKerja';
@@ -79,6 +81,16 @@ export function App() {
           </>
         )}
       </main>
+      <footer className="kaki">
+        <span>
+          Dasbor Monitoring KOMENS versi {VERSI} · Data per {tanggalPanjang(TANGGAL_DATA)}
+        </span>
+        {TAUTAN_MASUKAN && (
+          <a className="tanpa-cetak" href={TAUTAN_MASUKAN} target="_blank" rel="noreferrer">
+            Beri masukan tentang dasbor ini
+          </a>
+        )}
+      </footer>
       <DaftarDokumen permintaan={daftar} onTutup={() => setDaftar(null)} />
     </>
   );

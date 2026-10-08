@@ -1,46 +1,47 @@
 # Dasbor Monitoring Aset Pengetahuan KOMENS
 
-Versi awal dasbor monitoring KOMENS (Pusdatinrenbang, Tim Pengelolaan Informasi dan Pengetahuan): aplikasi web
-statis yang responsif, dengan tiga tampilan: Ringkasan Pimpinan, Kontrol Alur Kerja, dan Kualitas Aset.
+Dasbor monitoring aset pengetahuan KOMENS (Pusdatinrenbang, Tim Pengelolaan Informasi dan Pengetahuan):
+aplikasi web statis yang responsif, dengan tiga tampilan: Ringkasan Pimpinan, Kontrol Alur Kerja, dan
+Kualitas Aset. Versi ini memakai **data contoh** dan disiapkan sebagai rekomendasi / contoh pembangunan dasbor.
 
-> Spesifikasi resmi belum tersedia. `docs/spesifikasi.md` adalah **rancangan usulan** yang disusun dari
-> `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, dan mockup. Butir bertanda **[usulan]**
-> perlu dikonfirmasi pemilik kebutuhan.
+## Dokumentasi
 
-## Menjalankan
+| Dokumen | Untuk |
+| --- | --- |
+| [`docs/spesifikasi.md`](docs/spesifikasi.md) | Spesifikasi fungsional 1.0 (disetujui): rumus, tampilan, kriteria penerimaan |
+| [`docs/panduan-belajar.md`](docs/panduan-belajar.md) | Cara dasbor ini dibangun dan cara mengembangkannya |
+| [`docs/panduan-data.md`](docs/panduan-data.md) | Kamus data, prosedur pembaruan bulanan, keamanan data |
+| [`docs/panduan-pemasangan.md`](docs/panduan-pemasangan.md) | GitHub Pages dan server Pusdatinrenbang (Nginx) |
+| [`docs/panduan-pengguna.md`](docs/panduan-pengguna.md) | Cara membaca dan memakai dasbor |
+| [`docs/panduan-uji-pengguna.md`](docs/panduan-uji-pengguna.md) | Rencana uji coba pengguna, tugas, kuesioner SUS |
+| [`hasil-uji/hasil-uji-penerimaan.md`](hasil-uji/hasil-uji-penerimaan.md) | Hasil uji penerimaan terakhir |
+| [`CHANGELOG.md`](CHANGELOG.md) | Riwayat versi |
+
+## Mulai cepat
 
 Butuh Node.js 18 atau lebih baru.
 
 ```bash
 npm install
-npm run dev          # pengembangan: http://localhost:5173
-npm test             # uji modul indikator terhadap data/expected_indicators.json
-npm run build        # hasil statis di dist/ (index.html, assets/, data/*.csv)
-npx vite preview --port 4173 &   # sajikan dist/
-npm run uji:penerimaan           # uji penerimaan bagian 9 di peramban (butuh Chromium; atur CHROME_PATH bila perlu)
+npm run dev             # http://localhost:5173
+npm test                # uji rumus terhadap data/expected_indicators.json
+npm run periksa-data    # pemeriksaan mutu data (bagian 8.2)
+npm run build           # hasil statis di dist/
+npx vite preview --port 4173 &   # lalu: npm run uji:penerimaan
 ```
 
-`dist/` dapat disajikan dari server statis apa pun (Nginx, Apache, GitHub Pages). Tidak ada backend.
-
-## Mengganti data
-
-Berkas CSV dibaca saat halaman dimuat dari `data/` (di `dist/data/` setelah build). Untuk memperbarui data:
-
-1. Timpa berkas di `dist/data/` (atau `data/` sebelum build) dengan skema yang sama (lihat spesifikasi bagian 3).
-2. Ubah `TANGGAL_DATA` di `src/config.ts` lalu build ulang. Langkah ini hanya perlu bila tanggal cut-off berubah.
-3. Ganti `hari_libur.csv` dengan kalender resmi SKB 3 Menteri. Berkas contoh masih **parsial**.
-4. Setel `DATA_CONTOH = false` bila data sudah data produksi.
-
-Bila data tidak lolos pemeriksaan (spesifikasi 8.2), dasbor menampilkan peringatan teks.
+Setiap push diuji otomatis oleh GitHub Actions (`.github/workflows/ci-deploy.yml`), dan branch default dipasang ke
+GitHub Pages. Pages perlu diaktifkan sekali: Settings → Pages → Source: GitHub Actions.
 
 ## Struktur
 
 | Lokasi | Isi |
 | --- | --- |
-| `src/indicators/` | Modul indikator murni (tanpa UI): parser CSV, hari kerja, rumus, pemeriksaan data, rekonstruksi snapshot |
+| `src/indicators/` | Modul indikator murni: parser CSV, hari kerja, rumus, pemeriksaan data, rekonstruksi snapshot |
 | `src/components/` | Tampilan React |
-| `src/config.ts` | Parameter yang dapat diubah: tanggal data, batas 5 HK, target 95%, ambang kelengkapan, dll. |
-| `tests/` | Uji Vitest terhadap `data/expected_indicators.json` |
-| `scripts/uji-penerimaan.mjs` | Uji penerimaan antarmuka (Playwright) |
-| `hasil-uji/hasil-uji-penerimaan.md` | Hasil uji penerimaan terakhir |
-| `data/`, `tools/`, `reference/`, `CLAUDE.md` | Paket serah terima (tidak diubah) |
+| `src/config.ts` | Parameter: tanggal data, batas 5 HK, target 95%, ambang kelengkapan, tautan masukan |
+| `tests/` | Uji Vitest |
+| `scripts/` | Uji penerimaan, pemeriksaan data, pembaruan snapshot |
+| `templat-data/` | Templat CSV kosong untuk ekspor data nyata |
+| `deploy/` | Contoh konfigurasi Nginx |
+| `data/`, `tools/`, `reference/`, `CLAUDE.md` | Paket serah terima (data contoh, skrip acuan, mockup) |

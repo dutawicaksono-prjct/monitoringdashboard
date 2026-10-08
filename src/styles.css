@@ -321,6 +321,11 @@ table.tabel-dok td:first-child { white-space: nowrap; }
 table.tabel-dok th { font-size: 12.5px; color: var(--teks-redup); border-bottom: 2px solid var(--garis-input); position: sticky; top: 0; background: #fff; }
 
 .hanya-cetak { display: none; }
+.kaki {
+  max-width: 1360px; margin: 0 auto; padding: 0 var(--gutter) 32px; display: flex; flex-wrap: wrap; gap: 8px 24px;
+  justify-content: space-between; font-size: 12.5px; color: var(--teks-redup);
+}
+.kaki a { color: var(--utama); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
 .memuat { padding: 48px var(--gutter); text-align: center; color: var(--teks-redup); }
 
 /* ---------------------------------------------------------------- responsif */

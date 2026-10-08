@@ -267,7 +267,7 @@ function keCsv(p: PermintaanDaftar): string {
       .map(esc)
       .join(','),
   );
-  return '﻿' + [kepala.map(esc).join(','), ...baris].join('\r\n');
+  return '\uFEFF' + [kepala.map(esc).join(','), ...baris].join('\r\n');
 }
 
 export function DaftarDokumen({ permintaan, onTutup }: { permintaan: PermintaanDaftar | null; onTutup: () => void }) {

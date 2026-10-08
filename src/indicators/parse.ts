@@ -3,19 +3,40 @@ import type { Dataset, Dokumen, HariLibur, Riwayat, Snapshot, UnitKerja } from '
 
 type Baris = Record<string, string>;
 
-function bacaCsv(teks: string): Baris[] {
-  const hasil = Papa.parse<Baris>(teks.replace(/^﻿/, ''), { header: true, skipEmptyLines: true });
+/** Kolom wajib setiap berkas (docs/spesifikasi.md bagian 3). Kolom tambahan diabaikan. */
+export const KOLOM_WAJIB = {
+  'dokumen.csv': [
+    'dokumen_id', 'judul', 'sumber', 'menu_program', 'uke1', 'uke2', 'pic_uke', 'status_saat_ini', 'tgl_dibuat',
+    'tgl_status_terakhir', 'tgl_publish', 'skor_metadata', 'skor_dimensi_1', 'skor_dimensi_2', 'skor_dimensi_3',
+    'skor_dimensi_4', 'skor_dimensi_5', 'skor_dimensi_6', 'skor_dimensi_7', 'tgl_pembaruan_terakhir', 'hash_konten',
+    'ocr_berhasil',
+  ],
+  'riwayat_status.csv': ['dokumen_id', 'status_dari', 'status_ke', 'tgl_perubahan', 'diubah_oleh'],
+  'unit_kerja.csv': ['uke1', 'uke2'],
+  'hari_libur.csv': ['tanggal', 'keterangan', 'jenis'],
+  'snapshot_bulanan.csv': [
+    'tanggal_snapshot', 'total_aset', 'terpublikasi', 'dalam_proses_entri', 'tidak_tayang', 'tertahan_lebih_dari_5_hk',
+  ],
+} as const;
+
+export type NamaBerkas = keyof typeof KOLOM_WAJIB;
+
+function bacaCsv(teks: string, berkas: NamaBerkas): Baris[] {
+  const hasil = Papa.parse<Baris>(teks.replace(/^\uFEFF/, ''), { header: true, skipEmptyLines: true });
   if (hasil.errors.length) {
     const e = hasil.errors[0];
-    throw new Error(`CSV tidak valid (baris ${(e.row ?? 0) + 2}): ${e.message}`);
+    throw new Error(`${berkas}: CSV tidak valid (baris ${(e.row ?? 0) + 2}): ${e.message}`);
   }
+  const ada = new Set(hasil.meta.fields ?? []);
+  const kurang = KOLOM_WAJIB[berkas].filter((k) => !ada.has(k));
+  if (kurang.length) throw new Error(`${berkas}: kolom wajib tidak ditemukan: ${kurang.join(', ')}.`);
   return hasil.data;
 }
 
 const angka = (s: string) => (s === '' || s == null ? NaN : Number(s));
 
 export function bacaDokumen(teks: string): Dokumen[] {
-  return bacaCsv(teks).map((r) => ({
+  return bacaCsv(teks, 'dokumen.csv').map((r) => ({
     dokumen_id: r.dokumen_id,
     judul: r.judul,
     sumber: r.sumber,
@@ -36,19 +57,19 @@ export function bacaDokumen(teks: string): Dokumen[] {
 }
 
 export function bacaRiwayat(teks: string): Riwayat[] {
-  return bacaCsv(teks) as unknown as Riwayat[];
+  return bacaCsv(teks, 'riwayat_status.csv') as unknown as Riwayat[];
 }
 
 export function bacaUnitKerja(teks: string): UnitKerja[] {
-  return bacaCsv(teks) as unknown as UnitKerja[];
+  return bacaCsv(teks, 'unit_kerja.csv') as unknown as UnitKerja[];
 }
 
 export function bacaHariLibur(teks: string): HariLibur[] {
-  return bacaCsv(teks) as unknown as HariLibur[];
+  return bacaCsv(teks, 'hari_libur.csv') as unknown as HariLibur[];
 }
 
 export function bacaSnapshot(teks: string): Snapshot[] {
-  return bacaCsv(teks).map((r) => ({
+  return bacaCsv(teks, 'snapshot_bulanan.csv').map((r) => ({
     tanggal_snapshot: r.tanggal_snapshot,
     total_aset: angka(r.total_aset),
     terpublikasi: angka(r.terpublikasi),

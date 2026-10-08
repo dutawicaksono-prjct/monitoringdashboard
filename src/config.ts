@@ -30,3 +30,9 @@ export const DATA_CONTOH = true;
 
 /** Lokasi berkas CSV, relatif terhadap halaman. */
 export const DATA_URL = './data/';
+
+/**
+ * Tautan formulir masukan (mis. Google Form/Microsoft Forms) untuk uji coba pengguna.
+ * Kosongkan ('') untuk menyembunyikan tautan di kaki halaman.
+ */
+export const TAUTAN_MASUKAN = '';

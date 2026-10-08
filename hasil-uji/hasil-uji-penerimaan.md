@@ -14,7 +14,7 @@
 | K-13 | Nama unit, tanpa kode unit | LULUS | 83 baris unit menampilkan nama sesuai unit_kerja.csv; tidak ada kode unit. |
 | K-14 | Responsif 390–1360 px tanpa gulir horizontal halaman | LULUS | 12 kombinasi lebar×tampilan tanpa elemen keluar layar; tabel UKE bergulir di kotaknya pada 390/768 px. Tangkapan layar di hasil-uji/. |
 | K-15 | Aksesibilitas (teks status, kontras, target sentuh, papan ketik) | LULUS | Kontras teks terendah 4.99:1 (≥ 4,5); 38 tombol ≥ 44 px; tab dapat dipindah dengan Tab+Enter, aria-current mengikuti. |
-| K-16 | Unduh laporan → PDF tampilan aktif | LULUS | Tombol memanggil dialog cetak; filter/tombol disembunyikan saat cetak. PDF: ringkasan: 114 KB; keterangan cetak "Tampilan: Ringkasan Pimpinan · Filter: Seluruh periode · Semua UKE I · Semua UKE II · Entri + Menu Program"; alur: 118 KB; kualitas: 75 KB (hasil-uji/laporan-*.pdf). |
+| K-16 | Unduh laporan → PDF tampilan aktif | LULUS | Tombol memanggil dialog cetak; filter/tombol disembunyikan saat cetak. PDF: ringkasan: 115 KB; keterangan cetak "Tampilan: Ringkasan Pimpinan · Filter: Seluruh periode · Semua UKE I · Semua UKE II · Entri + Menu Program"; alur: 118 KB; kualitas: 75 KB (hasil-uji/laporan-*.pdf). |
 | K-17 | Penanda data contoh | LULUS | Header: "Data contoh · ilustrasi" |
 | K-18 | Statis tanpa backend; data dapat diganti tanpa build ulang | LULUS | dist/ berisi index.html, aset, dan data/*.csv; disajikan server statis. Mengganti hari_libur.csv saat runtime (1–8 Okt dijadikan libur uji) mengubah tertahan dari 790 menjadi 353 tanpa build ulang. |
 | K-19 | Parameter berupa konstanta | LULUS | src/config.ts: AMBANG_KELENGKAPAN = 60, BATAS_TERTAHAN_HK = 5, TARGET_PUBLIKASI_PERSEN = 95, dll. |

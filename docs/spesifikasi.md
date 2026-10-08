@@ -1,11 +1,13 @@
 # Spesifikasi Fungsional Dasbor Monitoring Aset Pengetahuan KOMENS
 
-> **Status: RANCANGAN USULAN, belum disahkan pemilik kebutuhan.**
-> Dokumen spesifikasi resmi tidak tersedia saat implementasi awal. Atas permintaan pemilik kebutuhan
-> (Tim PIP, Pusdatinrenbang), rancangan ini disusun oleh pengembang dari `CLAUDE.md`, implementasi acuan
-> `tools/compute_indicators.py`, data contoh, dan mockup `reference/mockup_v2.dc.html`. Rancangan ini menjadi
-> rekomendasi. Setiap butir bertanda **[usulan]** adalah keputusan rancangan yang perlu dikonfirmasi.
+> **Status: DISETUJUI, versi 1.0 (8 Oktober 2026).**
+> Disusun pengembang dari `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, data contoh, dan mockup
+> `reference/mockup_v2.dc.html`, lalu ditinjau dan disetujui pemilik kebutuhan (Tim PIP, Pusdatinrenbang).
+> Butir bertanda **[usulan]** adalah keputusan rancangan yang telah disetujui pada versi ini. Butir **masih
+> terbuka** (ambang kelengkapan, hak akses per peran, atribusi UKE Menu Program) tetap seperti tertulis.
 > Penomoran bagian mengikuti rujukan pada `CLAUDE.md` (3.1, 3.2, 4, 5, 8.2, 9).
+>
+> Riwayat: 1.0 (8 Okt 2026), disetujui tanpa perubahan dari rancangan.
 
 ## 1. Tujuan dan pengguna
 
@@ -90,7 +92,7 @@ statusnya kembali ke Draft.
 
 - **HK(a, b)** = jumlah hari kerja pada rentang (a, b]: tanggal a tidak dihitung, tanggal b dihitung.
   Hari kerja adalah Senin–Jumat yang tidak tercantum di `hari_libur.csv`. Dokumen yang statusnya berubah
-  hari ini berumur 0. **[perlu konfirmasi]**
+  hari ini berumur 0. **[usulan]**
 - **Lama tertahan** dokumen dalam proses = HK(tanggal WIB `tgl_status_terakhir`, T).
 - **Tertahan lebih dari 5 hari kerja**: lama tertahan > 5.
 - Per tahap: jumlah, jumlah > 5 HK, persen melewati (satu desimal), rata-rata lama tertahan (satu desimal).
