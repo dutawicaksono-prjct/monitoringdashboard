@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { DATA_CONTOH, TARGET_PUBLIKASI_PERSEN } from '../config';
 import { angka, LABEL_STATUS, LABEL_SUMBER, tanggalPanjang } from '../format';
+import { Ikon, JudulIkon } from './Ikon';
 import { LABEL_PEMERIKSAAN, type DokumenSiap, type Filter, type PemeriksaanData, type Ringkasan, type UnitKerja } from '../indicators';
 
 export type Tab = 'ringkasan' | 'alur' | 'kualitas';
@@ -22,8 +23,14 @@ export function Header({ tanggalData, onUnduh }: { tanggalData: string; onUnduh:
           </div>
         </div>
         <div className="header-aksi">
-          {DATA_CONTOH && <span className="lencana">Data contoh · ilustrasi</span>}
+          {DATA_CONTOH && (
+            <span className="lencana">
+              <Ikon nama="dataContoh" ukuran={14} />
+              Data contoh · ilustrasi
+            </span>
+          )}
           <button type="button" className="tombol-header" onClick={onUnduh}>
+            <Ikon nama="unduh" ukuran={16} />
             Unduh laporan
           </button>
         </div>
@@ -67,6 +74,7 @@ export function Bilah({ tab, onTab, filter, onFilter, tahun, unit }: BilahProps)
               aria-current={tab === t.id ? 'page' : undefined}
               onClick={() => onTab(t.id)}
             >
+              <Ikon nama={t.id} ukuran={17} />
               {t.label}
             </button>
           ))}
@@ -192,7 +200,9 @@ export function Definisi({ pemeriksaan, batasHk }: { pemeriksaan: PemeriksaanDat
   const lolos = kunci.filter((k) => pemeriksaan[k]).length;
   return (
     <section className="kartu definisi" aria-labelledby="judul-definisi">
-      <h2 id="judul-definisi">Definisi indikator</h2>
+      <JudulIkon nama="definisi" id="judul-definisi">
+        Definisi indikator
+      </JudulIkon>
       <div className="definisi-isi">
         <div>
           <b>Entri:</b> dokumen yang diinput langsung oleh pengguna atau masuk lewat interoperabilitas tanpa kategori program.
@@ -228,7 +238,8 @@ export function Definisi({ pemeriksaan, batasHk }: { pemeriksaan: PemeriksaanDat
         </div>
       </div>
       <details className="tanpa-cetak">
-        <summary>
+        <summary className="ikon-teks">
+          <Ikon nama="pemeriksaan" ukuran={16} />
           Pemeriksaan data: {lolos} dari {kunci.length} terpenuhi
         </summary>
         <ul className="daftar-periksa">

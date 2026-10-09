@@ -3,6 +3,7 @@ import { angka, BULAN_PENDEK, desimal, namaBulan, persen, rasio, selisih, tangga
 import { bulatkan, STATUS_PROSES, type Filter, type Indikator } from '../indicators';
 import { NAMA_DIMENSI } from './Kualitas';
 import type { Tab } from './Umum';
+import { Ikon, JudulIkon, KotakIkon, type NamaIkon } from './Ikon';
 
 const TARGET_POSISI = (t: number) => ({ left: `${t}%` });
 
@@ -22,11 +23,12 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
   const gulirKe = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // ---------------------------------------------------------------- perlu perhatian
-  const wawasan: { k: string; t: string; a: string; go: () => void }[] = [];
+  const wawasan: { k: string; ikon: NamaIkon; t: string; a: string; go: () => void }[] = [];
   if (adaEntri && r.tertahan_lebih_dari_5_hk > 0) {
     const terburuk = STATUS_PROSES.map((s) => ({ s, ...ind.tahap[s] })).sort((a, b) => b.lebih_dari_5_hk - a.lebih_dari_5_hk)[0];
     wawasan.push({
       k: 'Alur kerja',
+      ikon: 'tertahan',
       t: `${angka(terburuk.lebih_dari_5_hk)} dokumen tertahan lebih dari ${hk} hari kerja di tahap ${LABEL_TAHAP[terburuk.s]}; secara total ${angka(r.tertahan_lebih_dari_5_hk)} dokumen melewati batas.`,
       a: 'Buka kontrol alur kerja',
       go: () => onTab('alur'),
@@ -35,6 +37,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
   if (r.total_aset > 0) {
     wawasan.push({
       k: 'Target publikasi',
+      ikon: 'target',
       t:
         r.kekurangan_menuju_target > 0
           ? `Capaian publish ${persen(r.persen_publish)} dari target ${target}%; masih kurang ${angka(r.kekurangan_menuju_target)} dokumen.`
@@ -50,6 +53,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
   if (masalah && masalah[1] > 0) {
     wawasan.push({
       k: 'Kualitas metadata',
+      ikon: masalah[0] as NamaIkon,
       t: `${angka(masalah[1])} dokumen ${LABEL_MASALAH_KALIMAT[masalah[0]]}${
         dimTerendah ? `; ${NAMA_DIMENSI[Number(dimTerendah[0].split('_')[1]) - 1].toLowerCase()} skor terendah (${desimal(dimTerendah[1])})` : ''
       }.`,
@@ -68,12 +72,14 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
   const kpi = [
     {
       label: 'Total aset pengetahuan',
+      ikon: 'totalAset' as NamaIkon,
       value: angka(r.total_aset),
       sub: teksPerubahan(perubahan?.total_aset),
       note: `Entri ${angka(r.entri)} + Menu Program ${angka(r.menu_program)}`,
     },
     {
       label: 'Terpublikasi (gabungan)',
+      ikon: 'terpublikasi' as NamaIkon,
       value: angka(r.terpublikasi),
       bar: r.persen_publish ?? 0,
       sub: `${persen(r.persen_publish)} dari total · ${
@@ -85,12 +91,15 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
       ? [
           {
             label: 'Dalam proses (entri)',
+            ikon: 'dalamProses' as NamaIkon,
             value: angka(r.dalam_proses_entri),
             sub: `${rasio(r.dalam_proses_entri, r.total_aset)} dari total`,
             note: 'Menu Program tidak memiliki alur proses',
           },
           {
             label: `Tertahan lebih dari ${hk} hari kerja`,
+            ikon: 'tertahan' as NamaIkon,
+            nada: 'perhatian' as const,
             value: angka(r.tertahan_lebih_dari_5_hk),
             sub: `${rasio(r.tertahan_lebih_dari_5_hk, r.dalam_proses_entri)} dari ${angka(r.dalam_proses_entri)} dokumen dalam proses`,
             note: `Entri · batas maksimal ${hk} hari kerja per tahap`,
@@ -99,6 +108,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
       : []),
     {
       label: 'Skor kualitas metadata',
+      ikon: 'skorKualitas' as NamaIkon,
       value: desimal(ind.kualitas.skor_rata_rata),
       unit: '/100',
       sub: 'Dibanding akhir bulan lalu: —',
@@ -116,7 +126,10 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
           <div className="wawasan">
             {wawasan.map((w) => (
               <button key={w.k} type="button" className="kartu-wawasan" onClick={w.go}>
-                <span className="k">{w.k}</span>
+                <span className="k">
+                  <Ikon nama={w.ikon} ukuran={15} />
+                  {w.k}
+                </span>
                 <span className="t">{w.t}</span>
                 <span className="a">{w.a}</span>
               </button>
@@ -128,7 +141,10 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
       <section aria-label="Indikator utama" className="kpi-baris">
         {kpi.map((k) => (
           <div key={k.label} className="kpi">
-            <div className="kpi-label">{k.label}</div>
+            <div className="kpi-kepala">
+              <div className="kpi-label">{k.label}</div>
+              <KotakIkon nama={k.ikon} nada={'nada' in k ? k.nada : 'utama'} />
+            </div>
             <div className="kpi-nilai">
               <span className="n">{k.value}</span>
               {k.unit && <span className="u">{k.unit}</span>}
@@ -191,7 +207,9 @@ function CapaianUke1({ ind }: { ind: Indikator }) {
   return (
     <section id="capaian" className="kartu" aria-labelledby="judul-capaian">
       <div>
-        <h2 id="judul-capaian">Capaian publikasi per UKE I terhadap target {target}%</h2>
+        <JudulIkon nama="target" id="judul-capaian">
+          Capaian publikasi per UKE I terhadap target {target}%
+        </JudulIkon>
         <div className="kartu-sub">
           Dokumen entri (manual dan interoperabilitas tanpa kategori program), diurutkan dari capaian terendah. Menu Program tidak
           memiliki UKE I/UKE II karena dikategorikan menurut substansi.
@@ -244,6 +262,7 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
   const semua = [
     {
       src: 'Entri',
+      ikon: 'entri' as NamaIkon,
       ada: filter.sumber !== 'MENU_PROGRAM',
       total: r.entri,
       pub: r.terpublikasi_entri,
@@ -254,6 +273,7 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
     },
     {
       src: 'Menu Program',
+      ikon: 'menu' as NamaIkon,
       ada: filter.sumber !== 'ENTRI' && !filter.uke1 && !filter.uke2,
       total: r.menu_program,
       pub: r.terpublikasi_menu_program,
@@ -264,6 +284,7 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
     },
     {
       src: 'Total KOMENS',
+      ikon: 'totalAset' as NamaIkon,
       ada: true,
       total: r.total_aset,
       pub: r.terpublikasi,
@@ -279,7 +300,9 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
   return (
     <section id="rekap" className="kartu" aria-labelledby="judul-rekap">
       <div>
-        <h2 id="judul-rekap">Rekapitulasi angka per sumber data</h2>
+        <JudulIkon nama="rekap" id="judul-rekap">
+          Rekapitulasi angka per sumber data
+        </JudulIkon>
         <div className="kartu-sub">
           Total dokumen KOMENS = entri + Menu Program. Persentase publish dihitung terhadap total masing-masing sumber.
         </div>
@@ -305,7 +328,10 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
       {semua.map((x) => (
         <div key={x.src} className="baris-rekap">
           <div className="sumber">
-            <b>{x.src}</b>
+            <b className="ikon-teks">
+              <Ikon nama={x.ikon} ukuran={17} className="ikon-judul" />
+              {x.src}
+            </b>
             <span>{angka(x.total)} dokumen</span>
           </div>
           <div className="grafik">
@@ -368,7 +394,9 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
   return (
     <section className="kartu" style={{ flex: '2 1 560px' }} aria-labelledby="judul-tren">
       <div>
-        <h2 id="judul-tren">Dokumen baru per bulan, {ind.tahun_tren}</h2>
+        <JudulIkon nama="tren" id="judul-tren">
+          Dokumen baru per bulan, {ind.tahun_tren}
+        </JudulIkon>
         <div className="kartu-sub">
           Entri · {angka(totalTahun)} dokumen baru {awal && akhir ? `${BULAN_PENDEK[awal.m - 1]}–${BULAN_PENDEK[akhir.m - 1]}` : ''}
           {parsial && ` · ${BULAN_PENDEK[parsial.m - 1]}* = parsial (s.d. ${tglData} ${BULAN_PENDEK[parsial.m - 1]})`}
@@ -441,7 +469,9 @@ function MenuProgram({ ind }: { ind: Indikator }) {
   return (
     <section className="kartu" style={{ flex: '1 1 380px' }} aria-labelledby="judul-menu">
       <div>
-        <h2 id="judul-menu">Dokumen per Menu Program</h2>
+        <JudulIkon nama="menu" id="judul-menu">
+          Dokumen per Menu Program
+        </JudulIkon>
         <div className="kartu-sub">Total {angka(total)} dokumen · diurutkan dari terbanyak</div>
       </div>
       {dominan && (

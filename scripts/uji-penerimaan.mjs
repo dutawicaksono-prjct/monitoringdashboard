@@ -437,6 +437,35 @@ await uji('K-19', 'Parameter berupa konstanta', async () => {
   return 'src/config.ts: AMBANG_KELENGKAPAN = 60, BATAS_TERTAHAN_HK = 5, TARGET_PUBLIKASI_PERSEN = 95, dll.';
 });
 
+// ------------------------------------------------------------------ K-20
+await uji('K-20', 'Ikon sesuai 5.6: lengkap, tanpa warna baru, dekoratif', async () => {
+  const ringkas = [];
+  const warnaSah = new Set(['rgb(14, 90, 126)', 'rgb(138, 53, 16)']);
+  for (const [tab, wadah] of [
+    ['ringkasan', ['.kpi', '.kartu-wawasan']],
+    ['alur', ['.baris-tahap .nomor', '.aksi', '.chip']],
+    ['kualitas', ['.kartu-masalah']],
+  ]) {
+    const p = await bukaHalaman({ tab });
+    if (tab === 'alur') await p.getByRole('button', { name: 'Buka semua' }).click();
+    const r = await p.evaluate((sel) => {
+      const tanpa = sel.flatMap((s) => [...document.querySelectorAll(s)].filter((el) => !el.querySelector('svg')).map(() => s));
+      const jumlah = sel.map((s) => `${s} ${document.querySelectorAll(s).length}`);
+      const svg = [...document.querySelectorAll('body svg')];
+      const terbaca = svg.filter((x) => x.getAttribute('aria-hidden') !== 'true').length;
+      const warna = [...new Set([...document.querySelectorAll('.kotak-ikon, .ikon-judul')].map((e) => getComputedStyle(e).color))];
+      return { tanpa, jumlah, terbaca, warna, n: svg.length };
+    }, wadah);
+    await p.close();
+    pastikan(!r.tanpa.length, `${tab}: elemen tanpa ikon ${r.tanpa.slice(0, 3)}`);
+    pastikan(r.terbaca === 0, `${tab}: ${r.terbaca} ikon tidak aria-hidden`);
+    const asing = r.warna.filter((w) => !warnaSah.has(w));
+    pastikan(!asing.length, `${tab}: warna ikon di luar token ${asing}`);
+    ringkas.push(`${tab}: ${r.n} ikon (${r.jumlah.join(', ')})`);
+  }
+  return `${ringkas.join('; ')}. Semua aria-hidden; warna ikon hanya #0E5A7E / #8A3510.`;
+});
+
 await browser.close();
 
 hasil.sort((a, b) => a.kode.localeCompare(b.kode));

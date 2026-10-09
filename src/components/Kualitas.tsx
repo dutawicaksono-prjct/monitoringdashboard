@@ -2,6 +2,7 @@ import { AMBANG_PRIORITAS_DIMENSI, BATAS_BELUM_DIPERBARUI_BULAN } from '../confi
 import { angka, desimal, rasio } from '../format';
 import { predikatMasalah, type DokumenSiap, type Indikator, type Konteks, type Kualitas as TKualitas, type Filter } from '../indicators';
 import type { PermintaanDaftar } from './Umum';
+import { JudulIkon, KotakIkon } from './Ikon';
 
 /** Tujuh dimensi kualitas metadata (Bruce & Hillman), urut sesuai skor_dimensi_1..7. */
 export const NAMA_DIMENSI = [
@@ -72,7 +73,9 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
         <section className="kartu" style={{ flex: '1 1 560px' }} aria-labelledby="judul-skor">
           <div className="kepala-skor">
             <div>
-              <h2 id="judul-skor">Skor kualitas metadata</h2>
+              <JudulIkon nama="skorKualitas" id="judul-skor">
+                Skor kualitas metadata
+              </JudulIkon>
               <div className="kartu-sub">Rata-rata tujuh dimensi (Bruce &amp; Hillman) · 0–100 · {angka(total)} dokumen</div>
             </div>
             <div className="skor-besar">
@@ -106,7 +109,9 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
 
         <section className="kartu" style={{ flex: '1 1 380px' }} aria-labelledby="judul-sebaran">
           <div>
-            <h2 id="judul-sebaran">Sebaran skor per dokumen</h2>
+            <JudulIkon nama="sebaran" id="judul-sebaran">
+              Sebaran skor per dokumen
+            </JudulIkon>
             <div className="kartu-sub">Dari total {angka(total)} dokumen KOMENS</div>
           </div>
           <div className="daftar-bar">
@@ -127,13 +132,18 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
 
       <section className="kartu" aria-labelledby="judul-masalah">
         <div>
-          <h2 id="judul-masalah">Masalah kualitas yang perlu dibersihkan</h2>
+          <JudulIkon nama="masalah" id="judul-masalah">
+            Masalah kualitas yang perlu dibersihkan
+          </JudulIkon>
           <div className="kartu-sub">Klik daftar untuk melihat dokumen yang bermasalah dan menugaskan perbaikan</div>
         </div>
         <div className="masalah">
           {tampilMasalah.map((m) => (
             <div key={m.k} className="kartu-masalah">
-              <div className="label">{m.label}</div>
+              <div className="kpi-kepala">
+                <div className="label">{m.label}</div>
+                <KotakIkon nama={m.k} nada="perhatian" />
+              </div>
               <div className="n">{angka(q.masalah[m.k])}</div>
               <div className="p">{rasio(q.masalah[m.k], total)} dari total dokumen</div>
               <button

@@ -1,13 +1,14 @@
 # Spesifikasi Fungsional Dasbor Monitoring Aset Pengetahuan KOMENS
 
-> **Status: DISETUJUI, versi 1.0 (8 Oktober 2026).**
+> **Status: DISETUJUI, versi 1.1 (9 Oktober 2026).**
 > Disusun pengembang dari `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, data contoh, dan mockup
 > `reference/mockup_v2.dc.html`, lalu ditinjau dan disetujui pemilik kebutuhan (Tim PIP, Pusdatinrenbang).
 > Butir bertanda **[usulan]** adalah keputusan rancangan yang telah disetujui pada versi ini. Butir **masih
 > terbuka** (ambang kelengkapan, hak akses per peran, atribusi UKE Menu Program) tetap seperti tertulis.
 > Penomoran bagian mengikuti rujukan pada `CLAUDE.md` (3.1, 3.2, 4, 5, 8.2, 9).
 >
-> Riwayat: 1.0 (8 Okt 2026), disetujui tanpa perubahan dari rancangan.
+> Riwayat: 1.0 (8 Okt 2026), disetujui tanpa perubahan dari rancangan. 1.1 (9 Okt 2026), penambahan ikon
+> (bagian 5.6) atas permintaan pemilik kebutuhan.
 
 ## 1. Tujuan dan pengguna
 
@@ -198,6 +199,34 @@ Setiap blok memuat *catatan analis* yang disusun otomatis dari angka, bukan teks
 - Responsif dari 390 px sampai 1360 px tanpa gulir horizontal halaman. Tabel lebar bergulir di dalam
   kotaknya sendiri.
 
+### 5.6 Ikon
+
+Ikon membantu pengguna mengenali jenis angka sekilas. Aturannya:
+
+- Satu konsep = satu ikon di seluruh tampilan (kosakata di `src/components/Ikon.tsx`, pustaka lucide-react yang
+  disimpan lokal).
+- Ikon selalu dekoratif (`aria-hidden`) dan selalu didampingi teks; ikon tidak pernah menjadi satu-satunya pembawa
+  makna.
+- Ikon hanya memakai token warna yang sudah ada: kotak ikon nada *utama* (latar `#EEF4F8`, ikon `#0E5A7E`) dan nada
+  *perhatian* (latar `#FFF4EA`, ikon `#8A3510`). Tidak ada warna baru.
+
+| Konsep | Ikon | Konsep | Ikon |
+| --- | --- | --- | --- |
+| Total aset | rak buku (Library) | Draft | dokumen dengan pena |
+| Terpublikasi / Publish | bola dunia | Operator Konten | dokumen dengan kaca pembesar |
+| Dalam proses | panah berputar | PIC UKE | orang dengan tanda centang |
+| Tertahan lebih dari 5 HK | jam pasir (nada perhatian) | Tervalidasi | stempel |
+| Skor kualitas | pengukur (gauge) | Ditolak / UnPublish | silang dalam lingkaran / mata dicoret |
+| Target publikasi | sasaran | Metadata belum lengkap | dokumen dengan tanda seru |
+| Entri / Menu Program | dokumen / kisi | Tanpa PIC | orang dengan silang |
+| Status Melewati batas | segitiga peringatan | Belum diperbarui 12 bulan | kalender dengan jam |
+| Status Mendekati batas | jam | Kandidat duplikat | dua lembar bertumpuk |
+| Status Dalam batas / Selesai | lingkaran centang | File tidak terbaca | pindai teks |
+| Status Tidak ada antrean | lingkaran minus | Tab Ringkasan / Alur / Kualitas | dasbor / alur / perisai |
+
+Pada tahap alur kerja, ikon tahap ditampilkan dalam lingkaran dengan nomor urut kecil di sudutnya. Pada layar
+di bawah 600 px, ikon di tab disembunyikan agar tab tetap ringkas.
+
 ## 6. Unduh laporan
 
 Tombol *Unduh laporan* membuka dialog cetak peramban dengan tata letak cetak A4. Pengguna memilih
@@ -255,3 +284,4 @@ Ringkasan "*n* dari 8 terpenuhi" selalu tersedia di bagian definisi.
 | K-17 | Penanda data contoh tampil. |
 | K-18 | Aplikasi berjalan sebagai berkas statis tanpa backend; data dapat diganti tanpa membangun ulang. |
 | K-19 | Ambang kelengkapan dan parameter lain berupa konstanta yang mudah diubah. |
+| K-20 | Setiap KPI, kartu masalah, aksi cepat, tahap alur, dan label status memiliki ikon sesuai 5.6, tanpa warna baru, dan tidak terbaca oleh pembaca layar. |

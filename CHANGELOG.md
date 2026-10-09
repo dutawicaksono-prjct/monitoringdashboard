@@ -4,6 +4,13 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.1.0] - 2026-10-09
+
+### Ditambahkan
+- Ikon pada indikator utama, kartu perlu perhatian, tahap alur kerja, label status, aksi cepat, kartu masalah
+  kualitas, judul bagian, tab, dan header (spesifikasi 5.6). Pustaka lucide-react, disimpan lokal.
+- Kriteria penerimaan K-20 (ikon).
+
 ## [1.0.0] - 2026-10-08
 
 ### Ditambahkan

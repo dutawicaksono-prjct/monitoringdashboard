@@ -367,3 +367,33 @@ table.tabel-dok th { font-size: 12.5px; color: var(--teks-redup); border-bottom:
   .tabel-uke [role='row'] { grid-template-columns: 2.4fr 0.6fr 1.4fr 0.8fr 0.9fr 0.9fr 1.1fr; gap: 6px; font-size: 10px; }
   .kartu-wawasan { break-inside: avoid; }
 }
+
+/* ---------------------------------------------------------------- ikon (lucide-react, warna dari token yang ada) */
+svg.lucide { flex: 0 0 auto; }
+.kotak-ikon {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center;
+  justify-content: center;
+}
+.kotak-ikon.nada-utama { background: var(--info-latar); color: var(--utama); }
+.kotak-ikon.nada-perhatian { background: var(--perhatian-latar); color: var(--perhatian-teks); }
+.kpi-kepala { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; min-width: 0; }
+.kpi-kepala > div { min-width: 0; }
+.judul-ikon { display: flex; align-items: center; gap: 8px; }
+.judul-ikon .ikon-judul { color: var(--utama); }
+.ikon-teks { display: inline-flex; align-items: center; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; }
+.tab { display: inline-flex; align-items: center; gap: 8px; }
+.tombol-header, .lencana { display: inline-flex; align-items: center; gap: 8px; }
+.kartu-wawasan .k { display: inline-flex; align-items: center; gap: 6px; }
+.baris-tahap .kepala .nomor { position: relative; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 18px; }
+.nomor small {
+  position: absolute; right: -4px; bottom: -4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px;
+  background: #fff; color: var(--header); border: 1.5px solid var(--header); font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+@media (max-width: 600px) {
+  .tab svg { display: none; }
+  .kotak-ikon { width: 34px; height: 34px; }
+}
+.baris-rekap .sumber b.ikon-teks { display: inline-flex; }
+.ikon-judul { color: var(--utama); }

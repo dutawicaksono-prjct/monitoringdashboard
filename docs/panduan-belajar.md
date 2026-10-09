@@ -49,6 +49,7 @@ data/*.csv ──fetch──▶ parse.ts ──▶ Dataset ──siapkan()──
 | `src/indicators/parse.ts` | Membaca CSV dan validasi kolom | Pesan kesalahan yang ramah |
 | `src/components/Ringkasan.tsx` | Tampilan pimpinan | Menyusun "perlu perhatian" dan catatan analis dari data |
 | `src/components/AlurKerja.tsx` | Tahap proses dan tabel UKE | Tabel yang dapat dibuka/tutup |
+| `src/components/Ikon.tsx` | Kosakata ikon: satu konsep satu ikon | Konsistensi visual dan aksesibilitas ikon |
 | `src/styles.css` | Token warna, tata letak responsif, gaya cetak | Satu sumber warna; `@media print` untuk PDF |
 | `tests/indicators.test.ts` | Uji terhadap nilai acuan | Pola "fixture" |
 | `scripts/uji-penerimaan.mjs` | Uji di peramban | Menguji kriteria penerimaan secara otomatis |
@@ -67,7 +68,9 @@ data/*.csv ──fetch──▶ parse.ts ──▶ Dataset ──siapkan()──
 6. **Konteks melekat pada angka.** Sub-teks di bawah KPI ("65,7% dari 1.202 dokumen dalam proses") dan
    definisi indikator di setiap tampilan mencegah salah tafsir.
 7. **Tindak lanjut satu klik.** Kartu masalah dan aksi cepat membuka daftar dokumen yang dapat diunduh.
-8. **Jujur pada keterbatasan.** "—" bila data tidak ada (bukan 0), peringatan bila pemeriksaan data gagal,
+8. **Ikon sebagai penanda, bukan pengganti teks.** Satu konsep = satu ikon di semua tampilan (jam pasir selalu
+   berarti tertahan), ikon memakai warna yang sudah ada, dan status selalu punya tiga penanda: ikon, teks, warna.
+9. **Jujur pada keterbatasan.** "—" bila data tidak ada (bukan 0), peringatan bila pemeriksaan data gagal,
    penanda "Data contoh", dan bulan berjalan ditandai parsial.
 
 ## 5. Latihan: menambah indikator baru

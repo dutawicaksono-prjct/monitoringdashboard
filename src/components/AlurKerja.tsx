@@ -4,6 +4,7 @@ import { angka, desimal, persen, rasio } from '../format';
 import { statusWaktu, STATUS_PROSES, type DokumenSiap, type Filter, type Indikator } from '../indicators';
 import { LABEL_TAHAP } from './Ringkasan';
 import type { PermintaanDaftar } from './Umum';
+import { ChipStatus, Ikon, JudulIkon, KotakIkon, type NamaIkon } from './Ikon';
 
 interface Props {
   ind: Indikator;
@@ -46,9 +47,11 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
   const lainLewat = tahap.filter((t) => t.s !== terburuk.s && t.rata_rata_tertahan_hk != null && t.rata_rata_tertahan_hk > hk);
   const ditolak = entri.filter((d) => d.status_saat_ini === 'DITOLAK_OPERATOR' || d.status_saat_ini === 'DITOLAK_PIC');
 
-  const aksi: { label: string; value: number; cta: string; daftar: PermintaanDaftar }[] = [
+  const aksi: { label: string; ikon: NamaIkon; nada: 'utama' | 'perhatian'; value: number; cta: string; daftar: PermintaanDaftar }[] = [
     {
       label: `Tertahan lebih dari ${hk} hari kerja di tahap ${LABEL_TAHAP[terburuk.s]}`,
+      ikon: 'tertahan',
+      nada: 'perhatian',
       value: terburuk.lebih_dari_5_hk,
       cta: `Lihat daftar untuk pengingat ${LABEL_TAHAP[terburuk.s]}`,
       daftar: {
@@ -64,6 +67,8 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
     },
     {
       label: 'Ditolak dan belum direvisi',
+      ikon: 'ditolak',
+      nada: 'perhatian',
       value: ditolak.length,
       cta: 'Lihat daftar dokumen',
       daftar: {
@@ -75,6 +80,8 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
     },
     {
       label: `Tervalidasi, belum dipublikasikan lebih dari ${hk} hari kerja`,
+      ikon: 'TERVALIDASI',
+      nada: 'utama',
       value: ind.tahap.TERVALIDASI.lebih_dari_5_hk,
       cta: 'Lihat daftar dokumen',
       daftar: {
@@ -90,7 +97,9 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
     <div className="tumpuk">
       <section className="kartu" aria-labelledby="judul-alur">
         <div>
-          <h2 id="judul-alur">Alur kerja entri: di mana dokumen tertahan?</h2>
+          <JudulIkon nama="alur" id="judul-alur">
+            Alur kerja entri: di mana dokumen tertahan?
+          </JudulIkon>
           <div className="kartu-sub">
             {angka(totalEntri)} dokumen entri · batas maksimal tertahan di setiap tahap: <b>{hk} hari kerja</b> sejak perubahan
             status terakhir (tanpa akhir pekan dan hari libur)
@@ -103,7 +112,8 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
             <div key={t.s} className="baris-tahap">
               <div className="kepala">
                 <span className="nomor" aria-hidden="true">
-                  {t.n}
+                  <Ikon nama={t.s} ukuran={18} />
+                  <small>{t.n}</small>
                 </span>
                 <div>
                   <b>{LABEL_TAHAP[t.s]}</b>
@@ -126,16 +136,15 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
                   {t.rata_rata_tertahan_hk == null ? 'Tidak ada dokumen di tahap ini' : `Rata-rata tertahan ${desimal(t.rata_rata_tertahan_hk)} hari kerja`}
                 </span>
               </div>
-              <span className="chip" data-status={st}>
-                {st}
-              </span>
+              <ChipStatus status={st} />
             </div>
           );
         })}
         <div className="baris-tahap">
           <div className="kepala">
             <span className="nomor" aria-hidden="true">
-              5
+              <Ikon nama="PUBLISH" ukuran={18} />
+              <small>5</small>
             </span>
             <div>
               <b>Publish</b>
@@ -154,19 +163,20 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
             <b>Selesai</b>
             <span>Mencapai {rasio(pub, totalEntri)} dari entri</span>
           </div>
-          <span className="chip" data-status="Selesai">
-            Selesai
-          </span>
+          <ChipStatus status="Selesai" />
         </div>
         <div className="keluar pemisah">
           <b>Keluar dari alur:</b>
-          <span>
+          <span className="ikon-teks">
+            <Ikon nama="ditolak" ukuran={15} />
             Ditolak Operator Konten: <b>{angka(ind.status_entri.DITOLAK_OPERATOR ?? 0)}</b>
           </span>
-          <span>
+          <span className="ikon-teks">
+            <Ikon nama="ditolak" ukuran={15} />
             Ditolak PIC UKE: <b>{angka(ind.status_entri.DITOLAK_PIC ?? 0)}</b>
           </span>
-          <span>
+          <span className="ikon-teks">
+            <Ikon nama="unpublish" ukuran={15} />
             UnPublish: <b>{angka(ind.status_entri.UNPUBLISH ?? 0)}</b>
           </span>
         </div>
@@ -185,7 +195,10 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
       <section aria-label="Aksi cepat" className="aksi-cepat">
         {aksi.map((a) => (
           <div key={a.label} className="aksi">
-            <div className="label">{a.label}</div>
+            <div className="kpi-kepala">
+              <div className="label">{a.label}</div>
+              <KotakIkon nama={a.ikon} nada={a.nada} />
+            </div>
             <div className="n">{angka(a.value)}</div>
             <button type="button" className="tombol" onClick={() => onDaftar(a.daftar)}>
               {a.cta}
@@ -225,9 +238,7 @@ function TabelUke({ ind }: { ind: Indikator }) {
       <span role="cell" style={{ fontWeight: 700 }}>{angka(u.lebih_dari_5_hk)}</span>
       <span role="cell">{u.rata_rata_tertahan_hk == null ? '—' : `${desimal(u.rata_rata_tertahan_hk)} hari`}</span>
       <span role="cell">
-        <span className="chip" data-status={u.status}>
-          {u.status}
-        </span>
+        <ChipStatus status={u.status} />
       </span>
     </>
   );
@@ -236,7 +247,9 @@ function TabelUke({ ind }: { ind: Indikator }) {
     <section className="kartu" aria-labelledby="judul-tabel">
       <div className="kepala-tabel">
         <div>
-          <h2 id="judul-tabel">Ketepatan waktu per UKE I dan UKE II</h2>
+          <JudulIkon nama="tertahan" id="judul-tabel">
+            Ketepatan waktu per UKE I dan UKE II
+          </JudulIkon>
           <div className="kartu-sub">
             Entri · diurutkan dari dokumen tertahan lebih dari {hk} hari kerja terbanyak · klik UKE I untuk membuka UKE II
           </div>
