@@ -87,8 +87,14 @@ export function Ikon({ nama, ukuran = 16, className }: { nama: NamaIkon; ukuran?
   return <C size={ukuran} strokeWidth={2} aria-hidden="true" focusable="false" className={className} />;
 }
 
-/** Ikon dalam kotak berlatar lembut, untuk kartu angka. `nada` memilih pasangan warna yang sudah ada. */
-export function KotakIkon({ nama, nada = 'utama', ukuran = 20 }: { nama: NamaIkon; nada?: 'utama' | 'perhatian'; ukuran?: number }) {
+/**
+ * Nada warna kartu angka (spesifikasi 5.7). `utama`/`perhatian` untuk kartu umum; lima nada lain untuk
+ * angka utama, masing-masing mewakili makna angkanya.
+ */
+export type Nada = 'utama' | 'perhatian' | 'total' | 'publish' | 'proses' | 'tertahan' | 'kualitas';
+
+/** Ikon dalam kotak berlatar lembut, untuk kartu angka. */
+export function KotakIkon({ nama, nada = 'utama', ukuran = 20 }: { nama: NamaIkon; nada?: Nada; ukuran?: number }) {
   return (
     <span className={`kotak-ikon nada-${nada}`} aria-hidden="true">
       <Ikon nama={nama} ukuran={ukuran} />

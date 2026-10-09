@@ -4,6 +4,14 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.2.0] - 2026-10-09
+
+### Ditambahkan
+- Warna bermakna untuk lima angka utama: total (navy), terpublikasi (hijau), dalam proses (biru),
+  tertahan (oranye), skor kualitas (ungu) pada angka, kotak ikon, dan garis aksen kartu (spesifikasi 5.7).
+- Nada warna yang sama pada aksi cepat dan kartu masalah kualitas.
+- Kriteria penerimaan K-21.
+
 ## [1.1.0] - 2026-10-09
 
 ### Ditambahkan

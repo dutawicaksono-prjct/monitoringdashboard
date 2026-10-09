@@ -139,7 +139,7 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
         </div>
         <div className="masalah">
           {tampilMasalah.map((m) => (
-            <div key={m.k} className="kartu-masalah">
+            <div key={m.k} className="kartu-masalah" data-nada="perhatian">
               <div className="kpi-kepala">
                 <div className="label">{m.label}</div>
                 <KotakIkon nama={m.k} nada="perhatian" />

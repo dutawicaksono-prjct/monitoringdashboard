@@ -31,6 +31,17 @@
   --st-dalam-teks: #1f5b38;
   --st-kosong-latar: #e7ecf0;
   --st-kosong-teks: #33434f;
+  /* Warna angka utama (spesifikasi 5.7): warna / latar kotak ikon */
+  --angka-total: #0b2a3c;
+  --angka-total-latar: #e7ecf0;
+  --angka-publish: #2e7d4f;
+  --angka-publish-latar: #dcefe3;
+  --angka-proses: #0e5a7e;
+  --angka-proses-latar: #eef4f8;
+  --angka-tertahan: #c2561c;
+  --angka-tertahan-latar: #fff4ea;
+  --angka-kualitas: #6b4fbb;
+  --angka-kualitas-latar: #efebfa;
   --fokus: #0e5a7e;
   --gutter: 28px;
 }
@@ -374,8 +385,18 @@ svg.lucide { flex: 0 0 auto; }
   flex: 0 0 auto; width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center;
   justify-content: center;
 }
-.kotak-ikon.nada-utama { background: var(--info-latar); color: var(--utama); }
-.kotak-ikon.nada-perhatian { background: var(--perhatian-latar); color: var(--perhatian-teks); }
+.kotak-ikon { background: var(--nada-latar, var(--info-latar)); color: var(--nada-warna, var(--utama)); }
+.nada-utama { --nada-warna: var(--utama); --nada-latar: var(--info-latar); }
+.nada-perhatian { --nada-warna: var(--perhatian-teks); --nada-latar: var(--perhatian-latar); }
+.nada-total, [data-nada='total'] { --nada-warna: var(--angka-total); --nada-latar: var(--angka-total-latar); }
+.nada-publish, [data-nada='publish'] { --nada-warna: var(--angka-publish); --nada-latar: var(--angka-publish-latar); }
+.nada-proses, [data-nada='proses'] { --nada-warna: var(--angka-proses); --nada-latar: var(--angka-proses-latar); }
+.nada-tertahan, [data-nada='tertahan'] { --nada-warna: var(--angka-tertahan); --nada-latar: var(--angka-tertahan-latar); }
+.nada-kualitas, [data-nada='kualitas'] { --nada-warna: var(--angka-kualitas); --nada-latar: var(--angka-kualitas-latar); }
+[data-nada='perhatian'] { --nada-warna: var(--perhatian-teks); --nada-latar: var(--perhatian-latar); }
+/* Kartu angka berwarna: garis aksen atas + angka mengikuti nada */
+.kpi[data-nada], .aksi[data-nada] { border-top: 4px solid var(--nada-warna); }
+.kpi[data-nada] .kpi-nilai .n, .aksi[data-nada] .n, .kartu-masalah[data-nada] .n { color: var(--nada-warna); }
 .kpi-kepala { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; min-width: 0; }
 .kpi-kepala > div { min-width: 0; }
 .judul-ikon { display: flex; align-items: center; gap: 8px; }

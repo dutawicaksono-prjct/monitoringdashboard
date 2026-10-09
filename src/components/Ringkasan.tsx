@@ -3,7 +3,7 @@ import { angka, BULAN_PENDEK, desimal, namaBulan, persen, rasio, selisih, tangga
 import { bulatkan, STATUS_PROSES, type Filter, type Indikator } from '../indicators';
 import { NAMA_DIMENSI } from './Kualitas';
 import type { Tab } from './Umum';
-import { Ikon, JudulIkon, KotakIkon, type NamaIkon } from './Ikon';
+import { Ikon, JudulIkon, KotakIkon, type Nada, type NamaIkon } from './Ikon';
 
 const TARGET_POSISI = (t: number) => ({ left: `${t}%` });
 
@@ -73,6 +73,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
     {
       label: 'Total aset pengetahuan',
       ikon: 'totalAset' as NamaIkon,
+      nada: 'total' as Nada,
       value: angka(r.total_aset),
       sub: teksPerubahan(perubahan?.total_aset),
       note: `Entri ${angka(r.entri)} + Menu Program ${angka(r.menu_program)}`,
@@ -80,6 +81,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
     {
       label: 'Terpublikasi (gabungan)',
       ikon: 'terpublikasi' as NamaIkon,
+      nada: 'publish' as Nada,
       value: angka(r.terpublikasi),
       bar: r.persen_publish ?? 0,
       sub: `${persen(r.persen_publish)} dari total · ${
@@ -92,6 +94,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
           {
             label: 'Dalam proses (entri)',
             ikon: 'dalamProses' as NamaIkon,
+            nada: 'proses' as Nada,
             value: angka(r.dalam_proses_entri),
             sub: `${rasio(r.dalam_proses_entri, r.total_aset)} dari total`,
             note: 'Menu Program tidak memiliki alur proses',
@@ -99,7 +102,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
           {
             label: `Tertahan lebih dari ${hk} hari kerja`,
             ikon: 'tertahan' as NamaIkon,
-            nada: 'perhatian' as const,
+            nada: 'tertahan' as Nada,
             value: angka(r.tertahan_lebih_dari_5_hk),
             sub: `${rasio(r.tertahan_lebih_dari_5_hk, r.dalam_proses_entri)} dari ${angka(r.dalam_proses_entri)} dokumen dalam proses`,
             note: `Entri · batas maksimal ${hk} hari kerja per tahap`,
@@ -109,6 +112,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
     {
       label: 'Skor kualitas metadata',
       ikon: 'skorKualitas' as NamaIkon,
+      nada: 'kualitas' as Nada,
       value: desimal(ind.kualitas.skor_rata_rata),
       unit: '/100',
       sub: 'Dibanding akhir bulan lalu: —',
@@ -140,10 +144,10 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
 
       <section aria-label="Indikator utama" className="kpi-baris">
         {kpi.map((k) => (
-          <div key={k.label} className="kpi">
+          <div key={k.label} className="kpi" data-nada={k.nada}>
             <div className="kpi-kepala">
               <div className="kpi-label">{k.label}</div>
-              <KotakIkon nama={k.ikon} nada={'nada' in k ? k.nada : 'utama'} />
+              <KotakIkon nama={k.ikon} nada={k.nada} />
             </div>
             <div className="kpi-nilai">
               <span className="n">{k.value}</span>
@@ -153,7 +157,7 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
               <>
                 <div className="kpi-bar" role="img" aria-label={`Capaian ${persen(r.persen_publish)} dari target ${target}%`}>
                   <div className="lintasan">
-                    <div className="isi-bar" style={{ width: `${k.bar}%`, background: 'var(--utama)' }} />
+                    <div className="isi-bar" style={{ width: `${k.bar}%`, background: 'var(--nada-warna)' }} />
                   </div>
                   <div className="penanda-target" style={TARGET_POSISI(target)} />
                 </div>

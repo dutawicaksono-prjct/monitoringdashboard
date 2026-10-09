@@ -1,6 +1,6 @@
 # Spesifikasi Fungsional Dasbor Monitoring Aset Pengetahuan KOMENS
 
-> **Status: DISETUJUI, versi 1.1 (9 Oktober 2026).**
+> **Status: DISETUJUI, versi 1.2 (9 Oktober 2026).**
 > Disusun pengembang dari `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, data contoh, dan mockup
 > `reference/mockup_v2.dc.html`, lalu ditinjau dan disetujui pemilik kebutuhan (Tim PIP, Pusdatinrenbang).
 > Butir bertanda **[usulan]** adalah keputusan rancangan yang telah disetujui pada versi ini. Butir **masih
@@ -8,7 +8,8 @@
 > Penomoran bagian mengikuti rujukan pada `CLAUDE.md` (3.1, 3.2, 4, 5, 8.2, 9).
 >
 > Riwayat: 1.0 (8 Okt 2026), disetujui tanpa perubahan dari rancangan. 1.1 (9 Okt 2026), penambahan ikon
-> (bagian 5.6) atas permintaan pemilik kebutuhan.
+> (bagian 5.6) atas permintaan pemilik kebutuhan. 1.2 (9 Okt 2026), warna angka utama (bagian 5.7) atas
+> permintaan pemilik kebutuhan.
 
 ## 1. Tujuan dan pengguna
 
@@ -207,8 +208,8 @@ Ikon membantu pengguna mengenali jenis angka sekilas. Aturannya:
   disimpan lokal).
 - Ikon selalu dekoratif (`aria-hidden`) dan selalu didampingi teks; ikon tidak pernah menjadi satu-satunya pembawa
   makna.
-- Ikon hanya memakai token warna yang sudah ada: kotak ikon nada *utama* (latar `#EEF4F8`, ikon `#0E5A7E`) dan nada
-  *perhatian* (latar `#FFF4EA`, ikon `#8A3510`). Tidak ada warna baru.
+- Kotak ikon memakai nada *utama* (latar `#EEF4F8`, ikon `#0E5A7E`), nada *perhatian* (latar `#FFF4EA`,
+  ikon `#8A3510`), atau nada angka utama pada bagian 5.7.
 
 | Konsep | Ikon | Konsep | Ikon |
 | --- | --- | --- | --- |
@@ -226,6 +227,23 @@ Ikon membantu pengguna mengenali jenis angka sekilas. Aturannya:
 
 Pada tahap alur kerja, ikon tahap ditampilkan dalam lingkaran dengan nomor urut kecil di sudutnya. Pada layar
 di bawah 600 px, ikon di tab disembunyikan agar tab tetap ringkas.
+
+### 5.7 Warna angka utama
+
+Setiap angka utama memiliki warna yang mewakili maknanya. Warna dipakai pada angka, kotak ikon, dan garis aksen
+4 px di atas kartu. Label teks tetap berwarna teks biasa, sehingga makna tidak bergantung pada warna.
+
+| Angka | Nada | Warna / latar ikon | Makna warna | Kontras angka pada putih |
+| --- | --- | --- | --- | --- |
+| Total aset | `total` | `#0B2A3C` / `#E7ECF0` | keseluruhan, netral | 14,9:1 |
+| Terpublikasi (gabungan) | `publish` | `#2E7D4F` / `#DCEFE3` | sudah tayang, tercapai; bar capaian pada kartu ikut hijau | 5,0:1 |
+| Dalam proses (entri) | `proses` | `#0E5A7E` / `#EEF4F8` | sedang berjalan | 7,6:1 |
+| Tertahan lebih dari 5 HK | `tertahan` | `#C2561C` / `#FFF4EA` | perlu tindakan | 4,5:1 |
+| Skor kualitas metadata | `kualitas` | `#6B4FBB` / `#EFEBFA` | mutu metadata | 6,1:1 |
+
+Nada yang sama dipakai pada aksi cepat (tertahan = `tertahan`, ditolak = `perhatian`, tervalidasi belum
+dipublikasikan = `proses`) dan kartu masalah kualitas (`perhatian`). Grafik lain tidak berubah: pada grafik,
+terpublikasi tetap berwarna utama `#0E5A7E` sesuai legenda.
 
 ## 6. Unduh laporan
 
@@ -284,4 +302,5 @@ Ringkasan "*n* dari 8 terpenuhi" selalu tersedia di bagian definisi.
 | K-17 | Penanda data contoh tampil. |
 | K-18 | Aplikasi berjalan sebagai berkas statis tanpa backend; data dapat diganti tanpa membangun ulang. |
 | K-19 | Ambang kelengkapan dan parameter lain berupa konstanta yang mudah diubah. |
-| K-20 | Setiap KPI, kartu masalah, aksi cepat, tahap alur, dan label status memiliki ikon sesuai 5.6, tanpa warna baru, dan tidak terbaca oleh pembaca layar. |
+| K-20 | Setiap KPI, kartu masalah, aksi cepat, tahap alur, dan label status memiliki ikon sesuai 5.6, memakai warna sesuai 5.6/5.7, dan tidak terbaca oleh pembaca layar. |
+| K-21 | Kelima angka utama memiliki warna berbeda sesuai 5.7, dengan kontras angka terhadap latar minimal 4,5:1. |

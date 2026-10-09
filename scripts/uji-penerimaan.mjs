@@ -440,7 +440,7 @@ await uji('K-19', 'Parameter berupa konstanta', async () => {
 // ------------------------------------------------------------------ K-20
 await uji('K-20', 'Ikon sesuai 5.6: lengkap, tanpa warna baru, dekoratif', async () => {
   const ringkas = [];
-  const warnaSah = new Set(['rgb(14, 90, 126)', 'rgb(138, 53, 16)']);
+  const warnaSah = new Set(['rgb(14, 90, 126)', 'rgb(138, 53, 16)', 'rgb(11, 42, 60)', 'rgb(46, 125, 79)', 'rgb(194, 86, 28)', 'rgb(107, 79, 187)']);
   for (const [tab, wadah] of [
     ['ringkasan', ['.kpi', '.kartu-wawasan']],
     ['alur', ['.baris-tahap .nomor', '.aksi', '.chip']],
@@ -463,7 +463,32 @@ await uji('K-20', 'Ikon sesuai 5.6: lengkap, tanpa warna baru, dekoratif', async
     pastikan(!asing.length, `${tab}: warna ikon di luar token ${asing}`);
     ringkas.push(`${tab}: ${r.n} ikon (${r.jumlah.join(', ')})`);
   }
-  return `${ringkas.join('; ')}. Semua aria-hidden; warna ikon hanya #0E5A7E / #8A3510.`;
+  return `${ringkas.join('; ')}. Semua aria-hidden; warna ikon hanya token 5.6/5.7.`;
+});
+
+// ------------------------------------------------------------------ K-21
+await uji('K-21', 'Warna angka utama berbeda dan kontras cukup', async () => {
+  const p = await bukaHalaman();
+  const r = await p.evaluate(() =>
+    [...document.querySelectorAll('.kpi')].map((k) => ({
+      label: k.querySelector('.kpi-label').innerText,
+      warna: getComputedStyle(k.querySelector('.kpi-nilai .n')).color,
+    })),
+  );
+  await p.close();
+  const lum = (s) => {
+    const [r, g, b] = s.match(/\d+/g).map(Number).map((c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const kontras = (w) => 1.05 / (lum(w) + 0.05);
+  const harap = { 'Total aset': 'rgb(11, 42, 60)', Terpublikasi: 'rgb(46, 125, 79)', 'Dalam proses': 'rgb(14, 90, 126)', Tertahan: 'rgb(194, 86, 28)', 'Skor kualitas': 'rgb(107, 79, 187)' };
+  for (const [awal, w] of Object.entries(harap)) {
+    const k = r.find((x) => x.label.startsWith(awal));
+    pastikan(k && k.warna === w, `${awal}: ${k?.warna} ≠ ${w}`);
+    pastikan(kontras(k.warna) >= 4.5, `${awal}: kontras ${kontras(k.warna).toFixed(2)}`);
+  }
+  pastikan(new Set(r.map((x) => x.warna)).size === 5, 'warna tidak saling berbeda');
+  return r.map((x) => `${x.label.split(' (')[0]} ${x.warna} (${kontras(x.warna).toFixed(1)}:1)`).join('; ');
 });
 
 await browser.close();

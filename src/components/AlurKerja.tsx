@@ -4,7 +4,7 @@ import { angka, desimal, persen, rasio } from '../format';
 import { statusWaktu, STATUS_PROSES, type DokumenSiap, type Filter, type Indikator } from '../indicators';
 import { LABEL_TAHAP } from './Ringkasan';
 import type { PermintaanDaftar } from './Umum';
-import { ChipStatus, Ikon, JudulIkon, KotakIkon, type NamaIkon } from './Ikon';
+import { ChipStatus, Ikon, JudulIkon, KotakIkon, type Nada, type NamaIkon } from './Ikon';
 
 interface Props {
   ind: Indikator;
@@ -47,11 +47,11 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
   const lainLewat = tahap.filter((t) => t.s !== terburuk.s && t.rata_rata_tertahan_hk != null && t.rata_rata_tertahan_hk > hk);
   const ditolak = entri.filter((d) => d.status_saat_ini === 'DITOLAK_OPERATOR' || d.status_saat_ini === 'DITOLAK_PIC');
 
-  const aksi: { label: string; ikon: NamaIkon; nada: 'utama' | 'perhatian'; value: number; cta: string; daftar: PermintaanDaftar }[] = [
+  const aksi: { label: string; ikon: NamaIkon; nada: Nada; value: number; cta: string; daftar: PermintaanDaftar }[] = [
     {
       label: `Tertahan lebih dari ${hk} hari kerja di tahap ${LABEL_TAHAP[terburuk.s]}`,
       ikon: 'tertahan',
-      nada: 'perhatian',
+      nada: 'tertahan',
       value: terburuk.lebih_dari_5_hk,
       cta: `Lihat daftar untuk pengingat ${LABEL_TAHAP[terburuk.s]}`,
       daftar: {
@@ -81,7 +81,7 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
     {
       label: `Tervalidasi, belum dipublikasikan lebih dari ${hk} hari kerja`,
       ikon: 'TERVALIDASI',
-      nada: 'utama',
+      nada: 'proses',
       value: ind.tahap.TERVALIDASI.lebih_dari_5_hk,
       cta: 'Lihat daftar dokumen',
       daftar: {
@@ -194,7 +194,7 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
 
       <section aria-label="Aksi cepat" className="aksi-cepat">
         {aksi.map((a) => (
-          <div key={a.label} className="aksi">
+          <div key={a.label} className="aksi" data-nada={a.nada}>
             <div className="kpi-kepala">
               <div className="label">{a.label}</div>
               <KotakIkon nama={a.ikon} nada={a.nada} />
