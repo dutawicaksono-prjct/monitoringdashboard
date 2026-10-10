@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-"""Pembangkit data contoh (DUMMY) tag dokumen dan kamus padanan tag (spesifikasi 1.4, bagian 3.3 dan 4.4).
+"""Pembangkit data contoh (DUMMY) tag dokumen (spesifikasi 1.4, bagian 3.3 dan 4.4).
 
-Menghasilkan, di folder data/:
-  - tag_dokumen.csv  (satu baris per pasangan dokumen-tag, ditulis apa adanya seperti input pengguna)
-  - kamus_tag.csv    (tesaurus sementara: bentuk baku dan padanannya)
+Menghasilkan data/tag_dokumen.csv (satu baris per pasangan dokumen-tag, ditulis apa adanya seperti input pengguna).
+Daftar tag baku dan padanannya TIDAK lagi berupa CSV: tertanam di dasbor (src/indicators/kosakata-baku.json).
+Skrip ini memeriksa bahwa KONSEP di bawah (bentuk dengan masuk_kamus=True) sama dengan daftar bawaan itu.
 
 Membaca data/dokumen.csv. Hasil deterministik (seed tetap). Jalankan setelah generate_sample_data.py.
 
 Catatan
-  * Seluruh tag adalah rekaan untuk ilustrasi. Kamus ini sementara; ganti dengan tesaurus resmi Tim PIP.
+  * Seluruh tag adalah rekaan untuk ilustrasi. Daftar baku bawaan sementara; ganti dengan tesaurus resmi Tim PIP.
   * Sebagian varian sengaja TIDAK dimasukkan ke kamus (mis. bentuk panjang RPJMN, salah ketik "pendidkan")
     agar muncul sebagai kandidat padanan, dan dua tag sengaja belum ada di kamus sama sekali.
 """
 import csv
+import json
 import random
 from pathlib import Path
 
@@ -102,16 +103,11 @@ with open(DATA / "tag_dokumen.csv", "w", newline="", encoding="utf-8") as f:
     w.writeheader()
     w.writerows(baris)
 
-kamus = []
-for k, (_, lain) in KONSEP.items():
-    kamus.append({"tag_varian": k, "tag_baku": k, "jenis": "baku"})
-    for bentuk, jenis, _, masuk in lain:
-        if masuk:
-            kamus.append({"tag_varian": bentuk, "tag_baku": k, "jenis": jenis})
-with open(DATA / "kamus_tag.csv", "w", newline="", encoding="utf-8") as f:
-    w = csv.DictWriter(f, ["tag_varian", "tag_baku", "jenis"], lineterminator="\n")
-    w.writeheader()
-    w.writerows(kamus)
+# Bentuk yang ditandai masuk_kamus harus sama dengan daftar tag baku bawaan dasbor.
+harap = [{"baku": k, "padanan": [{"tag": b, "jenis": j} for b, j, _, masuk in lain if masuk]} for k, (_, lain) in KONSEP.items()]
+bawaan = json.loads((ROOT / "src" / "indicators" / "kosakata-baku.json").read_text(encoding="utf-8"))
+if harap != bawaan:
+    raise SystemExit("KONSEP tidak sama dengan src/indicators/kosakata-baku.json; samakan keduanya.")
 
 print(f"tag_dokumen.csv: {len(baris)} baris, {len({b['dokumen_id'] for b in baris})} dokumen bertag")
-print(f"kamus_tag.csv: {len(kamus)} baris, {sum(1 for x in kamus if x['jenis'] == 'baku')} konsep baku")
+print(f"daftar baku bawaan: {len(bawaan)} konsep (cocok dengan KONSEP)")

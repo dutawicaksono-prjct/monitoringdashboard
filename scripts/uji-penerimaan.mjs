@@ -54,7 +54,7 @@ const pct = (n) => `${new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1,
 await uji('K-02', 'Pemeriksaan 8.2 lolos; data rusak memicu peringatan', async () => {
   const p = await bukaHalaman();
   const ringkas = await p.locator('.definisi summary').innerText();
-  pastikan(ringkas.includes('10 dari 10 terpenuhi'), `ringkasan: ${ringkas}`);
+  pastikan(ringkas.includes('11 dari 11 terpenuhi'), `ringkasan: ${ringkas}`);
   pastikan((await p.locator('.peringatan').count()) === 0, 'peringatan muncul pada data valid');
   await p.close();
   // Rusak: duplikasi ID dokumen pertama dan status tidak sah.
@@ -71,7 +71,7 @@ await uji('K-02', 'Pemeriksaan 8.2 lolos; data rusak memicu peringatan', async (
   const peringatan = await p2.locator('.peringatan[role=alert]').innerText();
   await p2.close();
   pastikan(peringatan.includes('ID dokumen unik'), 'peringatan ID ganda tidak muncul');
-  return `Data contoh: 10 dari 10 terpenuhi. Data rusak → peringatan: "${peringatan.split('\n').slice(1, 3).join(' | ')}"`;
+  return `Data contoh: 11 dari 11 terpenuhi. Data rusak → peringatan: "${peringatan.split('\n').slice(1, 3).join(' | ')}"`;
 });
 
 // ------------------------------------------------------------------ K-03

@@ -184,28 +184,70 @@ def singkatan_dari(pendek, panjang):
     return pendek == "".join(w[0] for w in kata if w not in KATA_SAMBUNG)
 
 
-tag_path, kamus_path = DATA / "tag_dokumen.csv", DATA / "kamus_tag.csv"
+AMBANG_PEMETAAN_OTOMATIS = 0.85  # sama dengan src/config.ts
+AMBANG_KANDIDAT_MAKNA = 0.70
+JENIS_PEMETAAN = {"makna", "bahasa"}
+KOSAKATA = json.loads((ROOT / "src" / "indicators" / "kosakata-baku.json").read_text(encoding="utf-8"))
+
+tag_path, kamus_path, peta_path = DATA / "tag_dokumen.csv", DATA / "kamus_tag.csv", DATA / "pemetaan_tag.csv"
 tagd = pd.read_csv(tag_path, keep_default_na=False, dtype=str) if tag_path.exists() else None
 kamus = pd.read_csv(kamus_path, keep_default_na=False, dtype=str) if kamus_path.exists() else pd.DataFrame(columns=["tag_varian", "tag_baku", "jenis"])
+pemetaan = pd.read_csv(peta_path, keep_default_na=False, dtype=str) if peta_path.exists() else pd.DataFrame(columns=["tag", "tag_baku", "jenis", "skor"])
 
+# Kamus = daftar tag baku bawaan (kosakata-baku.json), lalu tambahan kamus_tag.csv yang sah.
 peta_kamus = {}  # norm(tag_varian) -> (tag_baku, jenis)
+kamus_sah = True
+
+
+def pasang(varian, baku, jenis):
+    n = norm_tag(varian)
+    if n in peta_kamus:
+        return peta_kamus[n][0] == baku
+    peta_kamus[n] = (baku, jenis)
+    return True
+
+
+for k in KOSAKATA:
+    pasang(k["baku"], k["baku"], "baku")
+for k in KOSAKATA:
+    for p_ in k["padanan"]:
+        kamus_sah = pasang(p_["tag"], k["baku"], p_["jenis"]) and kamus_sah
 for r in kamus.itertuples():
-    peta_kamus.setdefault(norm_tag(r.tag_varian), (r.tag_baku.strip(), r.jenis.strip().lower()))
-baku_norm = {norm_tag(r.tag_baku) for r in kamus.itertuples()}
-kunci_kamus = {}
-for r in kamus.itertuples():
-    kunci_kamus.setdefault(norm_tag(r.tag_varian), set()).add(norm_tag(r.tag_baku))
+    j = r.jenis.strip().lower()
+    b = peta_kamus.get(norm_tag(r.tag_baku))
+    if j not in JENIS_KAMUS or j == "baku" or not b or b[1] != "baku":
+        kamus_sah = False
+    else:
+        kamus_sah = pasang(r.tag_varian, b[0], j) and kamus_sah
+
+peta_makna = {}  # norm(tag) -> (tag_baku, jenis, skor), hanya bentuk di luar kamus
+pemetaan_sah = True
+for r in pemetaan.itertuples():
+    n = norm_tag(r.tag)
+    b = peta_kamus.get(norm_tag(r.tag_baku))
+    j = r.jenis.strip().lower()
+    try:
+        skor_ = float(r.skor) if r.skor.strip() != "" else float("nan")
+    except ValueError:
+        skor_ = float("nan")
+    if not n or not b or b[1] != "baku" or j not in JENIS_PEMETAAN or not (0 <= skor_ <= 1):
+        pemetaan_sah = False
+        continue
+    if n not in peta_kamus and n not in peta_makna:
+        peta_makna[n] = (b[0], j, skor_)
+
 checks["tag_dokumen_ada_di_dokumen"] = bool(tagd is None or tagd["dokumen_id"].isin(dok["dokumen_id"]).all())
-checks["kamus_tag_valid"] = bool(
-    kamus["jenis"].str.strip().str.lower().isin(JENIS_KAMUS).all()
-    and all(len(v) == 1 for v in kunci_kamus.values())
-    and all(peta_kamus.get(b, ("", ""))[1] == "baku" for b in baku_norm))
+checks["kamus_tag_valid"] = bool(kamus_sah)
+checks["pemetaan_tag_valid"] = bool(pemetaan_sah)
 
 
 def status_tag(n):
     if n in peta_kamus:
         baku, jenis = peta_kamus[n]
         return baku, jenis, ("baku" if jenis == "baku" else "padanan_bahasa" if jenis == "bahasa" else "varian")
+    if n in peta_makna and peta_makna[n][2] >= AMBANG_PEMETAAN_OTOMATIS:
+        baku, jenis, _ = peta_makna[n]
+        return baku, jenis, ("padanan_bahasa" if jenis == "bahasa" else "varian")
     return n, "", "belum_di_kamus"
 
 
@@ -234,13 +276,14 @@ def hitung_tag(sel_ids):
     # kandidat padanan: bentuk yang belum di kamus dan mirip bentuk lain dengan konsep berbeda
     belum = sorted(set(t.loc[t["status"] == "belum_di_kamus", "norm"]))
     pembanding = sorted(set(peta_kamus) | set(t["norm"]))
+    konsep_dari = dict(zip(t["norm"], t["konsep"]))
     kandidat = []
     for a in belum:
         terbaik = None
         for b in pembanding:
             if b == a:
                 continue
-            kb = peta_kamus[b][0] if b in peta_kamus else b
+            kb = peta_kamus[b][0] if b in peta_kamus else konsep_dari.get(b, b)
             if norm_tag(kb) == a:
                 continue
             if singkatan_dari(b, a) or singkatan_dari(a, b):
@@ -251,6 +294,9 @@ def hitung_tag(sel_ids):
                 continue
             if terbaik is None or (c[0], b in peta_kamus) > (terbaik[0], terbaik[2] in peta_kamus):
                 terbaik = c
+        # tanpa kandidat ejaan/singkatan: pemetaan makna yang skornya di bawah ambang otomatis
+        if terbaik is None and a in peta_makna and peta_makna[a][2] >= AMBANG_KANDIDAT_MAKNA:
+            terbaik = (peta_makna[a][2], "makna mirip", a, peta_makna[a][0])
         if terbaik:
             s, alasan, b, kb = terbaik
             kandidat.append({"tag": a, "usulan_baku": kb, "alasan": alasan,

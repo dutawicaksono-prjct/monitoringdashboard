@@ -36,6 +36,7 @@ try {
     snapshot_bulanan: opsional('snapshot_bulanan.csv'),
     tag_dokumen: opsional('tag_dokumen.csv'),
     kamus_tag: opsional('kamus_tag.csv'),
+    pemetaan_tag: opsional('pemetaan_tag.csv'),
   });
 } catch (e) {
   console.error(`GAGAL MEMBACA DATA: ${(e as Error).message}`);
@@ -89,8 +90,11 @@ const rincian: Record<keyof PemeriksaanData, () => string> = {
     return contoh([...new Set((ds.tagDokumen ?? []).filter((t) => !id.has(t.dokumen_id)).map((t) => t.dokumen_id))]);
   },
   kamus_tag_valid: () =>
-    ' Periksa kolom jenis (baku, ejaan, singkatan, sinonim, bentuk, bahasa), varian yang mengacu ke lebih dari satu bentuk baku, ' +
-    'dan bentuk baku yang belum punya baris jenis "baku".',
+    ' Periksa kamus_tag.csv: jenis harus ejaan, singkatan, sinonim, bentuk, atau bahasa (bentuk baku hanya dari daftar bawaan ' +
+    'src/indicators/kosakata-baku.json), tag_baku harus tag baku bawaan, dan varian tidak boleh mengacu ke konsep lain.',
+  pemetaan_tag_valid: () =>
+    ' Periksa pemetaan_tag.csv: tag_baku harus tag baku bawaan, jenis makna atau bahasa, skor angka 0–1. ' +
+    'Buat ulang dengan: python tools/petakan_tag.py',
 };
 
 console.log(`Pemeriksaan data · folder ${folder} · tanggal data ${tanggal}\n`);
@@ -114,7 +118,7 @@ if (!ds.snapshot.some((s) => s.tanggal_snapshot === akhirBulanLalu(tanggal))) {
 const tanpaSkor = ds.dokumen.filter((d) => Number.isNaN(d.skor_metadata) || d.skor_dimensi.some(Number.isNaN)).length;
 if (tanpaSkor) peringatan.push(`${tanpaSkor} dokumen memiliki skor kosong atau bukan angka.`);
 if (!ds.tagDokumen) peringatan.push('tag_dokumen.csv tidak ada; bagian konsistensi tag tidak ditampilkan.');
-else if (!ds.kamusTag.length) peringatan.push('kamus_tag.csv tidak ada atau kosong; semua tag berstatus "belum di kamus".');
+else if (!ds.pemetaanTag.length) peringatan.push('pemetaan_tag.csv tidak ada; tag di luar daftar baku tidak dipetakan menurut makna. Jalankan: python tools/petakan_tag.py');
 if (tanggal !== TANGGAL_DATA) peringatan.push(`Tanggal yang diperiksa (${tanggal}) berbeda dengan tanggal data (meta_data.csv atau src/config.ts: ${TANGGAL_DATA}).`);
 
 console.log(`\nRingkasan: ${ind.ringkasan.total_aset} dokumen (entri ${ind.ringkasan.entri}, Menu Program ${ind.ringkasan.menu_program}), ` +

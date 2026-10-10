@@ -12,6 +12,7 @@
     "tanggal_logis": true,
     "tag_dokumen_ada_di_dokumen": true,
     "kamus_tag_valid": true,
+    "pemetaan_tag_valid": true,
     "snapshot_persamaan_total": true
   },
   "ringkasan": {

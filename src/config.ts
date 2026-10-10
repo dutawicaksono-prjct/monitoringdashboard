@@ -27,9 +27,18 @@ export const AMBANG_PRIORITAS_DIMENSI = 65;
 
 /**
  * Kemiripan ejaan (Jaro-Winkler, 0–1) minimal agar dua tag diusulkan sebagai kandidat padanan.
- * Kandidat tidak pernah digabung otomatis; Tim PIP memverifikasi lalu menambahkannya ke kamus_tag.csv.
+ * Kandidat ejaan tidak pernah digabung otomatis; Tim PIP memverifikasi lalu menambahkannya ke daftar baku atau kamus_tag.csv.
  */
 export const AMBANG_KEMIRIPAN_TAG = 0.92;
+
+/**
+ * Pemetaan makna otomatis (pemetaan_tag.csv, dibuat tools/petakan_tag.py). Skor kosinus 0–1.
+ * Skor ≥ AMBANG_PEMETAAN_OTOMATIS: tag langsung dihitung sebagai padanan tag baku.
+ * AMBANG_KANDIDAT_MAKNA ≤ skor < AMBANG_PEMETAAN_OTOMATIS: hanya masuk tabel kandidat padanan.
+ * Nilai yang sama dipakai tools/petakan_tag.py dan tools/compute_indicators.py.
+ */
+export const AMBANG_PEMETAAN_OTOMATIS = 0.85;
+export const AMBANG_KANDIDAT_MAKNA = 0.7;
 
 /** Tampilkan penanda "Data contoh" di header. Matikan bila data sudah data produksi. */
 export const DATA_CONTOH = true;

@@ -64,11 +64,30 @@ export interface TagDokumen {
 /** Jenis entri kamus padanan tag. `bahasa` = padanan bahasa Inggris, diterima sebagai konsisten. */
 export const JENIS_KAMUS_TAG = ['baku', 'ejaan', 'singkatan', 'sinonim', 'bentuk', 'bahasa'] as const;
 
-/** Satu baris kamus padanan tag (kamus_tag.csv): bentuk `tag_varian` mengacu ke konsep `tag_baku`. */
+/** Satu baris kamus padanan tag: bentuk `tag_varian` mengacu ke konsep `tag_baku`. Daftar bawaan ada di
+ *  src/indicators/kosakata-baku.json; kamus_tag.csv (opsional) hanya menambah padanan untuk tag baku bawaan. */
 export interface KamusTag {
   tag_varian: string;
   tag_baku: string;
   jenis: string;
+}
+
+/** Satu konsep pada daftar tag baku bawaan dasbor (src/indicators/kosakata-baku.json). */
+export interface KonsepBaku {
+  baku: string;
+  padanan: { tag: string; jenis: string }[];
+}
+
+/** Jenis hasil pemetaan makna: `bahasa` bila tag paling mirip dengan padanan bahasa Inggris, selain itu `makna`. */
+export const JENIS_PEMETAAN_TAG = ['makna', 'bahasa'] as const;
+
+/** Satu baris pemetaan_tag.csv: hasil pemetaan makna (tools/petakan_tag.py) satu tag ke tag baku. */
+export interface PemetaanTag {
+  tag: string;
+  tag_baku: string;
+  jenis: string;
+  /** Kemiripan makna (kosinus) 0–1. */
+  skor: number;
 }
 
 export interface Dataset {
@@ -79,7 +98,10 @@ export interface Dataset {
   snapshot: Snapshot[];
   /** null bila tag_dokumen.csv tidak tersedia; bagian tag kemudian tidak ditampilkan. */
   tagDokumen: TagDokumen[] | null;
+  /** Tambahan padanan dari kamus_tag.csv (opsional). */
   kamusTag: KamusTag[];
+  /** Hasil pemetaan makna dari pemetaan_tag.csv (opsional). */
+  pemetaanTag: PemetaanTag[];
 }
 
 export type FilterSumber = 'SEMUA' | Sumber;
@@ -128,6 +150,7 @@ export interface PemeriksaanData {
   snapshot_persamaan_total: boolean;
   tag_dokumen_ada_di_dokumen: boolean;
   kamus_tag_valid: boolean;
+  pemetaan_tag_valid: boolean;
 }
 
 export interface Ringkasan {
@@ -170,7 +193,7 @@ export interface BentukTag {
   /** Penulisan yang paling sering dipakai untuk bentuk ini. */
   tulisan: string;
   status: StatusTag;
-  /** Jenis menurut kamus; kosong bila belum di kamus. */
+  /** Jenis menurut kamus (atau `makna`/`bahasa` bila dipetakan otomatis); kosong bila belum di kamus. */
   jenis: string;
   penggunaan: number;
 }
@@ -187,8 +210,8 @@ export interface KonsepTag {
 export interface KandidatPadanan {
   tag: string;
   usulan_baku: string;
-  alasan: 'singkatan' | 'ejaan mirip';
-  /** Skor Jaro-Winkler 2 desimal; null untuk singkatan. */
+  alasan: 'singkatan' | 'ejaan mirip' | 'makna mirip';
+  /** Skor 2 desimal (Jaro-Winkler untuk ejaan, kosinus untuk makna); null untuk singkatan. */
   kemiripan: number | null;
   dokumen: number;
 }

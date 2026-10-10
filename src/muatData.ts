@@ -17,7 +17,7 @@ export interface HasilMuat {
 }
 
 export async function muatDataset(): Promise<HasilMuat> {
-  const [dokumen, riwayat, unit, libur, snapshot, meta, tag, kamus] = await Promise.all([
+  const [dokumen, riwayat, unit, libur, snapshot, meta, tag, kamus, pemetaan] = await Promise.all([
     ambil('dokumen.csv', true),
     ambil('riwayat_status.csv', true),
     ambil('unit_kerja.csv', true),
@@ -26,6 +26,7 @@ export async function muatDataset(): Promise<HasilMuat> {
     ambil('meta_data.csv', false).catch(() => null),
     ambil('tag_dokumen.csv', false),
     ambil('kamus_tag.csv', false),
+    ambil('pemetaan_tag.csv', false),
   ]);
   const ds = bacaDataset({
     dokumen: dokumen!,
@@ -35,6 +36,7 @@ export async function muatDataset(): Promise<HasilMuat> {
     snapshot_bulanan: snapshot,
     tag_dokumen: tag,
     kamus_tag: kamus,
+    pemetaan_tag: pemetaan,
   });
   return { ds, tanggalData: (meta && bacaTanggalData(meta)) || TANGGAL_DATA };
 }

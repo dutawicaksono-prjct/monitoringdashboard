@@ -16,6 +16,12 @@ tampilan atau fitur baru, PATCH untuk perbaikan.
 - Berkas data opsional `tag_dokumen.csv` dan `kamus_tag.csv` beserta data contoh sementara
   (`tools/generate_sample_tags.py`), dua pemeriksaan data baru (10 pemeriksaan), uji K-25, dan konstanta
   `AMBANG_KEMIRIPAN_TAG`.
+- Daftar tag baku menjadi standar bawaan dasbor (`src/indicators/kosakata-baku.json`), tidak lagi dari CSV.
+  `kamus_tag.csv` kini opsional dan hanya menambah padanan untuk tag baku bawaan.
+- Pemetaan makna otomatis: `tools/petakan_tag.py` (model embedding multibahasa, berjalan lokal) menulis
+  `pemetaan_tag.csv`; tag berskor ≥ 0,85 langsung dihitung sebagai padanan tag baku, 0,70–0,85 masuk kandidat
+  padanan (*makna mirip*). Pemeriksaan data `pemetaan_tag_valid` (11 pemeriksaan) dan konstanta
+  `AMBANG_PEMETAAN_OTOMATIS`, `AMBANG_KANDIDAT_MAKNA`. Tampilan tidak berubah.
 
 ## [1.5.0] - 2026-10-10
 
