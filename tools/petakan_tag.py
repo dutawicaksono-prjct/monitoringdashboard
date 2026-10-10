@@ -7,9 +7,14 @@ Dijalankan setiap kali data tag diperbarui, SEBELUM dasbor dibuka/di-deploy:
 
 Cara kerja
   1. Mengambil semua tag di data/tag_dokumen.csv yang belum ada di kamus (daftar baku bawaan
-     src/indicators/kosakata-baku.json + tambahan data/kamus_tag.csv bila ada).
-  2. Menghitung embedding tag tersebut dan semua bentuk di kamus (bentuk baku dan padanannya) dengan model
-     multibahasa sentence-transformers, lalu mencari bentuk kamus dengan kemiripan kosinus tertinggi.
+     src/indicators/kosakata-baku.json + tambahan data/kamus_tag.csv bila ada). Tag yang sudah punya bukti tulisan
+     terhadap bentuk kamus (salah ketik mirip, Jaro-Winkler >= AMBANG_KEMIRIPAN_TAG, atau kepanjangan/singkatan)
+     dilewati: dasbor sudah mengusulkannya sebagai kandidat "ejaan mirip"/"singkatan", dan model embedding justru
+     sering keliru pada salah ketik (mis. "pendidkan" -> perdesaan, 0,93).
+  2. Menghitung embedding tag tersebut dan bentuk kamus (bentuk baku dan padanannya) dengan model multibahasa
+     sentence-transformers, lalu mencari bentuk kamus dengan kemiripan kosinus tertinggi. Singkatan (padanan berjenis
+     singkatan dan tag baku seperti RPJMN, UMKM) tidak dipakai sebagai sasaran: model memberi skor tinggi antara
+     singkatan pendek dan hampir semua kata yang tidak dikenalnya.
   3. Menulis tag dengan skor >= AMBANG_KANDIDAT_MAKNA ke data/pemetaan_tag.csv (tag, tag_baku, jenis, skor).
      jenis = "bahasa" bila bentuk terdekat adalah padanan bahasa Inggris, selain itu "makna".
 
@@ -34,12 +39,74 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MODEL_BAWAAN = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 AMBANG_KANDIDAT_MAKNA = 0.70  # sama dengan src/config.ts
+AMBANG_KEMIRIPAN_TAG = 0.92  # sama dengan src/config.ts
+PANJANG_MIN_KEMIRIPAN = 5  # sama dengan src/indicators/tag.ts
+KATA_SAMBUNG = {"dan", "di", "ke", "dari", "yang", "untuk", "atau", "serta"}
 
 
 def norm_tag(t):
     """Sama dengan normalTag di src/indicators/tag.ts."""
     t = unicodedata.normalize("NFKC", str(t)).lower()
     return " ".join(re.sub(r"[^0-9a-zÀ-ɏ ]+", " ", t).split())
+
+
+def jaro_winkler(a, b):
+    """Sama dengan jaroWinkler di src/indicators/tag.ts."""
+    if a == b:
+        return 1.0
+    la, lb = len(a), len(b)
+    if not la or not lb:
+        return 0.0
+    jarak = max(0, max(la, lb) // 2 - 1)
+    ma, mb = [False] * la, [False] * lb
+    m = 0
+    for i in range(la):
+        for j in range(max(0, i - jarak), min(lb, i + jarak + 1)):
+            if not mb[j] and a[i] == b[j]:
+                ma[i] = mb[j] = True
+                m += 1
+                break
+    if not m:
+        return 0.0
+    t, k = 0, 0
+    for i in range(la):
+        if ma[i]:
+            while not mb[k]:
+                k += 1
+            if a[i] != b[k]:
+                t += 1
+            k += 1
+    jaro = (m / la + m / lb + (m - t / 2) / m) / 3
+    p = 0
+    while p < min(4, la, lb) and a[p] == b[p]:
+        p += 1
+    return jaro + p * 0.1 * (1 - jaro)
+
+
+def singkatan_dari(pendek, panjang):
+    """Sama dengan singkatanDari di src/indicators/tag.ts."""
+    kata = panjang.split()
+    if " " in pendek or not (2 <= len(pendek) <= 6) or len(kata) < 2:
+        return False
+    return pendek == "".join(w[0] for w in kata if w not in KATA_SAMBUNG)
+
+
+def ada_bukti_tulisan(tag, kamus):
+    """True bila tag mirip tulisannya dengan bentuk kamus (salah ketik) atau singkatan/kepanjangannya."""
+    for b in kamus:
+        if singkatan_dari(b, tag) or singkatan_dari(tag, b):
+            return True
+        if min(len(tag), len(b)) >= PANJANG_MIN_KEMIRIPAN and jaro_winkler(tag, b) >= AMBANG_KEMIRIPAN_TAG:
+            return True
+    return False
+
+
+def singkatan(bentuk, kamus):
+    """Bentuk kamus yang berupa singkatan: padanan berjenis singkatan, atau tag baku satu kata berhuruf besar (RPJMN)."""
+    baku, jenis = kamus[bentuk]
+    if jenis == "singkatan":
+        return True
+    return jenis == "baku" and " " not in baku and sum(c.isupper() for c in baku) >= 2
 
 
 def baca_csv(path):
@@ -69,9 +136,10 @@ def petakan(tags, kamus, encode, ambang=AMBANG_KANDIDAT_MAKNA, pengecualian=froz
     encode: fungsi daftar teks -> matriks embedding (baris ternormalisasi). Mengembalikan baris pemetaan_tag.csv."""
     import numpy as np
 
-    if not tags or not kamus:
+    tags = [t for t in tags if not ada_bukti_tulisan(t, kamus)]
+    bentuk = sorted(b for b in kamus if not singkatan(b, kamus))
+    if not tags or not bentuk:
         return []
-    bentuk = sorted(kamus)
     eb = np.asarray(encode(bentuk), dtype=float)
     et = np.asarray(encode(tags), dtype=float)
     sim = et @ eb.T
@@ -112,7 +180,9 @@ def main():
         w = csv.DictWriter(f, ["tag", "tag_baku", "jenis", "skor"], lineterminator="\n")
         w.writeheader()
         w.writerows(baris)
-    print(f"{len(tags)} bentuk tag di luar kamus; {len(baris)} dipetakan (skor >= {AMBANG_KANDIDAT_MAKNA}) -> {keluar}")
+    sisa = [t for t in tags if not ada_bukti_tulisan(t, kamus)]
+    print(f"{len(tags)} bentuk tag di luar kamus ({len(tags) - len(sisa)} dilewati karena mirip tulisan/singkatan); "
+          f"{len(baris)} dipetakan (skor >= {AMBANG_KANDIDAT_MAKNA}) -> {keluar}")
     for r in baris:
         print(f"  {r['skor']}  {r['tag']} -> {r['tag_baku']} ({r['jenis']})")
 
