@@ -4,6 +4,13 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.4.0] - 2026-10-10
+
+### Ditambahkan
+- Efek angkat saat kursor di atas kartu: kartu grafik naik sedikit dengan bayangan, kotak angka (angka utama,
+  aksi cepat, masalah kualitas, Perlu perhatian) naik dan membesar sedikit. Tidak bergerak bila pengguna memilih
+  *kurangi gerakan* (prefers-reduced-motion), hanya aktif di perangkat berkursor, dan tidak ikut tercetak di PDF.
+
 ## [1.3.0] - 2026-10-10
 
 ### Ditambahkan

@@ -43,6 +43,7 @@
   --angka-kualitas: #6b4fbb;
   --angka-kualitas-latar: #efebfa;
   --fokus: #0e5a7e;
+  --bayangan-angkat: 0 10px 24px rgba(11, 42, 60, 0.12), 0 2px 6px rgba(11, 42, 60, 0.08);
   --gutter: 28px;
 }
 
@@ -454,4 +455,24 @@ table.tabel-pic td, table.tabel-pic th, table.tabel-matriks td, table.tabel-matr
 @media print {
   .tabel-pic, .tabel-matriks { min-width: 0; font-size: 10px; }
   .sel-matriks { min-height: 0; padding: 0; }
+}
+
+/* ---------------------------------------------------------------- efek angkat saat kursor di atas kartu */
+/* Kartu grafik naik sedikit; kotak angka naik dan membesar sedikit. Hanya untuk perangkat dengan kursor. */
+.kartu, .kpi, .aksi, .kartu-masalah, .kartu-wawasan {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+@media (hover: hover) {
+  .kartu:hover { transform: translateY(-3px); box-shadow: var(--bayangan-angkat); }
+  .kpi:hover, .aksi:hover, .kartu-masalah:hover, .kartu-wawasan:hover {
+    transform: translateY(-4px) scale(1.02); box-shadow: var(--bayangan-angkat);
+  }
+}
+.kartu-wawasan:focus-visible { transform: translateY(-4px) scale(1.02); box-shadow: var(--bayangan-angkat); }
+@media (prefers-reduced-motion: reduce) {
+  .kartu, .kpi, .aksi, .kartu-masalah, .kartu-wawasan { transition: box-shadow 0.2s ease; }
+  .kartu:hover, .kpi:hover, .aksi:hover, .kartu-masalah:hover, .kartu-wawasan:hover, .kartu-wawasan:focus-visible { transform: none; }
+}
+@media print {
+  .kartu, .kpi, .aksi, .kartu-masalah, .kartu-wawasan { transform: none !important; box-shadow: none !important; transition: none; }
 }
