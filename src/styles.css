@@ -476,3 +476,41 @@ table.tabel-pic td, table.tabel-pic th, table.tabel-matriks td, table.tabel-matr
 @media print {
   .kartu, .kpi, .aksi, .kartu-masalah, .kartu-wawasan { transform: none !important; box-shadow: none !important; transition: none; }
 }
+
+/* ---------------------------------------------------------------- batang grafik yang "hidup" */
+/* Batang tumbuh saat halaman dimuat, bergeser halus saat filter berubah, berkilau pelan, dan menyala saat ditunjuk.
+   Panjang akhir batang tidak diubah, jadi nilai data tetap terbaca benar. */
+.isi-bar, .tren .batang {
+  position: relative; overflow: hidden;
+  transition: width 0.6s ease, height 0.6s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+.isi-bar { transform-origin: left center; animation: batang-tumbuh-x 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.tren .batang { transform-origin: center bottom; animation: batang-tumbuh-y 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.isi-bar::after, .tren .batang::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  transform: translateX(-100%); animation: batang-kilau 4s ease-in-out 1s infinite;
+}
+.tren .batang::after {
+  background: linear-gradient(180deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  animation-name: batang-kilau-y;
+}
+@keyframes batang-tumbuh-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes batang-tumbuh-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes batang-kilau { 0%, 55% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+@keyframes batang-kilau-y { 0%, 55% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
+@media (hover: hover) {
+  .isi-bar:hover, .tren .batang:hover,
+  .baris-bar:hover .isi-bar, .baris-capaian:hover .isi-bar, .baris-tahap:hover .isi-bar, .kpi:hover .isi-bar {
+    filter: brightness(1.15) saturate(1.15);
+  }
+  .tren .batang:hover { box-shadow: 0 -3px 10px rgba(11, 42, 60, 0.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .isi-bar, .tren .batang { animation: none; transition: filter 0.2s ease; }
+  .isi-bar::after, .tren .batang::after { display: none; }
+}
+@media print {
+  .isi-bar, .tren .batang { animation: none !important; transition: none !important; filter: none !important; }
+  .isi-bar::after, .tren .batang::after { display: none; }
+}
