@@ -10,6 +10,8 @@
     "status_valid": true,
     "riwayat_sesuai_status": true,
     "tanggal_logis": true,
+    "tag_dokumen_ada_di_dokumen": true,
+    "kamus_tag_valid": true,
     "snapshot_persamaan_total": true
   },
   "ringkasan": {
@@ -926,8 +928,621 @@
       "tanpa_pic": 96,
       "belum_diperbarui_12_bulan": 538,
       "kandidat_duplikat": 74,
-      "file_tidak_terbaca": 38
+      "file_tidak_terbaca": 38,
+      "tag_tidak_baku": 518
     },
-    "ambang_kelengkapan": 60
+    "ambang_kelengkapan": 60,
+    "tag": {
+      "dokumen_bertag": 4771,
+      "dokumen_tanpa_tag": 292,
+      "penggunaan_tag": 10856,
+      "bentuk_unik": 58,
+      "konsep_unik": 31,
+      "penggunaan": {
+        "baku": 8956,
+        "padanan_bahasa": 682,
+        "varian": 546,
+        "belum_di_kamus": 672
+      },
+      "persen_konsistensi": 94.6,
+      "konsep_dengan_varian": 12,
+      "per_konsep": {
+        "IKN": {
+          "penggunaan": 317,
+          "dokumen": 317,
+          "persen_konsistensi": 88.6,
+          "bentuk": {
+            "ibu kota nusantara": {
+              "tulisan": "Ibu Kota Nusantara",
+              "status": "varian",
+              "jenis": "singkatan",
+              "penggunaan": 23
+            },
+            "ibukota nusantara": {
+              "tulisan": "ibukota nusantara",
+              "status": "varian",
+              "jenis": "ejaan",
+              "penggunaan": 13
+            },
+            "ikn": {
+              "tulisan": "IKN",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 281
+            }
+          }
+        },
+        "RPJMN": {
+          "penggunaan": 559,
+          "dokumen": 559,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "rpjmn": {
+              "tulisan": "RPJMN",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 559
+            }
+          }
+        },
+        "SDGs": {
+          "penggunaan": 512,
+          "dokumen": 512,
+          "persen_konsistensi": 89.3,
+          "bentuk": {
+            "sdgs": {
+              "tulisan": "SDGs",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 392
+            },
+            "tpb": {
+              "tulisan": "TPB",
+              "status": "varian",
+              "jenis": "singkatan",
+              "penggunaan": 55
+            },
+            "tujuan pembangunan berkelanjutan": {
+              "tulisan": "tujuan pembangunan berkelanjutan",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 65
+            }
+          }
+        },
+        "UMKM": {
+          "penggunaan": 477,
+          "dokumen": 477,
+          "persen_konsistensi": 97.5,
+          "bentuk": {
+            "ukm": {
+              "tulisan": "UKM",
+              "status": "varian",
+              "jenis": "sinonim",
+              "penggunaan": 12
+            },
+            "umkm": {
+              "tulisan": "UMKM",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 465
+            }
+          }
+        },
+        "air minum dan sanitasi": {
+          "penggunaan": 245,
+          "dokumen": 245,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "air minum dan sanitasi": {
+              "tulisan": "air minum dan sanitasi",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 245
+            }
+          }
+        },
+        "ekonomi hijau": {
+          "penggunaan": 301,
+          "dokumen": 301,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "ekonomi hijau": {
+              "tulisan": "ekonomi hijau",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 263
+            },
+            "green economy": {
+              "tulisan": "green economy",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 38
+            }
+          }
+        },
+        "energi baru terbarukan": {
+          "penggunaan": 376,
+          "dokumen": 376,
+          "persen_konsistensi": 88.8,
+          "bentuk": {
+            "ebt": {
+              "tulisan": "EBT",
+              "status": "varian",
+              "jenis": "singkatan",
+              "penggunaan": 42
+            },
+            "energi baru terbarukan": {
+              "tulisan": "energi baru terbarukan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 299
+            },
+            "renewable energy": {
+              "tulisan": "renewable energy",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 35
+            }
+          }
+        },
+        "evaluasi kinerja": {
+          "penggunaan": 275,
+          "dokumen": 275,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "evaluasi kinerja": {
+              "tulisan": "evaluasi kinerja",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 275
+            }
+          }
+        },
+        "gender": {
+          "penggunaan": 242,
+          "dokumen": 242,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "gender": {
+              "tulisan": "gender",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 242
+            }
+          }
+        },
+        "infrastruktur": {
+          "penggunaan": 620,
+          "dokumen": 620,
+          "persen_konsistensi": 87.7,
+          "bentuk": {
+            "infrastructure": {
+              "tulisan": "infrastructure",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 75
+            },
+            "infrastruktur": {
+              "tulisan": "infrastruktur",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 469
+            },
+            "infrastuktur": {
+              "tulisan": "infrastuktur",
+              "status": "varian",
+              "jenis": "ejaan",
+              "penggunaan": 76
+            }
+          }
+        },
+        "investasi": {
+          "penggunaan": 322,
+          "dokumen": 322,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "investasi": {
+              "tulisan": "investasi",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 322
+            }
+          }
+        },
+        "kemaritiman": {
+          "penggunaan": 265,
+          "dokumen": 265,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "kemaritiman": {
+              "tulisan": "kemaritiman",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 265
+            }
+          }
+        },
+        "kemiskinan": {
+          "penggunaan": 604,
+          "dokumen": 604,
+          "persen_konsistensi": 89.7,
+          "bentuk": {
+            "kemiskinan": {
+              "tulisan": "kemiskinan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 467
+            },
+            "miskin": {
+              "tulisan": "miskin",
+              "status": "varian",
+              "jenis": "bentuk",
+              "penggunaan": 62
+            },
+            "poverty": {
+              "tulisan": "poverty",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 75
+            }
+          }
+        },
+        "kesehatan": {
+          "penggunaan": 440,
+          "dokumen": 440,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "health": {
+              "tulisan": "health",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 52
+            },
+            "kesehatan": {
+              "tulisan": "kesehatan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 388
+            }
+          }
+        },
+        "kesehtan": {
+          "penggunaan": 49,
+          "dokumen": 49,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "kesehtan": {
+              "tulisan": "kesehtan",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 49
+            }
+          }
+        },
+        "ketahanan pangan": {
+          "penggunaan": 410,
+          "dokumen": 410,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "food security": {
+              "tulisan": "food security",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 47
+            },
+            "ketahanan pangan": {
+              "tulisan": "ketahanan pangan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 363
+            }
+          }
+        },
+        "ketenagakerjaan": {
+          "penggunaan": 311,
+          "dokumen": 311,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "ketenagakerjaan": {
+              "tulisan": "ketenagakerjaan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 311
+            }
+          }
+        },
+        "pariwisata": {
+          "penggunaan": 316,
+          "dokumen": 316,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "pariwisata": {
+              "tulisan": "pariwisata",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 316
+            }
+          }
+        },
+        "pembangunan rendah karbon": {
+          "penggunaan": 509,
+          "dokumen": 509,
+          "persen_konsistensi": 89.6,
+          "bentuk": {
+            "low carbon development": {
+              "tulisan": "low carbon development",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 63
+            },
+            "pembangunan rendah emisi": {
+              "tulisan": "pembangunan rendah emisi",
+              "status": "varian",
+              "jenis": "sinonim",
+              "penggunaan": 11
+            },
+            "pembangunan rendah karbon": {
+              "tulisan": "pembangunan rendah karbon",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 393
+            },
+            "prk": {
+              "tulisan": "PRK",
+              "status": "varian",
+              "jenis": "singkatan",
+              "penggunaan": 42
+            }
+          }
+        },
+        "pendidikan": {
+          "penggunaan": 490,
+          "dokumen": 490,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "education": {
+              "tulisan": "education",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 76
+            },
+            "pendidikan": {
+              "tulisan": "pendidikan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 414
+            }
+          }
+        },
+        "pendidkan": {
+          "penggunaan": 53,
+          "dokumen": 53,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "pendidkan": {
+              "tulisan": "pendidkan",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 53
+            }
+          }
+        },
+        "perdesaan": {
+          "penggunaan": 359,
+          "dokumen": 359,
+          "persen_konsistensi": 88.6,
+          "bentuk": {
+            "pedesaan": {
+              "tulisan": "pedesaan",
+              "status": "varian",
+              "jenis": "ejaan",
+              "penggunaan": 41
+            },
+            "perdesaan": {
+              "tulisan": "perdesaan",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 318
+            }
+          }
+        },
+        "perlindungan sosial": {
+          "penggunaan": 305,
+          "dokumen": 305,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "perlindungan sosial": {
+              "tulisan": "perlindungan sosial",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 305
+            }
+          }
+        },
+        "perubahan iklim": {
+          "penggunaan": 484,
+          "dokumen": 484,
+          "persen_konsistensi": 100.0,
+          "bentuk": {
+            "climate change": {
+              "tulisan": "climate change",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 42
+            },
+            "perubahan iklim": {
+              "tulisan": "perubahan iklim",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 442
+            }
+          }
+        },
+        "reformasi birokrasi": {
+          "penggunaan": 373,
+          "dokumen": 373,
+          "persen_konsistensi": 90.3,
+          "bentuk": {
+            "rb": {
+              "tulisan": "RB",
+              "status": "varian",
+              "jenis": "singkatan",
+              "penggunaan": 36
+            },
+            "reformasi birokrasi": {
+              "tulisan": "reformasi birokrasi",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 337
+            }
+          }
+        },
+        "rencana pembangunan jangka menengah nasional": {
+          "penggunaan": 75,
+          "dokumen": 75,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "rencana pembangunan jangka menengah nasional": {
+              "tulisan": "Rencana Pembangunan Jangka Menengah Nasional",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 75
+            }
+          }
+        },
+        "statistik": {
+          "penggunaan": 193,
+          "dokumen": 193,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "statistik": {
+              "tulisan": "statistik",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 193
+            }
+          }
+        },
+        "stunting": {
+          "penggunaan": 427,
+          "dokumen": 427,
+          "persen_konsistensi": 87.8,
+          "bentuk": {
+            "gagal tumbuh": {
+              "tulisan": "gagal tumbuh",
+              "status": "varian",
+              "jenis": "sinonim",
+              "penggunaan": 22
+            },
+            "stunting": {
+              "tulisan": "stunting",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 375
+            },
+            "tengkes": {
+              "tulisan": "tengkes",
+              "status": "varian",
+              "jenis": "sinonim",
+              "penggunaan": 30
+            }
+          }
+        },
+        "tata kelola": {
+          "penggunaan": 401,
+          "dokumen": 401,
+          "persen_konsistensi": 90.8,
+          "bentuk": {
+            "governance": {
+              "tulisan": "governance",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 50
+            },
+            "tata kelola": {
+              "tulisan": "tata kelola",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 314
+            },
+            "tatakelola": {
+              "tulisan": "tatakelola",
+              "status": "varian",
+              "jenis": "ejaan",
+              "penggunaan": 37
+            }
+          }
+        },
+        "transformasi digital": {
+          "penggunaan": 509,
+          "dokumen": 509,
+          "persen_konsistensi": 91.4,
+          "bentuk": {
+            "digital transformation": {
+              "tulisan": "digital transformation",
+              "status": "padanan_bahasa",
+              "jenis": "bahasa",
+              "penggunaan": 64
+            },
+            "digitalisasi": {
+              "tulisan": "digitalisasi",
+              "status": "varian",
+              "jenis": "sinonim",
+              "penggunaan": 44
+            },
+            "transformasi digital": {
+              "tulisan": "transformasi digital",
+              "status": "baku",
+              "jenis": "baku",
+              "penggunaan": 401
+            }
+          }
+        },
+        "usaha mikro kecil dan menengah": {
+          "penggunaan": 37,
+          "dokumen": 37,
+          "persen_konsistensi": null,
+          "bentuk": {
+            "usaha mikro kecil dan menengah": {
+              "tulisan": "usaha mikro kecil dan menengah",
+              "status": "belum_di_kamus",
+              "jenis": "",
+              "penggunaan": 37
+            }
+          }
+        }
+      },
+      "kandidat_padanan": [
+        {
+          "tag": "rencana pembangunan jangka menengah nasional",
+          "usulan_baku": "RPJMN",
+          "alasan": "singkatan",
+          "kemiripan": null,
+          "dokumen": 75
+        },
+        {
+          "tag": "pendidkan",
+          "usulan_baku": "pendidikan",
+          "alasan": "ejaan mirip",
+          "kemiripan": 0.98,
+          "dokumen": 53
+        },
+        {
+          "tag": "kesehtan",
+          "usulan_baku": "kesehatan",
+          "alasan": "ejaan mirip",
+          "kemiripan": 0.95,
+          "dokumen": 49
+        },
+        {
+          "tag": "usaha mikro kecil dan menengah",
+          "usulan_baku": "UMKM",
+          "alasan": "singkatan",
+          "kemiripan": null,
+          "dokumen": 37
+        }
+      ]
+    }
   }
 }

@@ -17,6 +17,11 @@ import {
   masalahPerUke1,
   kurangMenujuTarget,
   bacaTanggalData,
+  normalTag,
+  jaroWinkler,
+  singkatanDari,
+  bacaKamusTag,
+  periksaTag,
 } from '../src/indicators';
 import { TANGGAL_DATA } from '../src/config';
 
@@ -29,6 +34,8 @@ const ds = bacaDataset({
   unit_kerja: baca('unit_kerja.csv'),
   hari_libur: baca('hari_libur.csv'),
   snapshot_bulanan: baca('snapshot_bulanan.csv'),
+  tag_dokumen: baca('tag_dokumen.csv'),
+  kamus_tag: baca('kamus_tag.csv'),
 });
 const ctx = siapkan(ds, { tanggalData: expected.tanggal_data });
 const hasil = hitungIndikator(ctx, FILTER_AWAL);
@@ -168,6 +175,41 @@ describe('indikator pendukung keputusan (spesifikasi 4.8)', () => {
   it('kurang menuju target', () => {
     expect(kurangMenujuTarget(5063, 2687, 95)).toBe(2123);
     expect(kurangMenujuTarget(10, 10, 95)).toBe(0);
+  });
+});
+
+describe('konsistensi tagging (spesifikasi 1.4)', () => {
+  it('bentuk pembanding mengabaikan huruf besar, tanda baca, dan spasi', () => {
+    expect(normalTag('  Perubahan-Iklim ')).toBe('perubahan iklim');
+    expect(normalTag('Tata  Kelola/')).toBe('tata kelola');
+  });
+  it('kemiripan ejaan dan singkatan', () => {
+    expect(bulatkan(jaroWinkler('martha', 'marhta'), 3)).toBe(0.961);
+    expect(jaroWinkler('pendidkan', 'pendidikan')).toBeGreaterThanOrEqual(0.92);
+    expect(jaroWinkler('investasi', 'infrastruktur')).toBeLessThan(0.92);
+    expect(singkatanDari('umkm', 'usaha mikro kecil dan menengah')).toBe(true);
+    expect(singkatanDari('rpjmn', 'rencana pembangunan jangka menengah nasional')).toBe(true);
+    expect(singkatanDari('ukm', 'usaha mikro kecil dan menengah')).toBe(false);
+  });
+  it('angka tag per UKE I menjumlah ke total entri', () => {
+    const entri = pilihDokumen(ctx, { ...FILTER_AWAL, sumber: 'ENTRI' });
+    const t = hitungIndikator(ctx, { ...FILTER_AWAL, sumber: 'ENTRI' }).kualitas.tag!;
+    let n = 0;
+    for (const u of new Set(entri.map((d) => d.uke1))) n += hitungIndikator(ctx, { ...FILTER_AWAL, uke1: u }).kualitas.tag!.penggunaan_tag;
+    expect(n).toBe(t.penggunaan_tag);
+  });
+  it('tanpa tag_dokumen.csv bagian tag kosong dan masalah tag 0', () => {
+    const c = siapkan({ ...ds, tagDokumen: null }, { tanggalData: expected.tanggal_data });
+    const q = hitungIndikator(c, FILTER_AWAL).kualitas;
+    expect(q.tag).toBeNull();
+    expect(q.masalah.tag_tidak_baku).toBe(0);
+    expect(c.pemeriksaan.tag_dokumen_ada_di_dokumen).toBe(true);
+  });
+  it('kamus berantai atau jenis tidak sah terdeteksi', () => {
+    const kamus = bacaKamusTag('tag_varian,tag_baku,jenis\nprk,pembangunan rendah karbon,singkatan\nPRK,program,singkatan\n');
+    expect(periksaTag({ ...ds, kamusTag: kamus }).kamus_tag_valid).toBe(false);
+    const jenis = bacaKamusTag('tag_varian,tag_baku,jenis\nx,x,baku\ny,x,typo\n');
+    expect(periksaTag({ ...ds, kamusTag: jenis }).kamus_tag_valid).toBe(false);
   });
 });
 

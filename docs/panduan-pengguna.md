@@ -14,7 +14,7 @@ Angka dihitung dari data per tanggal yang tertera di header ("Data per 8 Oktober
 | Tab | **Ringkasan Pimpinan**, **Kontrol Alur Kerja**, **Kualitas Aset** |
 | Filter | Periode, UKE I, UKE II, Sumber data. Berlaku untuk semua angka di semua tab |
 | Definisi indikator | Di bawah setiap tab; jelaskan arti setiap istilah |
-| Pemeriksaan data | Di bawah definisi; klik untuk melihat 8 pemeriksaan mutu data |
+| Pemeriksaan data | Di bawah definisi; klik untuk melihat 10 pemeriksaan mutu data |
 
 ## 2. Filter
 
@@ -85,7 +85,13 @@ ke rekan (misalnya PIC UKE) agar mereka langsung melihat tampilan yang sama.
 
 - **Skor kualitas metadata** per tujuh dimensi. Dimensi di bawah 65 ditandai *Prioritas perbaikan*.
 - **Sebaran skor** per dokumen.
-- **Masalah kualitas**: klik **Lihat daftar** untuk melihat dan mengunduh dokumen bermasalah.
+- **Masalah kualitas**: klik **Lihat daftar** untuk melihat dan mengunduh dokumen bermasalah. *Tag tidak baku*
+  menghitung dokumen yang memakai bentuk tag bukan baku menurut kamus tag.
+- **Konsistensi tagging**: persentase pemakaian tag berbentuk baku atau padanan bahasa Inggris. Tabel *Seluruh tag yang
+  diinput* menampilkan setiap konsep dengan semua bentuk penulisannya (hijau = baku, biru = padanan bahasa Inggris,
+  oranye = tidak baku, abu-abu = belum di kamus); ketik di *Cari tag* atau pilih *Tampilkan* untuk menyaring. Tabel
+  *Kandidat padanan* berisi tag yang belum di kamus tetapi mirip tag lain; unduh, tinjau, lalu tambahkan ke
+  `kamus_tag.csv`.
 
 - **Masalah kualitas per UKE I**: jumlah temuan per unit; angka terbesar di tiap kolom ditandai. Klik angka untuk melihat
   daftarnya.

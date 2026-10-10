@@ -4,3 +4,4 @@ export * from './tanggal';
 export * from './parse';
 export * from './hitung';
 export * from './keputusan';
+export * from './tag';

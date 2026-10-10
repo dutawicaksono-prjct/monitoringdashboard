@@ -55,12 +55,31 @@ export interface Snapshot {
   tertahan_lebih_dari_5_hk: number;
 }
 
+/** Satu tag pada satu dokumen, ditulis apa adanya seperti input pengguna (tag_dokumen.csv). */
+export interface TagDokumen {
+  dokumen_id: string;
+  tag: string;
+}
+
+/** Jenis entri kamus padanan tag. `bahasa` = padanan bahasa Inggris, diterima sebagai konsisten. */
+export const JENIS_KAMUS_TAG = ['baku', 'ejaan', 'singkatan', 'sinonim', 'bentuk', 'bahasa'] as const;
+
+/** Satu baris kamus padanan tag (kamus_tag.csv): bentuk `tag_varian` mengacu ke konsep `tag_baku`. */
+export interface KamusTag {
+  tag_varian: string;
+  tag_baku: string;
+  jenis: string;
+}
+
 export interface Dataset {
   dokumen: Dokumen[];
   riwayat: Riwayat[];
   unitKerja: UnitKerja[];
   hariLibur: HariLibur[];
   snapshot: Snapshot[];
+  /** null bila tag_dokumen.csv tidak tersedia; bagian tag kemudian tidak ditampilkan. */
+  tagDokumen: TagDokumen[] | null;
+  kamusTag: KamusTag[];
 }
 
 export type FilterSumber = 'SEMUA' | Sumber;
@@ -107,6 +126,8 @@ export interface PemeriksaanData {
   riwayat_sesuai_status: boolean;
   tanggal_logis: boolean;
   snapshot_persamaan_total: boolean;
+  tag_dokumen_ada_di_dokumen: boolean;
+  kamus_tag_valid: boolean;
 }
 
 export interface Ringkasan {
@@ -135,8 +156,55 @@ export interface Kualitas {
     belum_diperbarui_12_bulan: number;
     kandidat_duplikat: number;
     file_tidak_terbaca: number;
+    tag_tidak_baku: number;
   };
   ambang_kelengkapan: number;
+  /** null bila data tag tidak tersedia. */
+  tag: StatistikTag | null;
+}
+
+/** Status satu pemakaian tag terhadap kamus. */
+export type StatusTag = 'baku' | 'padanan_bahasa' | 'varian' | 'belum_di_kamus';
+
+export interface BentukTag {
+  /** Penulisan yang paling sering dipakai untuk bentuk ini. */
+  tulisan: string;
+  status: StatusTag;
+  /** Jenis menurut kamus; kosong bila belum di kamus. */
+  jenis: string;
+  penggunaan: number;
+}
+
+export interface KonsepTag {
+  penggunaan: number;
+  dokumen: number;
+  /** (baku + padanan bahasa) ÷ (baku + padanan bahasa + varian); null bila konsep belum di kamus. */
+  persen_konsistensi: number | null;
+  /** Kunci: bentuk ternormalisasi. */
+  bentuk: Record<string, BentukTag>;
+}
+
+export interface KandidatPadanan {
+  tag: string;
+  usulan_baku: string;
+  alasan: 'singkatan' | 'ejaan mirip';
+  /** Skor Jaro-Winkler 2 desimal; null untuk singkatan. */
+  kemiripan: number | null;
+  dokumen: number;
+}
+
+export interface StatistikTag {
+  dokumen_bertag: number;
+  dokumen_tanpa_tag: number;
+  penggunaan_tag: number;
+  bentuk_unik: number;
+  konsep_unik: number;
+  penggunaan: Record<StatusTag, number>;
+  persen_konsistensi: number | null;
+  konsep_dengan_varian: number;
+  /** Kunci: konsep baku (atau bentuk ternormalisasi bila belum di kamus). */
+  per_konsep: Record<string, KonsepTag>;
+  kandidat_padanan: KandidatPadanan[];
 }
 
 export type Perubahan = Omit<Snapshot, 'tanggal_snapshot'>;

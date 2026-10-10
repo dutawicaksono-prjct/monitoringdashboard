@@ -220,6 +220,7 @@ const LABEL_MASALAH_KALIMAT: Record<string, string> = {
   belum_diperbarui_12_bulan: 'belum diperbarui lebih dari 12 bulan',
   kandidat_duplikat: 'merupakan kandidat duplikat',
   file_tidak_terbaca: 'memiliki file tidak terbaca (OCR gagal)',
+  tag_tidak_baku: 'memakai tag tidak baku',
 };
 
 function CapaianUke1({ ind }: { ind: Indikator }) {

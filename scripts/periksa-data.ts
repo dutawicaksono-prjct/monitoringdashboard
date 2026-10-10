@@ -34,6 +34,8 @@ try {
     unit_kerja: baca('unit_kerja.csv'),
     hari_libur: baca('hari_libur.csv'),
     snapshot_bulanan: opsional('snapshot_bulanan.csv'),
+    tag_dokumen: opsional('tag_dokumen.csv'),
+    kamus_tag: opsional('kamus_tag.csv'),
   });
 } catch (e) {
   console.error(`GAGAL MEMBACA DATA: ${(e as Error).message}`);
@@ -82,6 +84,13 @@ const rincian: Record<keyof PemeriksaanData, () => string> = {
     ),
   snapshot_persamaan_total: () =>
     contoh(ds.snapshot.filter((s) => s.total_aset !== s.terpublikasi + s.dalam_proses_entri + s.tidak_tayang).map((s) => s.tanggal_snapshot)),
+  tag_dokumen_ada_di_dokumen: () => {
+    const id = new Set(ds.dokumen.map((d) => d.dokumen_id));
+    return contoh([...new Set((ds.tagDokumen ?? []).filter((t) => !id.has(t.dokumen_id)).map((t) => t.dokumen_id))]);
+  },
+  kamus_tag_valid: () =>
+    ' Periksa kolom jenis (baku, ejaan, singkatan, sinonim, bentuk, bahasa), varian yang mengacu ke lebih dari satu bentuk baku, ' +
+    'dan bentuk baku yang belum punya baris jenis "baku".',
 };
 
 console.log(`Pemeriksaan data · folder ${folder} · tanggal data ${tanggal}\n`);
@@ -104,6 +113,8 @@ if (!ds.snapshot.some((s) => s.tanggal_snapshot === akhirBulanLalu(tanggal))) {
 }
 const tanpaSkor = ds.dokumen.filter((d) => Number.isNaN(d.skor_metadata) || d.skor_dimensi.some(Number.isNaN)).length;
 if (tanpaSkor) peringatan.push(`${tanpaSkor} dokumen memiliki skor kosong atau bukan angka.`);
+if (!ds.tagDokumen) peringatan.push('tag_dokumen.csv tidak ada; bagian konsistensi tag tidak ditampilkan.');
+else if (!ds.kamusTag.length) peringatan.push('kamus_tag.csv tidak ada atau kosong; semua tag berstatus "belum di kamus".');
 if (tanggal !== TANGGAL_DATA) peringatan.push(`Tanggal yang diperiksa (${tanggal}) berbeda dengan tanggal data (meta_data.csv atau src/config.ts: ${TANGGAL_DATA}).`);
 
 console.log(`\nRingkasan: ${ind.ringkasan.total_aset} dokumen (entri ${ind.ringkasan.entri}, Menu Program ${ind.ringkasan.menu_program}), ` +

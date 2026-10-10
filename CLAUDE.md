@@ -21,12 +21,14 @@ Angka pada mockup hanya contoh. Angka yang benar adalah hasil hitungan dari data
 | `data/unit_kerja.csv` | Referensi 12 UKE I dan 71 UKE II (tanpa kode unit) |
 | `data/snapshot_bulanan.csv` | Snapshot akhir bulan untuk "perubahan dibanding bulan lalu" |
 | `data/expected_indicators.json` | Nilai acuan seluruh indikator, dipakai sebagai fixture uji |
+| `data/tag_dokumen.csv`, `data/kamus_tag.csv` | Tag per dokumen dan kamus padanan tag (contoh, sementara; spesifikasi 1.4) |
 | `tools/generate_sample_data.py` | Membangkitkan ulang `dokumen.csv` dan `riwayat_status.csv` (deterministik) |
+| `tools/generate_sample_tags.py` | Membangkitkan ulang `tag_dokumen.csv` dan `kamus_tag.csv` (deterministik) |
 | `tools/compute_indicators.py` | Implementasi acuan rumus (Python) dan pemeriksaan data bagian 8.2 |
 
 Tanggal data contoh (cut-off): **2026-10-08**. Semua nama dokumen, ID, dan pengguna adalah rekaan.
 
-Membangkitkan ulang: `python tools/generate_sample_data.py && python tools/compute_indicators.py` (butuh `pandas`).
+Membangkitkan ulang: `python tools/generate_sample_data.py && python tools/generate_sample_tags.py && python tools/compute_indicators.py` (butuh `pandas`).
 
 ## 3. Keputusan yang sudah ditetapkan
 
