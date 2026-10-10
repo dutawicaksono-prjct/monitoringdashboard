@@ -3,7 +3,8 @@ import { bacaDataset, bacaTanggalData, type Dataset } from './indicators';
 
 async function ambil(nama: string, wajib: boolean): Promise<string | null> {
   const res = await fetch(`${DATA_URL}${nama}`, { cache: 'no-cache' });
-  if (!res.ok) {
+  // Sebagian server (mis. vite preview) membalas berkas yang tidak ada dengan index.html; anggap tidak ada.
+  if (!res.ok || (res.headers.get('content-type') ?? '').includes('text/html')) {
     if (!wajib) return null;
     throw new Error(`Berkas data ${nama} tidak dapat dimuat (HTTP ${res.status}).`);
   }
