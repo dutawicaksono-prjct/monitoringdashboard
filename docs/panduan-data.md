@@ -13,6 +13,7 @@ Dasbor membaca lima berkas CSV dari folder `data/`. Versi ini memakai **data con
 | `unit_kerja.csv` | satu UKE II beserta UKE I induknya | `uke2` | Ya |
 | `hari_libur.csv` | satu hari libur nasional / cuti bersama | `tanggal` | Ya |
 | `snapshot_bulanan.csv` | angka total pada akhir satu bulan | `tanggal_snapshot` | Tidak |
+| `meta_data.csv` | tanggal data (cut-off) | `tanggal_data` | Tidak |
 
 Aturan format:
 
@@ -51,10 +52,11 @@ Lakukan setiap awal bulan, atau sesering yang dibutuhkan.
 1. **Ekspor** `dokumen.csv` dan `riwayat_status.csv` dari KOMENS sesuai templat.
 2. **Perbarui** `unit_kerja.csv` bila ada perubahan nomenklatur, dan `hari_libur.csv` bila tahun berganti
    atau ada SKB baru.
-3. **Setel tanggal data** di `src/config.ts` (`TANGGAL_DATA`) ke tanggal ekspor.
+3. **Setel tanggal data** di `data/meta_data.csv` (kolom `tanggal_data`, format `YYYY-MM-DD`) ke tanggal ekspor.
+   Tidak perlu build ulang. Bila berkas ini tidak ada, dipakai `TANGGAL_DATA` di `src/config.ts`.
 4. **Periksa data**: `npm run periksa-data`. Perbaiki semua butir `[GAGAL]`; baca juga bagian *Peringatan*.
 5. **Rekam snapshot akhir bulan lalu**: `npm run snapshot` (otomatis memakai akhir bulan sebelum
-   `TANGGAL_DATA`). Untuk tanggal tertentu: `npm run snapshot -- 2026-10-31`.
+   tanggal data). Untuk tanggal tertentu: `npm run snapshot -- 2026-10-31`.
 6. **Uji dan pasang**: commit lalu push; GitHub Actions menguji dan memasang otomatis. Untuk server
    Pusdatinrenbang, ikuti `docs/panduan-pemasangan.md`.
 
@@ -76,6 +78,6 @@ Lakukan setiap awal bulan, atau sesering yang dibutuhkan.
 - [ ] `npm run periksa-data` menghasilkan "semua pemeriksaan terpenuhi"
 - [ ] Tidak ada peringatan tahun hari libur yang hilang
 - [ ] Snapshot akhir bulan lalu tersedia
-- [ ] `TANGGAL_DATA` sama dengan tanggal ekspor
+- [ ] `tanggal_data` di `meta_data.csv` sama dengan tanggal ekspor
 - [ ] `DATA_CONTOH` = `false` bila data nyata
 - [ ] Angka total di dasbor sama dengan jumlah dokumen di KOMENS pada tanggal yang sama (cek manual)

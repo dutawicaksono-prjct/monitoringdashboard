@@ -1,7 +1,7 @@
 import { AMBANG_MENDEKATI_HK } from '../config';
 import { useEffect, useState } from 'react';
 import { angka, desimal, persen, rasio } from '../format';
-import { statusWaktu, STATUS_PROSES, type DokumenSiap, type Filter, type Indikator } from '../indicators';
+import { bebanPic, sebaranUmur, statusWaktu, STATUS_PROSES, type DokumenSiap, type Filter, type Indikator } from '../indicators';
 import { LABEL_TAHAP } from './Ringkasan';
 import type { PermintaanDaftar } from './Umum';
 import { ChipStatus, Ikon, JudulIkon, KotakIkon, type Nada, type NamaIkon } from './Ikon';
@@ -207,17 +207,124 @@ export function AlurKerja({ ind, filter, dokumen, onDaftar }: Props) {
         ))}
       </section>
 
-      <TabelUke ind={ind} />
+      <BebanPic entri={entri} hk={hk} onDaftar={onDaftar} />
+
+      <TabelUke ind={ind} entri={entri} />
     </div>
   );
 }
 
-function TabelUke({ ind }: { ind: Indikator }) {
+function BebanPic({ entri, hk, onDaftar }: { entri: DokumenSiap[]; hk: number; onDaftar: (p: PermintaanDaftar) => void }) {
+  const [semua, setSemua] = useState(false);
+  const { baris, tanpa_pic } = bebanPic(entri);
+  const totalDiPic = baris.reduce((a, b) => a + b.jumlah, 0) + tanpa_pic.length;
+  if (!totalDiPic) return null;
+  const TAMPIL = 10;
+  const tampil = semua ? baris : baris.slice(0, TAMPIL);
+  const teratas = baris.slice(0, 5);
+  const porsiTeratas = teratas.reduce((a, b) => a + b.lebih_dari_batas, 0);
+  const totalLewat = baris.reduce((a, b) => a + b.lebih_dari_batas, 0) + tanpa_pic.filter((d) => d.lewat_batas).length;
+  const daftarPic = (pic: string): PermintaanDaftar => ({
+    judul: `Dokumen di tahap PIC UKE: ${pic}`,
+    dokumen: entri.filter((d) => d.status_saat_ini === 'PIC_UKE' && d.pic_uke.trim() === pic).sort((a, b) => (b.lama_hk ?? 0) - (a.lama_hk ?? 0)),
+    labelKeterangan: 'Lama tertahan',
+    keterangan: ketLama,
+  });
+  return (
+    <section id="beban-pic" className="kartu" aria-labelledby="judul-pic">
+      <div className="kepala-tabel">
+        <div>
+          <JudulIkon nama="bebanPic" id="judul-pic">
+            Beban per PIC UKE
+          </JudulIkon>
+          <div className="kartu-sub">
+            {angka(totalDiPic)} dokumen sedang di tahap PIC UKE, dipegang {angka(baris.length)} PIC · diurutkan dari tertahan lebih
+            dari {hk} hari kerja terbanyak
+          </div>
+        </div>
+        {tanpa_pic.length > 0 && (
+          <button
+            type="button"
+            className="tombol"
+            onClick={() =>
+              onDaftar({
+                judul: 'Di tahap PIC UKE tanpa PIC',
+                catatan: 'Dokumen ini menunggu verifikasi PIC UKE, tetapi kolom PIC kosong sehingga tidak ada yang dapat diingatkan. Tetapkan PIC di KOMENS.',
+                dokumen: tanpa_pic,
+                labelKeterangan: 'Lama tertahan',
+                keterangan: ketLama,
+              })
+            }
+          >
+            Lihat {angka(tanpa_pic.length)} dokumen tanpa PIC
+          </button>
+        )}
+      </div>
+      {tanpa_pic.length > 0 && (
+        <div className="catatan perhatian">
+          <b>Catatan analis:</b> {angka(tanpa_pic.length)} dokumen berada di tahap PIC UKE tanpa PIC, sehingga tertahan tanpa pemilik
+          ({angka(tanpa_pic.filter((d) => d.lewat_batas).length)} di antaranya lebih dari {hk} hari kerja).
+          {totalLewat > 0 &&
+            ` Lima PIC teratas memegang ${angka(porsiTeratas)} dari ${angka(totalLewat)} dokumen tertahan di tahap ini (${rasio(porsiTeratas, totalLewat)}); pengingat ke mereka paling besar dampaknya.`}
+        </div>
+      )}
+      <div className="gulir" tabIndex={0} aria-label="Tabel beban per PIC, dapat digulir ke samping">
+        <table className="tabel-dok tabel-pic">
+          <thead>
+            <tr>
+              <th scope="col">PIC</th>
+              <th scope="col">UKE II</th>
+              <th scope="col">Di tahap PIC UKE</th>
+              <th scope="col">Lebih dari {hk} hari kerja</th>
+              <th scope="col">Terlama (hari kerja)</th>
+              <th scope="col">
+                <span className="sr-only">Aksi</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {tampil.map((b) => (
+              <tr key={b.pic}>
+                <td>{b.pic}</td>
+                <td>{b.uke2.join(', ')}</td>
+                <td>{angka(b.jumlah)}</td>
+                <td>
+                  <b>{angka(b.lebih_dari_batas)}</b>
+                </td>
+                <td>{angka(b.terlama)}</td>
+                <td>
+                  <button type="button" className="tombol tombol-kecil" onClick={() => onDaftar(daftarPic(b.pic))}>
+                    Daftar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {baris.length > TAMPIL && (
+        <button type="button" className="tombol" onClick={() => setSemua((x) => !x)} aria-expanded={semua}>
+          {semua ? `Tampilkan ${TAMPIL} teratas` : `Tampilkan semua ${angka(baris.length)} PIC`}
+        </button>
+      )}
+    </section>
+  );
+}
+
+function TabelUke({ ind, entri }: { ind: Indikator; entri: DokumenSiap[] }) {
   const hk = ind.batas_tertahan_hari_kerja;
+  const umurUke1 = new Map<string, DokumenSiap[]>();
+  const umurUke2 = new Map<string, DokumenSiap[]>();
+  for (const d of entri) {
+    (umurUke1.get(d.uke1) ?? umurUke1.set(d.uke1, []).get(d.uke1)!).push(d);
+    (umurUke2.get(d.uke2) ?? umurUke2.set(d.uke2, []).get(d.uke2)!).push(d);
+  }
+  const lebih20 = (docs: DokumenSiap[] | undefined) => sebaranUmur(docs ?? [], hk);
   const kelompok = Object.entries(ind.uke1)
     .map(([nama, u]) => ({ nama, ...u }))
     .sort((a, b) => b.lebih_dari_5_hk - a.lebih_dari_5_hk || a.nama.localeCompare(b.nama, 'id'));
   const kunci = kelompok.map((k) => k.nama).join('|');
+  const melewati = kelompok.filter((k) => k.status === 'Melewati batas').length;
   const [terbuka, setTerbuka] = useState<Record<string, boolean>>({});
   // Saat isi tabel berubah (filter), buka UKE I teratas sebagai titik awal.
   useEffect(() => {
@@ -225,7 +332,12 @@ function TabelUke({ ind }: { ind: Indikator }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kunci]);
 
-  const sel = (u: { total: number; publish: number; persen_publish: number | null; dalam_proses: number; lebih_dari_5_hk: number; rata_rata_tertahan_hk: number | null; status: string }) => (
+  const sel = (
+    u: { total: number; publish: number; persen_publish: number | null; dalam_proses: number; lebih_dari_5_hk: number; rata_rata_tertahan_hk: number | null; status: string },
+    docs: DokumenSiap[] | undefined,
+  ) => {
+    const s = lebih20(docs);
+    return (
     <>
       <span role="cell">{angka(u.total)}</span>
       <span role="cell" className="sel-persen">
@@ -236,12 +348,16 @@ function TabelUke({ ind }: { ind: Indikator }) {
       </span>
       <span role="cell">{angka(u.dalam_proses)}</span>
       <span role="cell" style={{ fontWeight: 700 }}>{angka(u.lebih_dari_5_hk)}</span>
+      <span role="cell" className="sel-umur" title={`${hk + 1}–10 hari kerja: ${s.hk_6_10} · 11–20: ${s.hk_11_20} · terlama ${s.terlama ?? '—'} hari kerja`}>
+        {angka(s.hk_lebih_20)}
+      </span>
       <span role="cell">{u.rata_rata_tertahan_hk == null ? '—' : `${desimal(u.rata_rata_tertahan_hk)} hari`}</span>
       <span role="cell">
         <ChipStatus status={u.status} />
       </span>
     </>
-  );
+    );
+  };
 
   return (
     <section className="kartu" aria-labelledby="judul-tabel">
@@ -253,6 +369,12 @@ function TabelUke({ ind }: { ind: Indikator }) {
           <div className="kartu-sub">
             Entri · diurutkan dari dokumen tertahan lebih dari {hk} hari kerja terbanyak · klik UKE I untuk membuka UKE II
           </div>
+          {melewati > 0 && (
+            <div className="kartu-sub">
+              {angka(melewati)} dari {angka(kelompok.length)} UKE I berstatus Melewati batas. Kolom "lebih dari 20 hari kerja" membantu
+              memilih unit yang paling mendesak.
+            </div>
+          )}
         </div>
         <div className="tombol-grup">
           <button type="button" className="tombol" onClick={() => setTerbuka(Object.fromEntries(kelompok.map((k) => [k.nama, true])))}>
@@ -286,6 +408,7 @@ function TabelUke({ ind }: { ind: Indikator }) {
             <span role="columnheader">Terpublikasi</span>
             <span role="columnheader">Dalam proses</span>
             <span role="columnheader">Tertahan lebih dari {hk} hari kerja</span>
+            <span role="columnheader">Di antaranya lebih dari 20 hari kerja</span>
             <span role="columnheader">Rata-rata tertahan (hari kerja)</span>
             <span role="columnheader">Status</span>
           </div>
@@ -313,7 +436,7 @@ function TabelUke({ ind }: { ind: Indikator }) {
                       </span>
                     </button>
                   </span>
-                  {sel(g)}
+                  {sel(g, umurUke1.get(g.nama))}
                 </div>
                 {buka &&
                   anak.map((u) => (
@@ -321,7 +444,7 @@ function TabelUke({ ind }: { ind: Indikator }) {
                       <span role="rowheader" style={{ minWidth: 0 }}>
                         <span className="nama-unit">{u.nama}</span>
                       </span>
-                      {sel(u)}
+                      {sel(u, umurUke2.get(u.nama))}
                     </div>
                   ))}
               </div>

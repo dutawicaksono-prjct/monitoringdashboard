@@ -56,9 +56,11 @@ interface BilahProps {
   onFilter: (f: Filter) => void;
   tahun: number[];
   unit: UnitKerja[];
+  onSalinTautan: () => void;
+  tersalin: boolean;
 }
 
-export function Bilah({ tab, onTab, filter, onFilter, tahun, unit }: BilahProps) {
+export function Bilah({ tab, onTab, filter, onFilter, tahun, unit, onSalinTautan, tersalin }: BilahProps) {
   const daftarUke1 = [...new Set(unit.map((u) => u.uke1))];
   const daftarUke2 = filter.uke1 ? unit.filter((u) => u.uke1 === filter.uke1) : unit;
   const ukeNonaktif = filter.sumber === 'MENU_PROGRAM';
@@ -142,6 +144,13 @@ export function Bilah({ tab, onTab, filter, onFilter, tahun, unit }: BilahProps)
               <option value="MENU_PROGRAM">Menu Program</option>
             </select>
           </label>
+          <button type="button" className="tombol tombol-tautan" onClick={onSalinTautan}>
+            <Ikon nama="tautan" ukuran={16} />
+            {tersalin ? 'Tautan tersalin' : 'Salin tautan tampilan ini'}
+          </button>
+          <span className="sr-only" role="status">
+            {tersalin ? 'Tautan tampilan ini sudah disalin ke papan klip.' : ''}
+          </span>
         </div>
         <div className="hanya-cetak catatan-kecil" style={{ padding: '8px 0' }}>
           Tampilan: {TAB.find((t) => t.id === tab)?.label} · Filter: {deskripsiFilter(filter)}

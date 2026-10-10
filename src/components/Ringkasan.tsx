@@ -1,6 +1,18 @@
 import { useState } from 'react';
 import { angka, BULAN_PENDEK, desimal, namaBulan, persen, rasio, selisih, tanggalPanjang } from '../format';
-import { bulatkan, STATUS_PROSES, type Filter, type Indikator } from '../indicators';
+import {
+  bulatkan,
+  filterAwal,
+  jalanMenujuTarget,
+  kurangMenujuTarget,
+  publishPerBulan,
+  STATUS_PROSES,
+  trenCapaian,
+  type DokumenSiap,
+  type Filter,
+  type Indikator,
+  type Snapshot,
+} from '../indicators';
 import { NAMA_DIMENSI } from './Kualitas';
 import type { Tab } from './Umum';
 import { Ikon, JudulIkon, KotakIkon, type Nada, type NamaIkon } from './Ikon';
@@ -10,10 +22,12 @@ const TARGET_POSISI = (t: number) => ({ left: `${t}%` });
 interface Props {
   ind: Indikator;
   filter: Filter;
+  dokumen: DokumenSiap[];
+  snapshot: Snapshot[];
   onTab: (t: Tab) => void;
 }
 
-export function Ringkasan({ ind, filter, onTab }: Props) {
+export function Ringkasan({ ind, filter, dokumen, snapshot, onTab }: Props) {
   const r = ind.ringkasan;
   const adaEntri = filter.sumber !== 'MENU_PROGRAM';
   const adaMenu = filter.sumber !== 'ENTRI' && !filter.uke1 && !filter.uke2;
@@ -177,11 +191,16 @@ export function Ringkasan({ ind, filter, onTab }: Props) {
         </div>
       )}
 
+      <div className="baris-kartu">
+        <JalanTarget ind={ind} dokumen={dokumen} />
+        <TrenCapaianKartu ind={ind} filter={filter} snapshot={snapshot} />
+      </div>
+
       {adaEntri && <CapaianUke1 ind={ind} />}
       <Rekap ind={ind} filter={filter} />
 
       <div className="baris-kartu">
-        {adaEntri && <TrenBulanan ind={ind} />}
+        {adaEntri && <TrenBulanan ind={ind} dokumen={dokumen} />}
         {adaMenu && <MenuProgram ind={ind} />}
       </div>
     </div>
@@ -208,6 +227,9 @@ function CapaianUke1({ ind }: { ind: Indikator }) {
   const baris = Object.entries(ind.uke1)
     .map(([nama, u]) => ({ nama, ...u }))
     .sort((a, b) => (a.persen_publish ?? 0) - (b.persen_publish ?? 0) || a.nama.localeCompare(b.nama, 'id'));
+  const kurang = baris.map((g) => ({ nama: g.nama, kurang: kurangMenujuTarget(g.total, g.publish, target) }));
+  const totalKurang = kurang.reduce((a, k) => a + k.kurang, 0);
+  const terbesar = [...kurang].sort((a, b) => b.kurang - a.kurang)[0];
   return (
     <section id="capaian" className="kartu" aria-labelledby="judul-capaian">
       <div>
@@ -219,6 +241,14 @@ function CapaianUke1({ ind }: { ind: Indikator }) {
           memiliki UKE I/UKE II karena dikategorikan menurut substansi.
         </div>
       </div>
+      {terbesar && terbesar.kurang > 0 && (
+        <div className="catatan">
+          <b>Catatan analis:</b> persentase terendah belum tentu kekurangan terbesar. Kekurangan dokumen terbanyak menuju {target}%
+          ada di {terbesar.nama} ({angka(terbesar.kurang)} dokumen
+          {totalKurang > 0 ? `, ${rasio(terbesar.kurang, totalKurang)} dari kekurangan seluruh UKE I` : ''}), sehingga dorongan di
+          unit ini paling besar dampaknya.
+        </div>
+      )}
       <div className="legenda">
         <span>
           <span className="swatch" style={{ background: 'var(--utama)' }} />
@@ -248,6 +278,7 @@ function CapaianUke1({ ind }: { ind: Indikator }) {
               </div>
               <span className="angka">
                 <b>{persen(g.persen_publish)}</b> · {angka(g.publish)} dari {angka(g.total)}
+                <span className="kurang">kurang {angka(kurangMenujuTarget(g.total, g.publish, target))} menuju {target}%</span>
                 {rendah && <span className="tanda-bawah">Di bawah 50%</span>}
               </span>
             </div>
@@ -380,12 +411,15 @@ function Rekap({ ind, filter }: { ind: Indikator; filter: Filter }) {
   );
 }
 
-function TrenBulanan({ ind }: { ind: Indikator }) {
-  const data = Object.entries(ind.dokumen_baru_per_bulan).map(([b, v]) => ({ m: Number(b.slice(5, 7)), b, v }));
+function TrenBulanan({ ind, dokumen }: { ind: Indikator; dokumen: DokumenSiap[] }) {
+  const terbit = publishPerBulan(dokumen, Object.keys(ind.dokumen_baru_per_bulan));
+  const data = Object.entries(ind.dokumen_baru_per_bulan).map(([b, v]) => ({ m: Number(b.slice(5, 7)), b, v, p: terbit[b] ?? 0 }));
   const bulanData = ind.tanggal_data.slice(0, 7);
   const tglData = Number(ind.tanggal_data.slice(8, 10));
-  const maks = Math.max(1, ...data.map((d) => d.v));
+  const maks = Math.max(1, ...data.map((d) => Math.max(d.v, d.p)));
   const TINGGI = 170;
+  const totalTerbit = data.reduce((a, d) => a + d.p, 0);
+  const netLengkap = data.filter((d) => d.b < ind.tanggal_data.slice(0, 7)).reduce((a, d) => a + d.v - d.p, 0);
   const rata = ind.rata_rata_bulanan_bulan_lengkap;
   const lengkap = data.filter((d) => d.b < bulanData);
   const totalTahun = data.reduce((a, d) => a + d.v, 0);
@@ -399,12 +433,27 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
     <section className="kartu" style={{ flex: '2 1 560px' }} aria-labelledby="judul-tren">
       <div>
         <JudulIkon nama="tren" id="judul-tren">
-          Dokumen baru per bulan, {ind.tahun_tren}
+          Dokumen baru dan dipublikasikan per bulan, {ind.tahun_tren}
         </JudulIkon>
         <div className="kartu-sub">
-          Entri · {angka(totalTahun)} dokumen baru {awal && akhir ? `${BULAN_PENDEK[awal.m - 1]}–${BULAN_PENDEK[akhir.m - 1]}` : ''}
+          Entri · {angka(totalTahun)} dokumen baru dan {angka(totalTerbit)} dipublikasikan{' '}
+          {awal && akhir ? `${BULAN_PENDEK[awal.m - 1]}–${BULAN_PENDEK[akhir.m - 1]}` : ''}
           {parsial && ` · ${BULAN_PENDEK[parsial.m - 1]}* = parsial (s.d. ${tglData} ${BULAN_PENDEK[parsial.m - 1]})`}
         </div>
+      </div>
+      <div className="legenda">
+        <span>
+          <span className="swatch" style={{ background: 'var(--utama)' }} />
+          Dokumen baru (masuk)
+        </span>
+        <span>
+          <span className="swatch" style={{ background: 'var(--angka-publish)' }} />
+          Dipublikasikan (keluar)
+        </span>
+        <span>
+          <span className="swatch" style={{ background: 'var(--biru-muda)' }} />
+          Bulan parsial
+        </span>
       </div>
       <div className="tren" role="img" aria-label={`Grafik batang dokumen baru per bulan tahun ${ind.tahun_tren}; rincian pada tabel berikut.`}>
         {rata != null && (
@@ -417,11 +466,22 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
         )}
         {data.map((d) => (
           <div key={d.b} className="kolom">
-            <span>{angka(d.v)}</span>
-            <div
-              className="batang"
-              style={{ height: Math.max(3, Math.round((d.v / maks) * TINGGI)), background: d.b === bulanData ? 'var(--biru-muda)' : 'var(--utama)' }}
-            />
+            <div className="pasangan">
+              <div className="sub-kolom">
+                <span>{angka(d.v)}</span>
+                <div
+                  className="batang"
+                  style={{ height: Math.max(3, Math.round((d.v / maks) * TINGGI)), background: d.b === bulanData ? 'var(--biru-muda)' : 'var(--utama)' }}
+                />
+              </div>
+              <div className="sub-kolom">
+                <span className="redup">{angka(d.p)}</span>
+                <div
+                  className="batang"
+                  style={{ height: Math.max(3, Math.round((d.p / maks) * TINGGI)), background: d.b === bulanData ? 'var(--biru-muda)' : 'var(--angka-publish)' }}
+                />
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -434,7 +494,14 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
         ))}
       </div>
       <table className="sr-only">
-        <caption>Dokumen baru per bulan {ind.tahun_tren}</caption>
+        <caption>Dokumen baru dan dipublikasikan per bulan {ind.tahun_tren}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Bulan</th>
+            <th scope="col">Dokumen baru</th>
+            <th scope="col">Dipublikasikan</th>
+          </tr>
+        </thead>
         <tbody>
           {data.map((d) => (
             <tr key={d.b}>
@@ -442,7 +509,8 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
                 {namaBulan(d.m)}
                 {d.b === bulanData ? ' (parsial)' : ''}
               </th>
-              <td>{d.v}</td>
+              <td>{angka(d.v)}</td>
+              <td>{angka(d.p)}</td>
             </tr>
           ))}
         </tbody>
@@ -451,7 +519,13 @@ function TrenBulanan({ ind }: { ind: Indikator }) {
         <b>Catatan analis:</b>{' '}
         {lonjakan.length
           ? `lonjakan ${lonjakan.map((d) => `${namaBulan(d.m)} (${angka(d.v)})`).join(' dan ')} jauh di atas rata-rata (1,5 kali atau lebih). Perlu ditelusuri apakah berasal dari impor massal atau kinerja entri yang sebenarnya, agar tren tidak disalahartikan.`
-          : 'tidak ada bulan dengan jumlah dokumen baru 1,5 kali rata-rata atau lebih.'}
+          : 'tidak ada bulan dengan jumlah dokumen baru 1,5 kali rata-rata atau lebih.'}{' '}
+        {lengkap.length > 0 &&
+          (netLengkap > 0
+            ? `Pada bulan lengkap, dokumen masuk ${angka(netLengkap)} lebih banyak daripada yang dipublikasikan, sehingga antrean entri bertambah.`
+            : netLengkap < 0
+              ? `Pada bulan lengkap, dokumen yang dipublikasikan ${angka(-netLengkap)} lebih banyak daripada yang masuk, sehingga antrean entri berkurang.`
+              : 'Pada bulan lengkap, dokumen masuk dan yang dipublikasikan seimbang.')}
       </div>
     </section>
   );
@@ -507,6 +581,168 @@ function MenuProgram({ ind }: { ind: Indikator }) {
           <b>Catatan analis:</b> {teratas[0]} menyumbang {rasio(teratas[1], total)} dokumen Menu Program, sehingga menu lain tampak
           nyaris tak terlihat jika digabung. Gunakan tombol di atas untuk skala terpisah.
         </div>
+      )}
+    </section>
+  );
+}
+
+function JalanTarget({ ind, dokumen }: { ind: Indikator; dokumen: DokumenSiap[] }) {
+  const r = ind.ringkasan;
+  const target = ind.target_publikasi_persen;
+  const j = jalanMenujuTarget(dokumen, r, target);
+  if (!r.total_aset) return null;
+  const w = (x: number) => `${(100 * x) / r.total_aset}%`;
+  const tercapai = j.kekurangan === 0;
+  return (
+    <section id="jalan-target" className="kartu" style={{ flex: '1 1 520px' }} aria-labelledby="judul-jalan">
+      <div>
+        <JudulIkon nama="jalanTarget" id="judul-jalan">
+          Jalan menuju target {target}%
+        </JudulIkon>
+        <div className="kartu-sub">
+          Target {angka(j.target_dokumen)} dokumen terpublikasi dari {angka(r.total_aset)} total aset. Dari mana kekurangan{' '}
+          {angka(j.kekurangan)} dokumen dapat ditutup?
+        </div>
+      </div>
+      <div className="legenda">
+        <span>
+          <span className="swatch" style={{ background: 'var(--utama)' }} />
+          Sudah terpublikasi
+        </span>
+        <span>
+          <span className="swatch" style={{ background: 'var(--biru-muda)' }} />
+          Dapat ditutup lewat alur kerja
+        </span>
+        <span>
+          <span className="swatch" style={{ background: 'var(--perhatian)' }} />
+          Perlu keputusan (tidak tayang)
+        </span>
+        <span>
+          <span className="swatch-target" />
+          Target {target}%
+        </span>
+      </div>
+      <div className="bar-jalan" role="img" aria-label={`Terpublikasi ${angka(j.terpublikasi)}, dapat ditutup lewat alur ${angka(j.dari_alur)}, perlu keputusan ${angka(j.perlu_keputusan)} dokumen menuju target ${angka(j.target_dokumen)}.`}>
+        <div className="lintasan">
+          <div className="isi-bar" style={{ width: w(j.terpublikasi), background: 'var(--utama)' }} />
+          <div className="isi-bar" style={{ width: w(j.dari_alur), background: 'var(--biru-muda)' }} />
+          <div className="isi-bar" style={{ width: w(j.perlu_keputusan), background: 'var(--perhatian)' }} />
+        </div>
+        <div className="penanda-target" style={TARGET_POSISI(target)} />
+      </div>
+      <div className="rincian-jalan">
+        <div>
+          <span className="n">{angka(j.terpublikasi)}</span>
+          <span>sudah terpublikasi ({persen(r.persen_publish)})</span>
+        </div>
+        <div>
+          <span className="n">{angka(j.dari_alur)}</span>
+          <span>
+            dapat ditutup bila dokumen dalam proses selesai; capaian maksimal lewat alur {persen(j.persen_maks_via_alur)}
+          </span>
+        </div>
+        <div>
+          <span className="n perhatian-teks">{angka(j.perlu_keputusan)}</span>
+          <span>
+            harus datang dari {angka(r.tidak_tayang)} dokumen tidak tayang: {angka(j.unpublish_menu_program)} Menu Program UnPublish,{' '}
+            {angka(j.ditolak_entri)} entri ditolak, {angka(j.unpublish_entri)} entri UnPublish
+          </span>
+        </div>
+      </div>
+      <div className={`catatan${j.perlu_keputusan > 0 ? ' perhatian' : ''}`}>
+        <b>Catatan analis:</b>{' '}
+        {tercapai
+          ? `target ${target}% sudah tercapai.`
+          : j.perlu_keputusan > 0
+            ? `mempercepat alur kerja saja tidak cukup: bila seluruh ${angka(r.dalam_proses_entri)} dokumen dalam proses dipublikasikan, capaian baru ${persen(j.persen_maks_via_alur)}. Sisa ${angka(j.perlu_keputusan)} dokumen memerlukan keputusan atas dokumen tidak tayang${
+                j.unpublish_menu_teratas
+                  ? `; terbesar ${j.unpublish_menu_teratas.nama} dengan ${angka(j.unpublish_menu_teratas.jumlah)} dokumen UnPublish`
+                  : ''
+              }. Perlu dipastikan apakah dokumen tersebut sengaja tidak ditayangkan atau dapat dipublikasikan.`
+            : `kekurangan ${angka(j.kekurangan)} dokumen dapat ditutup sepenuhnya bila dokumen dalam proses selesai dipublikasikan.`}
+      </div>
+    </section>
+  );
+}
+
+function TrenCapaianKartu({ ind, filter, snapshot }: { ind: Indikator; filter: Filter; snapshot: Snapshot[] }) {
+  const target = ind.target_publikasi_persen;
+  const aktif = filterAwal(filter);
+  const t = trenCapaian(snapshot, ind.tanggal_data, ind.ringkasan, target);
+  const cukup = t.titik.length > 1;
+  return (
+    <section id="tren-capaian" className="kartu" style={{ flex: '1 1 420px' }} aria-labelledby="judul-tren-capaian">
+      <div>
+        <JudulIkon nama="trenCapaian" id="judul-tren-capaian">
+          Tren capaian terhadap target {target}%
+        </JudulIkon>
+        <div className="kartu-sub">Snapshot akhir bulan dan posisi pada tanggal data · seluruh KOMENS</div>
+      </div>
+      {!aktif ? (
+        <div className="catatan-kecil">
+          Tren capaian hanya tersedia untuk seluruh periode tanpa filter, karena snapshot bulanan hanya berisi angka total.
+        </div>
+      ) : !cukup ? (
+        <div className="catatan-kecil">Snapshot bulanan belum tersedia, sehingga tren belum dapat ditampilkan.</div>
+      ) : (
+        <>
+          {t.titik.map((x) => (
+            <div key={x.tanggal} className="baris-capaian">
+              <div className="nama">
+                {x.berjalan ? `${tanggalPanjang(x.tanggal)} (tanggal data)` : `Akhir ${namaBulan(Number(x.tanggal.slice(5, 7)))} ${x.tanggal.slice(0, 4)}`}
+              </div>
+              <div className="grafik">
+                <div className="bar" aria-hidden="true">
+                  <div className="lintasan">
+                    <div className="isi-bar" style={{ width: `${x.persen_publish ?? 0}%`, background: x.berjalan ? 'var(--biru-muda)' : 'var(--utama)' }} />
+                  </div>
+                  <div className="penanda-target" style={TARGET_POSISI(target)} />
+                </div>
+                <span className="angka">
+                  <b>{persen(x.persen_publish)}</b>
+                  <span className="kurang">kurang {angka(x.kekurangan)} dokumen</span>
+                </span>
+              </div>
+            </div>
+          ))}
+          <div className={`catatan${t.perkiraan_tercapai ? '' : ' perhatian'}`}>
+            <b>Catatan analis:</b>{' '}
+            {t.laju_kekurangan_per_bulan == null
+              ? 'butuh minimal dua snapshot akhir bulan untuk menghitung laju.'
+              : `dalam ${t.titik.filter((x) => !x.berjalan).slice(-4).length - 1} bulan terakhir terpublikasi bertambah rata-rata ${angka(t.laju_publish_per_bulan)} per bulan, sedangkan total aset bertambah ${angka(t.laju_total_per_bulan)} per bulan. `}
+            {t.laju_kekurangan_per_bulan != null &&
+              (t.perkiraan_tercapai
+                ? t.bulan_menuju_target === 0
+                  ? 'Target sudah tercapai.'
+                  : `Kekurangan menyempit sekitar ${angka(-t.laju_kekurangan_per_bulan)} dokumen per bulan; dengan laju ini target diperkirakan tercapai sekitar ${namaBulan(Number(t.perkiraan_tercapai.slice(5, 7)))} ${t.perkiraan_tercapai.slice(0, 4)}.`
+                : `Kekurangan tidak menyempit (berubah ${selisih(t.laju_kekurangan_per_bulan)} dokumen per bulan), sehingga target ${target}% tidak akan tercapai bila laju ini berlanjut.`)}
+          </div>
+          <div className="sr-only">
+          <table>
+            <caption>Tren capaian publikasi</caption>
+            <thead>
+              <tr>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Total aset</th>
+                <th scope="col">Terpublikasi</th>
+                <th scope="col">Persen publish</th>
+                <th scope="col">Kekurangan menuju target</th>
+              </tr>
+            </thead>
+            <tbody>
+              {t.titik.map((x) => (
+                <tr key={x.tanggal}>
+                  <th scope="row">{tanggalPanjang(x.tanggal)}</th>
+                  <td>{angka(x.total)}</td>
+                  <td>{angka(x.terpublikasi)}</td>
+                  <td>{persen(x.persen_publish)}</td>
+                  <td>{angka(x.kekurangan)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+        </>
       )}
     </section>
   );

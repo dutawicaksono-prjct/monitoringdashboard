@@ -27,6 +27,9 @@ Angka dihitung dari data per tanggal yang tertera di header ("Data per 8 Oktober
 Perubahan dibanding akhir bulan lalu hanya tampil untuk seluruh periode tanpa filter. Bila ada filter,
 tampil "—" karena data pembanding bulanan hanya tersedia untuk angka total.
 
+**Tautan berfilter**: filter dan tab yang aktif tersimpan di alamat halaman. Klik **Salin tautan tampilan ini** lalu kirim
+ke rekan (misalnya PIC UKE) agar mereka langsung melihat tampilan yang sama.
+
 ## 3. Ringkasan Pimpinan
 
 1. **Perlu perhatian**: tiga temuan terpenting saat ini. Klik kartu untuk menuju rinciannya.
@@ -44,6 +47,14 @@ tampil "—" karena data pembanding bulanan hanya tersedia untuk angka total.
    masih parsial.
 6. **Dokumen per Menu Program**: bila satu menu sangat dominan (JDIH), gunakan tombol **Sembunyikan** agar menu
    lain terbaca.
+
+7. **Jalan menuju target 95%**: dari kekurangan menuju target, berapa yang dapat ditutup bila dokumen dalam proses selesai
+   (biru muda) dan berapa yang hanya dapat ditutup lewat keputusan atas dokumen tidak tayang (oranye). Bila bagian oranye
+   ada, mempercepat alur kerja saja tidak cukup.
+8. **Tren capaian**: persen publish pada akhir setiap bulan. Catatan analis menyebut laju per bulan dan perkiraan kapan
+   target tercapai, atau bahwa target tidak tercapai bila laju tidak berubah.
+9. Capaian per UKE I juga menyebut **kekurangan dokumen** per unit; unit dengan persen terendah belum tentu yang
+   kekurangannya terbanyak. Grafik bulanan menampilkan dokumen baru (biru) dan yang dipublikasikan (hijau).
 
 ## 4. Kontrol Alur Kerja
 
@@ -64,11 +75,22 @@ tampil "—" karena data pembanding bulanan hanya tersedia untuk angka total.
 
 *Hari kerja* = Senin–Jumat di luar libur nasional dan cuti bersama. Hari status berubah tidak dihitung.
 
+- **Beban per PIC UKE**: siapa memegang dokumen di tahap PIC UKE dan berapa yang lewat batas. Klik **Daftar** untuk
+  daftar dokumen per PIC (siap diunduh untuk pengingat). Tombol **Lihat … dokumen tanpa PIC** menampilkan dokumen yang
+  tertahan tanpa pemilik.
+- Kolom **lebih dari 20 hari kerja** di tabel UKE membantu memilih unit yang paling mendesak, karena hampir semua unit
+  bisa berstatus Melewati batas.
+
 ## 5. Kualitas Aset
 
 - **Skor kualitas metadata** per tujuh dimensi. Dimensi di bawah 65 ditandai *Prioritas perbaikan*.
 - **Sebaran skor** per dokumen.
 - **Masalah kualitas**: klik **Lihat daftar** untuk melihat dan mengunduh dokumen bermasalah.
+
+- **Masalah kualitas per UKE I**: jumlah temuan per unit; angka terbesar di tiap kolom ditandai. Klik angka untuk melihat
+  daftarnya.
+- Dimensi *Kemutakhiran isi (ketepatan waktu)* mengukur seberapa mutakhir isi dokumen, berbeda dengan ketepatan waktu alur
+  kerja.
 
 ## 6. Unduh laporan (PDF)
 
