@@ -1,0 +1,227 @@
+[
+  {
+    "baku": "pembangunan rendah karbon",
+    "padanan": [
+      {
+        "tag": "PRK",
+        "jenis": "singkatan"
+      },
+      {
+        "tag": "low carbon development",
+        "jenis": "bahasa"
+      },
+      {
+        "tag": "pembangunan rendah emisi",
+        "jenis": "sinonim"
+      }
+    ]
+  },
+  {
+    "baku": "kemiskinan",
+    "padanan": [
+      {
+        "tag": "poverty",
+        "jenis": "bahasa"
+      },
+      {
+        "tag": "miskin",
+        "jenis": "bentuk"
+      }
+    ]
+  },
+  {
+    "baku": "stunting",
+    "padanan": [
+      {
+        "tag": "tengkes",
+        "jenis": "sinonim"
+      },
+      {
+        "tag": "gagal tumbuh",
+        "jenis": "sinonim"
+      }
+    ]
+  },
+  {
+    "baku": "RPJMN",
+    "padanan": []
+  },
+  {
+    "baku": "SDGs",
+    "padanan": [
+      {
+        "tag": "TPB",
+        "jenis": "singkatan"
+      },
+      {
+        "tag": "tujuan pembangunan berkelanjutan",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "transformasi digital",
+    "padanan": [
+      {
+        "tag": "digitalisasi",
+        "jenis": "sinonim"
+      },
+      {
+        "tag": "digital transformation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "ketahanan pangan",
+    "padanan": [
+      {
+        "tag": "food security",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "perubahan iklim",
+    "padanan": [
+      {
+        "tag": "climate change",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "infrastruktur",
+    "padanan": [
+      {
+        "tag": "infrastuktur",
+        "jenis": "ejaan"
+      },
+      {
+        "tag": "infrastructure",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "UMKM",
+    "padanan": [
+      {
+        "tag": "UKM",
+        "jenis": "sinonim"
+      }
+    ]
+  },
+  {
+    "baku": "pendidikan",
+    "padanan": [
+      {
+        "tag": "education",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "kesehatan",
+    "padanan": [
+      {
+        "tag": "health",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "ekonomi hijau",
+    "padanan": [
+      {
+        "tag": "green economy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "energi baru terbarukan",
+    "padanan": [
+      {
+        "tag": "EBT",
+        "jenis": "singkatan"
+      },
+      {
+        "tag": "renewable energy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "perdesaan",
+    "padanan": [
+      {
+        "tag": "pedesaan",
+        "jenis": "ejaan"
+      }
+    ]
+  },
+  {
+    "baku": "tata kelola",
+    "padanan": [
+      {
+        "tag": "tatakelola",
+        "jenis": "ejaan"
+      },
+      {
+        "tag": "governance",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "reformasi birokrasi",
+    "padanan": [
+      {
+        "tag": "RB",
+        "jenis": "singkatan"
+      }
+    ]
+  },
+  {
+    "baku": "IKN",
+    "padanan": [
+      {
+        "tag": "Ibu Kota Nusantara",
+        "jenis": "singkatan"
+      },
+      {
+        "tag": "ibukota nusantara",
+        "jenis": "ejaan"
+      }
+    ]
+  },
+  {
+    "baku": "pariwisata",
+    "padanan": []
+  },
+  {
+    "baku": "gender",
+    "padanan": []
+  },
+  {
+    "baku": "air minum dan sanitasi",
+    "padanan": []
+  },
+  {
+    "baku": "ketenagakerjaan",
+    "padanan": []
+  },
+  {
+    "baku": "investasi",
+    "padanan": []
+  },
+  {
+    "baku": "perlindungan sosial",
+    "padanan": []
+  },
+  {
+    "baku": "evaluasi kinerja",
+    "padanan": []
+  }
+]

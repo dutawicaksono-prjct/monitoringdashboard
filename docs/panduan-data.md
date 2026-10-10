@@ -15,7 +15,8 @@ Dasbor membaca lima berkas CSV dari folder `data/`. Versi ini memakai **data con
 | `snapshot_bulanan.csv` | angka total pada akhir satu bulan | `tanggal_snapshot` | Tidak |
 | `meta_data.csv` | tanggal data (cut-off) | `tanggal_data` | Tidak |
 | `tag_dokumen.csv` | satu tag pada satu dokumen, ditulis apa adanya | `dokumen_id` + `tag` | Tidak |
-| `kamus_tag.csv` | satu bentuk tag dan bentuk bakunya (tesaurus) | `tag_varian` | Tidak |
+| `kamus_tag.csv` | tambahan padanan untuk tag baku bawaan | `tag_varian` | Tidak |
+| `pemetaan_tag.csv` | hasil pemetaan makna `tools/petakan_tag.py` | `tag` | Tidak |
 
 Aturan format:
 
@@ -47,21 +48,36 @@ Membangkitkan ulang data contoh (butuh Python dan `pandas`):
 python tools/generate_sample_data.py && python tools/generate_sample_tags.py && python tools/compute_indicators.py
 ```
 
-### Tag dan kamus tag
+### Tag, daftar tag baku, dan pemetaan makna
 
-Data contoh tag (10.856 pemakaian pada 4.771 dokumen) dan `kamus_tag.csv` (25 konsep) adalah **rekaan sementara**,
-sampai ekspor tag dari KOMENS dan tesaurus Tim PIP tersedia. Cara mengisi kamus:
+Data contoh tag (10.856 pemakaian pada 4.771 dokumen) adalah **rekaan sementara** sampai ekspor tag dari KOMENS
+tersedia.
 
-| tag_varian | tag_baku | jenis | Artinya |
-| --- | --- | --- | --- |
-| kemiskinan | kemiskinan | baku | bentuk baku konsep "kemiskinan" (wajib satu baris per konsep) |
-| poverty | kemiskinan | bahasa | padanan bahasa Inggris, dihitung konsisten |
-| miskin | kemiskinan | bentuk | bentuk lain, dihitung **tidak baku** |
-| PRK | pembangunan rendah karbon | singkatan | dihitung tidak baku; jenis lain: `ejaan`, `sinonim` |
+**Daftar tag baku** tertanam di dasbor: `src/indicators/kosakata-baku.json` (25 konsep contoh, sampai tesaurus Tim
+PIP selesai). Setiap konsep:
 
-Huruf besar/kecil, tanda hubung, dan spasi ganda diabaikan, jadi `Kemiskinan` dan `kemiskinan` cukup ditulis
-sekali. Tabel *Kandidat padanan* di Kualitas Aset dapat diunduh sebagai baris kamus, ditinjau, lalu ditempel ke
-`kamus_tag.csv`. Kamus dapat diganti tanpa build ulang.
+```json
+{ "baku": "kemiskinan", "padanan": [ { "tag": "poverty", "jenis": "bahasa" }, { "tag": "miskin", "jenis": "bentuk" } ] }
+```
+
+`jenis`: `bahasa` (padanan bahasa Inggris, dihitung konsisten), `ejaan`, `singkatan`, `sinonim`, `bentuk` (dihitung
+**tidak baku**). Mengubah daftar ini = ubah berkas lalu build/deploy ulang (lewat PR). Huruf besar/kecil, tanda
+hubung, dan spasi ganda diabaikan.
+
+**`kamus_tag.csv`** (opsional) hanya menambah padanan untuk tag baku bawaan, tanpa build ulang, misalnya dari tabel
+*Kandidat padanan* yang sudah diverifikasi. Baris yang menambah/mengubah bentuk baku diabaikan.
+
+**Pemetaan makna** (opsional, disarankan setiap pembaruan data):
+
+```
+pip install sentence-transformers pandas
+python tools/petakan_tag.py        # menulis data/pemetaan_tag.csv
+```
+
+Skrip memakai model multibahasa `paraphrase-multilingual-MiniLM-L12-v2` (diunduh sekali dari huggingface.co, lalu
+berjalan lokal; teks tag tidak dikirim ke layanan luar). Tag di luar kamus dengan skor ≥ 0,85 langsung dihitung
+sebagai padanan tag baku terdekat; 0,70–0,85 masuk tabel *Kandidat padanan* (alasan *makna mirip*). Pemetaan yang
+salah dapat dicegah lewat `data/pengecualian_pemetaan.csv` (kolom `tag, tag_baku`) lalu jalankan ulang skrip.
 
 ## 3. Prosedur pembaruan data bulanan
 

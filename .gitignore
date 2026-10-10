@@ -5,3 +5,4 @@ dist/
 hasil-uji/*
 !hasil-uji/hasil-uji-penerimaan.md
 *.tsbuildinfo
+__pycache__/

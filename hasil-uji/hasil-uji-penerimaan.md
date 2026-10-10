@@ -1,6 +1,6 @@
 | No | Kriteria | Hasil | Catatan |
 | --- | --- | --- | --- |
-| K-02 | Pemeriksaan 8.2 lolos; data rusak memicu peringatan | LULUS | Data contoh: 10 dari 10 terpenuhi. Data rusak → peringatan: "Tidak terpenuhi: Total aset = terpublikasi + dalam proses (entri) + tidak tayang. / Tidak terpenuhi: ID dokumen unik." |
+| K-02 | Pemeriksaan 8.2 lolos; data rusak memicu peringatan | LULUS | Data contoh: 11 dari 11 terpenuhi. Data rusak → peringatan: "Tidak terpenuhi: Total aset = terpublikasi + dalam proses (entri) + tidak tayang. / Tidak terpenuhi: ID dokumen unik." |
 | K-03 | Persamaan kontrol ditampilkan dan terpenuhi | LULUS | Persamaan kontrol terpenuhi: total 5.063 = terpublikasi 2.687 + dalam proses 1.202 + tidak tayang 1.174. |
 | K-04 | Tidak ada tanggal libur di kode sumber | LULUS | 22 tanggal libur dicari di 20 berkas src/: tidak ada. Aturan (a, b] diuji di tests/indicators.test.ts. |
 | K-05 | Status ketepatan waktu selalu bertuliskan teks | LULUS | 88 chip, semuanya berteks: Melewati batas 76, Mendekati batas 8, Selesai 1, Dalam batas 3 |

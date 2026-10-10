@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { Dataset, Dokumen, HariLibur, KamusTag, Riwayat, Snapshot, TagDokumen, UnitKerja } from './types';
+import type { Dataset, Dokumen, HariLibur, KamusTag, PemetaanTag, Riwayat, Snapshot, TagDokumen, UnitKerja } from './types';
 
 type Baris = Record<string, string>;
 
@@ -19,6 +19,7 @@ export const KOLOM_WAJIB = {
   ],
   'tag_dokumen.csv': ['dokumen_id', 'tag'],
   'kamus_tag.csv': ['tag_varian', 'tag_baku', 'jenis'],
+  'pemetaan_tag.csv': ['tag', 'tag_baku', 'jenis', 'skor'],
 } as const;
 
 export type NamaBerkas = keyof typeof KOLOM_WAJIB;
@@ -89,6 +90,15 @@ export function bacaKamusTag(teks: string): KamusTag[] {
   return bacaCsv(teks, 'kamus_tag.csv').map((r) => ({ tag_varian: r.tag_varian ?? '', tag_baku: r.tag_baku ?? '', jenis: r.jenis ?? '' }));
 }
 
+export function bacaPemetaanTag(teks: string): PemetaanTag[] {
+  return bacaCsv(teks, 'pemetaan_tag.csv').map((r) => ({
+    tag: r.tag ?? '',
+    tag_baku: r.tag_baku ?? '',
+    jenis: r.jenis ?? '',
+    skor: (r.skor ?? '').trim() === '' ? Number.NaN : Number(r.skor),
+  }));
+}
+
 export interface TeksCsv {
   dokumen: string;
   riwayat_status: string;
@@ -98,8 +108,10 @@ export interface TeksCsv {
   snapshot_bulanan?: string | null;
   /** Opsional: tanpa tag_dokumen.csv, bagian konsistensi tag tidak ditampilkan. */
   tag_dokumen?: string | null;
-  /** Opsional: tanpa kamus, semua tag berstatus "belum di kamus". */
+  /** Opsional: tambahan padanan untuk tag baku bawaan. */
   kamus_tag?: string | null;
+  /** Opsional: hasil pemetaan makna (tools/petakan_tag.py). */
+  pemetaan_tag?: string | null;
 }
 
 export function bacaDataset(t: TeksCsv): Dataset {
@@ -111,6 +123,7 @@ export function bacaDataset(t: TeksCsv): Dataset {
     snapshot: t.snapshot_bulanan ? bacaSnapshot(t.snapshot_bulanan) : [],
     tagDokumen: t.tag_dokumen ? bacaTagDokumen(t.tag_dokumen) : null,
     kamusTag: t.kamus_tag ? bacaKamusTag(t.kamus_tag) : [],
+    pemetaanTag: t.pemetaan_tag ? bacaPemetaanTag(t.pemetaan_tag) : [],
   };
 }
 

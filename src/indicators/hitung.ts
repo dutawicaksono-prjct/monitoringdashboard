@@ -98,7 +98,8 @@ export const LABEL_PEMERIKSAAN: Record<keyof PemeriksaanData, string> = {
   tanggal_logis: 'Tanggal status terakhir tidak sebelum tanggal dibuat dan tidak melewati tanggal data',
   snapshot_persamaan_total: 'Persamaan total terpenuhi pada setiap snapshot bulanan',
   tag_dokumen_ada_di_dokumen: 'Setiap dokumen di tag_dokumen.csv ada di dokumen.csv',
-  kamus_tag_valid: 'Kamus tag: jenis sah, satu bentuk baku per varian, dan setiap bentuk baku terdaftar',
+  kamus_tag_valid: 'Kamus tag tambahan: jenis sah, mengacu ke tag baku bawaan, tidak bertentangan dengan daftar bawaan',
+  pemetaan_tag_valid: 'Pemetaan makna tag: mengacu ke tag baku bawaan, jenis makna/bahasa, skor 0–1',
 };
 
 export function periksaData(ds: Dataset, tanggalData: string): PemeriksaanData {

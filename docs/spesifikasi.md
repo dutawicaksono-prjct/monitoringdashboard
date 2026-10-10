@@ -73,10 +73,15 @@ dengan zona waktu (contoh: `2026-09-10T09:59:18+07:00`). Seluruh perhitungan tan
 - `tag_dokumen.csv` (`dokumen_id, tag`): satu baris per tag pada satu dokumen, ditulis apa adanya seperti input
   pengguna. Opsional; tanpa berkas ini bagian konsistensi tagging dan masalah *Tag tidak baku* tidak ditampilkan.
   **[1.4]**
-- `kamus_tag.csv` (`tag_varian, tag_baku, jenis`): kamus padanan tag (tesaurus). Setiap konsep punya satu baris
-  `jenis` = `baku` (`tag_varian` = `tag_baku`); bentuk lain mengacu ke bentuk bakunya dengan `jenis` `ejaan`,
-  `singkatan`, `sinonim`, `bentuk`, atau `bahasa` (padanan bahasa Inggris). Opsional; dapat diganti tanpa build
-  ulang. **[1.4]**
+- **Daftar tag baku bawaan** (`src/indicators/kosakata-baku.json`): standar tag baku tertanam di dasbor, bukan
+  berkas data. Setiap konsep punya satu bentuk baku dan padanannya dengan `jenis` `ejaan`, `singkatan`, `sinonim`,
+  `bentuk`, atau `bahasa` (padanan bahasa Inggris). Diubah lewat kode (satu PR, tercatat di riwayat repositori). **[1.4]**
+- `kamus_tag.csv` (`tag_varian, tag_baku, jenis`): opsional, hanya **menambah** padanan untuk tag baku bawaan;
+  tidak dapat menambah atau mengubah bentuk baku. Baris yang melanggar diabaikan dan ditandai di pemeriksaan
+  data. **[1.4]**
+- `pemetaan_tag.csv` (`tag, tag_baku, jenis, skor`): opsional, hasil pemetaan makna `tools/petakan_tag.py` (model
+  embedding multibahasa, dijalankan lokal setiap pembaruan data). `jenis` = `makna` atau `bahasa` (bentuk terdekat
+  adalah padanan bahasa Inggris); `skor` = kemiripan kosinus 0–1. **[1.4]**
 
 ## 4. Indikator dan rumus
 
@@ -135,14 +140,18 @@ statusnya kembali ke Draft.
 - **Konsistensi tagging** **[1.4]**:
   - *Bentuk pembanding* tag: huruf kecil, karakter selain huruf/angka menjadi spasi, spasi dirapikan
     (`Perubahan-Iklim` = `perubahan iklim`). Tag yang sama bentuk pembandingnya dihitung sekali per dokumen.
-  - *Status pemakaian* menurut `kamus_tag.csv`: **baku** (`jenis` = `baku`), **padanan bahasa Inggris**
-    (`jenis` = `bahasa`, diterima karena KOMENS dwibahasa), **tidak baku** (`ejaan`, `singkatan`, `sinonim`,
-    `bentuk`), atau **belum di kamus**.
+  - *Status pemakaian* menurut kamus (daftar tag baku bawaan + tambahan `kamus_tag.csv`): **baku**
+    (`jenis` = `baku`), **padanan bahasa Inggris** (`jenis` = `bahasa`, diterima karena KOMENS dwibahasa),
+    **tidak baku** (`ejaan`, `singkatan`, `sinonim`, `bentuk`), atau **belum di kamus**.
+  - *Pemetaan makna otomatis*: bentuk yang tidak ada di kamus tetapi berskor ≥ `AMBANG_PEMETAAN_OTOMATIS` (0,85) di
+    `pemetaan_tag.csv` langsung dihitung sebagai padanan tag bakunya: **padanan bahasa Inggris** bila `jenis` =
+    `bahasa`, selain itu **tidak baku** (jenis `makna`). Kamus selalu didahulukan.
   - *Konsistensi tag* = (baku + padanan bahasa Inggris) ÷ (baku + padanan bahasa Inggris + tidak baku) × 100%,
     satu desimal; tag belum di kamus tidak masuk penyebut. Dihitung juga per konsep.
   - *Kandidat padanan*: bentuk yang belum di kamus dan (a) merupakan singkatan/kepanjangan bentuk lain (huruf awal
     kata, kata sambung dilewati) atau (b) mirip ejaannya (Jaro-Winkler ≥ `AMBANG_KEMIRIPAN_TAG` = 0,92, kedua bentuk
-    minimal 5 huruf). Kandidat tidak pernah digabung otomatis.
+    minimal 5 huruf), atau (c) bila (a) dan (b) tidak ada, berskor makna `AMBANG_KANDIDAT_MAKNA` (0,70) sampai di
+    bawah 0,85 di `pemetaan_tag.csv` (alasan *makna mirip*). Kandidat tidak pernah digabung otomatis.
   - Semua angka tag mengikuti filter aktif.
 
 ### 4.5 Tren dan Menu Program
@@ -318,7 +327,7 @@ pemeriksaan data. Tombol, filter, dan dialog tidak ikut tercetak. Nama berkas us
 ## 7. Parameter yang dapat diubah (`src/config.ts`)
 
 Tanggal data, batas tertahan (5 HK), ambang *Mendekati batas* (4), target (95%), ambang kelengkapan (60),
-batas belum diperbarui (12 bulan), ambang dimensi prioritas (65), ambang kemiripan tag (0,92), penanda data contoh.
+batas belum diperbarui (12 bulan), ambang dimensi prioritas (65), ambang kemiripan tag (0,92), ambang pemetaan makna otomatis (0,85) dan kandidat makna (0,70), penanda data contoh.
 
 ## 8. Mutu data
 
@@ -339,7 +348,8 @@ Selama data adalah data contoh, header menampilkan "Data contoh · ilustrasi" (`
 | `tanggal_logis` | `tgl_status_terakhir` ≥ `tgl_dibuat` dan tidak melewati T |
 | `snapshot_persamaan_total` | Persamaan total terpenuhi di setiap baris snapshot |
 | `tag_dokumen_ada_di_dokumen` | **[1.4]** Setiap `dokumen_id` di `tag_dokumen.csv` ada di `dokumen.csv` |
-| `kamus_tag_valid` | **[1.4]** `jenis` sah; setiap bentuk mengacu ke satu bentuk baku; setiap `tag_baku` punya baris `jenis` = `baku` |
+| `kamus_tag_valid` | **[1.4]** Baris `kamus_tag.csv`: `jenis` sah dan bukan `baku`; `tag_baku` adalah tag baku bawaan; bentuk tidak mengacu ke konsep lain |
+| `pemetaan_tag_valid` | **[1.4]** Baris `pemetaan_tag.csv`: `tag_baku` adalah tag baku bawaan; `jenis` `makna` atau `bahasa`; `skor` 0–1 |
 
 Bila ada yang tidak terpenuhi, muncul peringatan teks di atas isi tampilan yang menyebut pemeriksaan yang gagal.
 Ringkasan "*n* dari 10 terpenuhi" selalu tersedia di bagian definisi.
@@ -349,7 +359,7 @@ Ringkasan "*n* dari 10 terpenuhi" selalu tersedia di bagian definisi.
 | No | Kriteria |
 | --- | --- |
 | K-01 | Semua nilai `data/expected_indicators.json` dihasilkan identik oleh modul indikator (uji otomatis). |
-| K-02 | Kesepuluh pemeriksaan 8.2 bernilai benar pada data contoh. Bila data dirusak, pemeriksaan terkait gagal dan peringatan teks tampil. |
+| K-02 | Kesebelas pemeriksaan 8.2 bernilai benar pada data contoh. Bila data dirusak, pemeriksaan terkait gagal dan peringatan teks tampil. |
 | K-03 | Persamaan kontrol ditampilkan dan terpenuhi pada data contoh (5.063 = 2.687 + 1.202 + 1.174). |
 | K-04 | HK mengikuti (a, b], tanpa akhir pekan dan tanggal `hari_libur.csv`. Tidak ada tanggal libur di kode sumber. |
 | K-05 | Status ketepatan waktu mengikuti ambang 4/5 dan selalu tampil sebagai teks. |

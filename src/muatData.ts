@@ -3,7 +3,8 @@ import { bacaDataset, bacaTanggalData, type Dataset } from './indicators';
 
 async function ambil(nama: string, wajib: boolean): Promise<string | null> {
   const res = await fetch(`${DATA_URL}${nama}`, { cache: 'no-cache' });
-  if (!res.ok) {
+  // Sebagian server (mis. vite preview) membalas berkas yang tidak ada dengan index.html; anggap tidak ada.
+  if (!res.ok || (res.headers.get('content-type') ?? '').includes('text/html')) {
     if (!wajib) return null;
     throw new Error(`Berkas data ${nama} tidak dapat dimuat (HTTP ${res.status}).`);
   }
@@ -17,7 +18,7 @@ export interface HasilMuat {
 }
 
 export async function muatDataset(): Promise<HasilMuat> {
-  const [dokumen, riwayat, unit, libur, snapshot, meta, tag, kamus] = await Promise.all([
+  const [dokumen, riwayat, unit, libur, snapshot, meta, tag, kamus, pemetaan] = await Promise.all([
     ambil('dokumen.csv', true),
     ambil('riwayat_status.csv', true),
     ambil('unit_kerja.csv', true),
@@ -26,6 +27,7 @@ export async function muatDataset(): Promise<HasilMuat> {
     ambil('meta_data.csv', false).catch(() => null),
     ambil('tag_dokumen.csv', false),
     ambil('kamus_tag.csv', false),
+    ambil('pemetaan_tag.csv', false),
   ]);
   const ds = bacaDataset({
     dokumen: dokumen!,
@@ -35,6 +37,7 @@ export async function muatDataset(): Promise<HasilMuat> {
     snapshot_bulanan: snapshot,
     tag_dokumen: tag,
     kamus_tag: kamus,
+    pemetaan_tag: pemetaan,
   });
   return { ds, tanggalData: (meta && bacaTanggalData(meta)) || TANGGAL_DATA };
 }

@@ -32,7 +32,8 @@ const TAMPIL = 15;
 
 /** Label satu bentuk: status dan, untuk bentuk tidak baku, jenisnya menurut kamus. */
 export function labelBentuk(status: StatusTag, jenis: string): string {
-  return status === 'varian' && jenis ? `${LABEL_STATUS_TAG.varian} (${jenis})` : LABEL_STATUS_TAG[status];
+  if (status !== 'varian' || !jenis) return LABEL_STATUS_TAG[status];
+  return `${LABEL_STATUS_TAG.varian} (${jenis === 'makna' ? 'makna, dipetakan otomatis' : jenis})`;
 }
 
 interface Props {
@@ -97,7 +98,7 @@ export function KonsistensiTag({ q, ctx, dokumen, onDaftar }: Props) {
           Konsistensi tagging
         </JudulIkon>
         <div className="kartu-sub">
-          Bentuk baku mengacu pada kamus tag (kamus_tag.csv) · padanan bahasa Inggris dihitung konsisten · {angka(q.dokumen_bertag)}{' '}
+          Bentuk baku mengacu pada daftar tag baku bawaan dasbor · padanan bahasa Inggris dihitung konsisten · {angka(q.dokumen_bertag)}{' '}
           dokumen bertag
         </div>
       </div>
@@ -261,7 +262,7 @@ export function KonsistensiTag({ q, ctx, dokumen, onDaftar }: Props) {
             <div>
               <h3 className="judul-sub">Kandidat padanan untuk diverifikasi</h3>
               <div className="kartu-sub">
-                Tag yang belum di kamus tetapi mirip ejaan atau merupakan kepanjangan tag lain. Tidak digabung otomatis.
+                Tag yang belum di kamus tetapi mirip ejaan, mirip makna, atau merupakan kepanjangan tag lain. Tidak digabung otomatis.
               </div>
             </div>
             <button type="button" className="tombol tombol-tautan" onClick={unduhKandidat}>
@@ -286,7 +287,11 @@ export function KonsistensiTag({ q, ctx, dokumen, onDaftar }: Props) {
                     <td>
                       <b>{x.usulan_baku}</b>
                     </td>
-                    <td>{x.alasan === 'singkatan' ? 'Kepanjangan/singkatan' : `Ejaan mirip (${angka(Math.round((x.kemiripan ?? 0) * 100))}%)`}</td>
+                    <td>
+                      {x.alasan === 'singkatan'
+                        ? 'Kepanjangan/singkatan'
+                        : `${x.alasan === 'makna mirip' ? 'Makna' : 'Ejaan'} mirip (${angka(Math.round((x.kemiripan ?? 0) * 100))}%)`}
+                    </td>
                     <td>{angka(x.dokumen)}</td>
                   </tr>
                 ))}
