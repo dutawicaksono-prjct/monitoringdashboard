@@ -4,6 +4,13 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.5.0] - 2026-10-10
+
+### Ditambahkan
+- Batang grafik lebih "hidup": tumbuh saat halaman dimuat, bergeser halus saat filter berubah, berkilau pelan
+  secara berkala, dan lebih terang saat kursor diarahkan ke batang atau barisnya. Panjang akhir batang tidak
+  berubah. Animasi mati bila pengguna memilih *kurangi gerakan* dan tidak ikut tercetak di PDF.
+
 ## [1.4.0] - 2026-10-10
 
 ### Ditambahkan
