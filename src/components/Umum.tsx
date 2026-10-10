@@ -16,10 +16,10 @@ export function Header({ tanggalData, onUnduh }: { tanggalData: string; onUnduh:
     <header className="header">
       <div className="header-isi">
         <div>
-          <div className="remah">Pengetahuan Anda › Dasbor Monitoring</div>
-          <h1>Monitoring Aset Pengetahuan KOMENS</h1>
+          <div className="remah">MONITORING DASHBOARD</div>
+          <h1>KNOWLEDGE ASSETS MONITORING</h1>
           <div className="header-sub">
-            Pusdatinrenbang · Tim Pengelolaan Informasi dan Pengetahuan · Data per {tanggalPanjang(tanggalData)}
+            Pusdatinrenbang · Data per {tanggalPanjang(tanggalData)}
           </div>
         </div>
         <div className="header-aksi">
@@ -222,11 +222,11 @@ export function Definisi({ pemeriksaan, batasHk }: { pemeriksaan: PemeriksaanDat
           aplikasi lain. Tidak memiliki UKE I/UKE II maupun alur proses; hanya berstatus Publish atau UnPublish.
         </div>
         <div>
-          <b>Dokumen KOMENS (total aset):</b> seluruh dokumen, baik yang dalam proses entri, Menu Program, maupun yang sudah
+          <b>Total Aset:</b> seluruh dokumen, baik yang dalam proses entri, Menu Program, maupun yang sudah
           publish. Dokumen UnPublish tetap dihitung.
         </div>
         <div>
-          <b>Terpublikasi (gabungan):</b> publish dari entri ditambah publish dari Menu Program.
+          <b>Terpublikasi:</b> publish dari entri ditambah publish dari Menu Program.
         </div>
         <div>
           <b>Tidak tayang:</b> entri yang ditolak (Operator Konten atau PIC UKE) atau UnPublish, ditambah Menu Program UnPublish.
