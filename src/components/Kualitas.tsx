@@ -3,6 +3,7 @@ import { angka, desimal, rasio } from '../format';
 import { masalahPerUke1, predikatMasalah, type DokumenSiap, type Indikator, type Konteks, type Kualitas as TKualitas, type Filter } from '../indicators';
 import type { PermintaanDaftar } from './Umum';
 import { Ikon, JudulIkon, KotakIkon } from './Ikon';
+import { KonsistensiTag, labelBentuk } from './Tag';
 
 /** Tujuh dimensi kualitas metadata (Bruce & Hillman), urut sesuai skor_dimensi_1..7. */
 export const NAMA_DIMENSI = [
@@ -64,8 +65,20 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
       nilai: (d) => `Hash ${d.hash_konten.slice(0, 10)}…`,
     },
     { k: 'file_tidak_terbaca', label: 'File tidak terbaca (OCR gagal)', ket: 'Pemindaian teks gagal', nilai: () => 'OCR gagal' },
+    {
+      k: 'tag_tidak_baku',
+      label: 'Tag tidak baku',
+      ket: 'Memakai bentuk tag yang bukan bentuk baku menurut kamus tag (padanan bahasa Inggris tidak dihitung)',
+      nilai: (d) =>
+        (ctx.tag?.perDokumen.get(d.dokumen_id) ?? [])
+          .filter((p) => p.status === 'varian')
+          .map((p) => `${p.tulisan} → ${p.konsep} (${labelBentuk(p.status, p.jenis).toLowerCase()})`)
+          .join('; '),
+    },
   ];
-  const tampilMasalah = daftarMasalah.filter((m) => m.k !== 'tanpa_pic' || filter.sumber !== 'MENU_PROGRAM');
+  const tampilMasalah = daftarMasalah.filter(
+    (m) => (m.k !== 'tanpa_pic' || filter.sumber !== 'MENU_PROGRAM') && (m.k !== 'tag_tidak_baku' || q.tag !== null),
+  );
 
   return (
     <div className="tumpuk">
@@ -168,7 +181,17 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
         </div>
       </section>
 
-      {filter.sumber !== 'MENU_PROGRAM' && <MatriksUke1 ctx={ctx} dokumen={dokumen} daftar={daftarMasalah} pred={pred} onDaftar={onDaftar} />}
+      {q.tag && <KonsistensiTag q={q.tag} ctx={ctx} dokumen={dokumen} onDaftar={onDaftar} />}
+
+      {filter.sumber !== 'MENU_PROGRAM' && (
+        <MatriksUke1
+          ctx={ctx}
+          dokumen={dokumen}
+          daftar={daftarMasalah.filter((m) => m.k !== 'tag_tidak_baku' || q.tag !== null)}
+          pred={pred}
+          onDaftar={onDaftar}
+        />
+      )}
     </div>
   );
 }

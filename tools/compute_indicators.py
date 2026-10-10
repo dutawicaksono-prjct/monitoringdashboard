@@ -10,6 +10,8 @@ import argparse
 import datetime as dt
 import json
 import math
+import re
+import unicodedata
 from pathlib import Path
 
 import pandas as pd
@@ -130,6 +132,146 @@ masalah = {
     "file_tidak_terbaca": int((dok["ocr_berhasil"].astype(str).str.lower() == "false").sum()),
 }
 
+# ------------------------------------------------------------ tag (spesifikasi 1.4, bagian 4.4)
+JENIS_KAMUS = {"baku", "ejaan", "singkatan", "sinonim", "bentuk", "bahasa"}
+KATA_SAMBUNG = {"dan", "di", "ke", "dari", "yang", "untuk", "atau", "serta"}
+AMBANG_KEMIRIPAN_TAG = 0.92  # konstanta, sama dengan src/config.ts
+PANJANG_MIN_KEMIRIPAN = 5
+
+
+def norm_tag(t):
+    """Bentuk pembanding: huruf kecil, tanda baca menjadi spasi, spasi dirapikan."""
+    t = unicodedata.normalize("NFKC", str(t)).lower()
+    return " ".join(re.sub(r"[^0-9a-z\u00c0-\u024f ]+", " ", t).split())
+
+
+def jaro_winkler(a, b):
+    if a == b:
+        return 1.0
+    la, lb = len(a), len(b)
+    if not la or not lb:
+        return 0.0
+    jarak = max(0, max(la, lb) // 2 - 1)
+    ma, mb = [False] * la, [False] * lb
+    m = 0
+    for i in range(la):
+        for j in range(max(0, i - jarak), min(lb, i + jarak + 1)):
+            if not mb[j] and a[i] == b[j]:
+                ma[i] = mb[j] = True
+                m += 1
+                break
+    if not m:
+        return 0.0
+    t, k = 0, 0
+    for i in range(la):
+        if ma[i]:
+            while not mb[k]:
+                k += 1
+            if a[i] != b[k]:
+                t += 1
+            k += 1
+    jaro = (m / la + m / lb + (m - t / 2) / m) / 3
+    p = 0
+    while p < min(4, la, lb) and a[p] == b[p]:
+        p += 1
+    return jaro + p * 0.1 * (1 - jaro)
+
+
+def singkatan_dari(pendek, panjang):
+    kata = panjang.split()
+    if " " in pendek or not (2 <= len(pendek) <= 6) or len(kata) < 2:
+        return False
+    return pendek == "".join(w[0] for w in kata if w not in KATA_SAMBUNG)
+
+
+tag_path, kamus_path = DATA / "tag_dokumen.csv", DATA / "kamus_tag.csv"
+tagd = pd.read_csv(tag_path, keep_default_na=False, dtype=str) if tag_path.exists() else None
+kamus = pd.read_csv(kamus_path, keep_default_na=False, dtype=str) if kamus_path.exists() else pd.DataFrame(columns=["tag_varian", "tag_baku", "jenis"])
+
+peta_kamus = {}  # norm(tag_varian) -> (tag_baku, jenis)
+for r in kamus.itertuples():
+    peta_kamus.setdefault(norm_tag(r.tag_varian), (r.tag_baku.strip(), r.jenis.strip().lower()))
+baku_norm = {norm_tag(r.tag_baku) for r in kamus.itertuples()}
+kunci_kamus = {}
+for r in kamus.itertuples():
+    kunci_kamus.setdefault(norm_tag(r.tag_varian), set()).add(norm_tag(r.tag_baku))
+checks["tag_dokumen_ada_di_dokumen"] = bool(tagd is None or tagd["dokumen_id"].isin(dok["dokumen_id"]).all())
+checks["kamus_tag_valid"] = bool(
+    kamus["jenis"].str.strip().str.lower().isin(JENIS_KAMUS).all()
+    and all(len(v) == 1 for v in kunci_kamus.values())
+    and all(peta_kamus.get(b, ("", ""))[1] == "baku" for b in baku_norm))
+
+
+def status_tag(n):
+    if n in peta_kamus:
+        baku, jenis = peta_kamus[n]
+        return baku, jenis, ("baku" if jenis == "baku" else "padanan_bahasa" if jenis == "bahasa" else "varian")
+    return n, "", "belum_di_kamus"
+
+
+def hitung_tag(sel_ids):
+    if tagd is None:
+        return None, set()
+    t = tagd[tagd["dokumen_id"].isin(sel_ids)].copy()
+    t["norm"] = t["tag"].map(norm_tag)
+    t = t[t["norm"] != ""].drop_duplicates(["dokumen_id", "norm"])
+    info = t["norm"].map(status_tag)
+    t["konsep"] = [x[0] for x in info]
+    t["jenis"] = [x[1] for x in info]
+    t["status"] = [x[2] for x in info]
+    hit = {k: int((t["status"] == k).sum()) for k in ("baku", "padanan_bahasa", "varian", "belum_di_kamus")}
+    per_konsep = {}
+    for k, g in t.groupby("konsep", sort=True):
+        bentuk = {}
+        for n, gb in g.groupby("norm", sort=True):
+            tulisan = gb["tag"].str.strip().value_counts()
+            tulisan = sorted(tulisan.items(), key=lambda x: (-x[1], x[0]))[0][0]
+            bentuk[n] = {"tulisan": tulisan, "status": gb["status"].iloc[0], "jenis": gb["jenis"].iloc[0], "penggunaan": len(gb)}
+        ok = int(g["status"].isin(["baku", "padanan_bahasa"]).sum())
+        var = int((g["status"] == "varian").sum())
+        per_konsep[k] = {"penggunaan": len(g), "dokumen": int(g["dokumen_id"].nunique()),
+                         "persen_konsistensi": pct(ok, ok + var), "bentuk": bentuk}
+    # kandidat padanan: bentuk yang belum di kamus dan mirip bentuk lain dengan konsep berbeda
+    belum = sorted(set(t.loc[t["status"] == "belum_di_kamus", "norm"]))
+    pembanding = sorted(set(peta_kamus) | set(t["norm"]))
+    kandidat = []
+    for a in belum:
+        terbaik = None
+        for b in pembanding:
+            if b == a:
+                continue
+            kb = peta_kamus[b][0] if b in peta_kamus else b
+            if norm_tag(kb) == a:
+                continue
+            if singkatan_dari(b, a) or singkatan_dari(a, b):
+                c = (2.0, "singkatan", b, kb)
+            elif min(len(a), len(b)) >= PANJANG_MIN_KEMIRIPAN and (s := jaro_winkler(a, b)) >= AMBANG_KEMIRIPAN_TAG:
+                c = (s, "ejaan mirip", b, kb)
+            else:
+                continue
+            if terbaik is None or (c[0], b in peta_kamus) > (terbaik[0], terbaik[2] in peta_kamus):
+                terbaik = c
+        if terbaik:
+            s, alasan, b, kb = terbaik
+            kandidat.append({"tag": a, "usulan_baku": kb, "alasan": alasan,
+                             "kemiripan": None if alasan == "singkatan" else round(s, 2),
+                             "dokumen": int(t.loc[t["norm"] == a, "dokumen_id"].nunique())})
+    kandidat.sort(key=lambda x: (-x["dokumen"], x["tag"]))
+    ok, var = hit["baku"] + hit["padanan_bahasa"], hit["varian"]
+    bertag = int(t["dokumen_id"].nunique())
+    hasil = {
+        "dokumen_bertag": bertag, "dokumen_tanpa_tag": len(sel_ids) - bertag,
+        "penggunaan_tag": len(t), "bentuk_unik": int(t["norm"].nunique()), "konsep_unik": int(t["konsep"].nunique()),
+        "penggunaan": hit, "persen_konsistensi": pct(ok, ok + var),
+        "konsep_dengan_varian": sum(1 for v in per_konsep.values() if any(b["status"] == "varian" for b in v["bentuk"].values())),
+        "per_konsep": per_konsep, "kandidat_padanan": kandidat,
+    }
+    return hasil, set(t.loc[t["status"] == "varian", "dokumen_id"])
+
+
+tag_hasil, dok_tag_tidak_baku = hitung_tag(set(dok["dokumen_id"]))
+masalah["tag_tidak_baku"] = len(dok_tag_tidak_baku)
+
 # ------------------------------------------------------------ snapshot bulanan (keputusan: snapshot bulanan)
 def snapshot(D):
     """Keadaan pada akhir hari D, direkonstruksi dari riwayat_status (entri) dan tanggal dokumen/publish (Menu Program)."""
@@ -182,8 +324,12 @@ out = {
         "skor_rata_rata": round(float(skor.mean()), 1),
         "skor_per_dimensi": {f"dimensi_{k}": round(float(dok[c].astype(float).mean()), 1) for k, c in enumerate(dim, 1)},
         "sebaran_skor": bins, "masalah": masalah, "ambang_kelengkapan": AMBANG_KELENGKAPAN,
+        "tag": tag_hasil,
     },
 }
 (DATA / "expected_indicators.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
 print(json.dumps({k: out[k] for k in ("pemeriksaan_data", "ringkasan", "status_entri", "tahap", "dokumen_baru_per_bulan_2026",
-                                     "rata_rata_bulanan_bulan_lengkap", "dokumen_per_menu_program", "kualitas")}, ensure_ascii=False, indent=1))
+                                     "rata_rata_bulanan_bulan_lengkap", "dokumen_per_menu_program")}, ensure_ascii=False, indent=1))
+print(json.dumps({k: v for k, v in out["kualitas"].items() if k != "tag"}, ensure_ascii=False))
+if tag_hasil:
+    print(json.dumps({k: v for k, v in tag_hasil.items() if k != "per_konsep"}, ensure_ascii=False, indent=1))

@@ -54,7 +54,7 @@ const pct = (n) => `${new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1,
 await uji('K-02', 'Pemeriksaan 8.2 lolos; data rusak memicu peringatan', async () => {
   const p = await bukaHalaman();
   const ringkas = await p.locator('.definisi summary').innerText();
-  pastikan(ringkas.includes('8 dari 8 terpenuhi'), `ringkasan: ${ringkas}`);
+  pastikan(ringkas.includes('10 dari 10 terpenuhi'), `ringkasan: ${ringkas}`);
   pastikan((await p.locator('.peringatan').count()) === 0, 'peringatan muncul pada data valid');
   await p.close();
   // Rusak: duplikasi ID dokumen pertama dan status tidak sah.
@@ -71,7 +71,7 @@ await uji('K-02', 'Pemeriksaan 8.2 lolos; data rusak memicu peringatan', async (
   const peringatan = await p2.locator('.peringatan[role=alert]').innerText();
   await p2.close();
   pastikan(peringatan.includes('ID dokumen unik'), 'peringatan ID ganda tidak muncul');
-  return `Data contoh: 8 dari 8 terpenuhi. Data rusak → peringatan: "${peringatan.split('\n').slice(1, 3).join(' | ')}"`;
+  return `Data contoh: 10 dari 10 terpenuhi. Data rusak → peringatan: "${peringatan.split('\n').slice(1, 3).join(' | ')}"`;
 });
 
 // ------------------------------------------------------------------ K-03
@@ -493,6 +493,27 @@ await uji('K-21', 'Warna angka utama berbeda dan kontras cukup', async () => {
   }
   pastikan(new Set(r.map((x) => x.warna)).size === 5, 'warna tidak saling berbeda');
   return r.map((x) => `${x.label.split(' (')[0]} ${x.warna} (${kontras(x.warna).toFixed(1)}:1)`).join('; ');
+});
+
+// ------------------------------------------------------------------ K-25
+await uji('K-25', 'Konsistensi tagging di Kualitas Aset', async () => {
+  const t = expected.kualitas.tag;
+  const p = await bukaHalaman({ tab: 'kualitas' });
+  const isi = await p.locator('section[aria-labelledby="judul-tag"]').innerText();
+  const kartu = await p.locator('.kartu-masalah', { hasText: 'Tag tidak baku' }).locator('.n').innerText();
+  const semua = Object.keys(t.per_konsep).length;
+  await p.getByRole('button', { name: `Tampilkan semua ${fmt(semua)} tag` }).click();
+  const baris = await p.locator('.tabel-tag tbody tr').count();
+  await p.getByLabel('Cari tag').fill('rendah karbon');
+  const cari = await p.locator('.tabel-tag tbody tr').allInnerTexts();
+  await p.close();
+  pastikan(isi.includes(pct(t.persen_konsistensi)), `konsistensi ${pct(t.persen_konsistensi)} tidak tampil`);
+  pastikan(isi.includes(fmt(t.penggunaan_tag)), 'jumlah pemakaian tag tidak tampil');
+  pastikan(kartu === fmt(expected.kualitas.masalah.tag_tidak_baku), `kartu Tag tidak baku ${kartu}`);
+  pastikan(baris === semua, `tabel memuat ${baris} dari ${semua} tag`);
+  pastikan(cari.length === 1 && cari[0].includes('PRK') && cari[0].includes('low carbon development'), `pencarian: ${cari.length} baris`);
+  for (const k of t.kandidat_padanan) pastikan(isi.includes(k.usulan_baku), `kandidat ${k.tag} tidak tampil`);
+  return `Konsistensi ${pct(t.persen_konsistensi)} dari ${fmt(t.penggunaan_tag)} pemakaian; kartu Tag tidak baku ${kartu} dokumen; tabel memuat seluruh ${semua} tag beserta bentuknya; pencarian "rendah karbon" menemukan baku, singkatan (PRK), dan padanan bahasa Inggris; ${t.kandidat_padanan.length} kandidat padanan tampil.`;
 });
 
 await browser.close();

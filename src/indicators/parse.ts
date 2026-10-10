@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { Dataset, Dokumen, HariLibur, Riwayat, Snapshot, UnitKerja } from './types';
+import type { Dataset, Dokumen, HariLibur, KamusTag, Riwayat, Snapshot, TagDokumen, UnitKerja } from './types';
 
 type Baris = Record<string, string>;
 
@@ -17,6 +17,8 @@ export const KOLOM_WAJIB = {
   'snapshot_bulanan.csv': [
     'tanggal_snapshot', 'total_aset', 'terpublikasi', 'dalam_proses_entri', 'tidak_tayang', 'tertahan_lebih_dari_5_hk',
   ],
+  'tag_dokumen.csv': ['dokumen_id', 'tag'],
+  'kamus_tag.csv': ['tag_varian', 'tag_baku', 'jenis'],
 } as const;
 
 export type NamaBerkas = keyof typeof KOLOM_WAJIB;
@@ -79,6 +81,14 @@ export function bacaSnapshot(teks: string): Snapshot[] {
   }));
 }
 
+export function bacaTagDokumen(teks: string): TagDokumen[] {
+  return bacaCsv(teks, 'tag_dokumen.csv').map((r) => ({ dokumen_id: r.dokumen_id, tag: r.tag ?? '' }));
+}
+
+export function bacaKamusTag(teks: string): KamusTag[] {
+  return bacaCsv(teks, 'kamus_tag.csv').map((r) => ({ tag_varian: r.tag_varian ?? '', tag_baku: r.tag_baku ?? '', jenis: r.jenis ?? '' }));
+}
+
 export interface TeksCsv {
   dokumen: string;
   riwayat_status: string;
@@ -86,6 +96,10 @@ export interface TeksCsv {
   hari_libur: string;
   /** Opsional: tanpa snapshot, "perubahan dibanding bulan lalu" ditampilkan "—". */
   snapshot_bulanan?: string | null;
+  /** Opsional: tanpa tag_dokumen.csv, bagian konsistensi tag tidak ditampilkan. */
+  tag_dokumen?: string | null;
+  /** Opsional: tanpa kamus, semua tag berstatus "belum di kamus". */
+  kamus_tag?: string | null;
 }
 
 export function bacaDataset(t: TeksCsv): Dataset {
@@ -95,6 +109,8 @@ export function bacaDataset(t: TeksCsv): Dataset {
     unitKerja: bacaUnitKerja(t.unit_kerja),
     hariLibur: bacaHariLibur(t.hari_libur),
     snapshot: t.snapshot_bulanan ? bacaSnapshot(t.snapshot_bulanan) : [],
+    tagDokumen: t.tag_dokumen ? bacaTagDokumen(t.tag_dokumen) : null,
+    kamusTag: t.kamus_tag ? bacaKamusTag(t.kamus_tag) : [],
   };
 }
 

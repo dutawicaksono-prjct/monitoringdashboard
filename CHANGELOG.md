@@ -4,6 +4,19 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.6.0] - 2026-10-10
+
+### Ditambahkan
+- Kualitas Aset: bagian *Konsistensi tagging* (spesifikasi 1.4): konsistensi tag, pemakaian tag, bentuk tidak baku,
+  tag belum di kamus, dokumen tanpa tag; tabel *seluruh tag yang diinput* beserta semua bentuk penulisannya (dapat
+  dicari, disaring, dan dibuka ke daftar dokumen); kandidat padanan (singkatan dan ejaan mirip) yang dapat diunduh
+  sebagai baris kamus.
+- Masalah kualitas keenam *Tag tidak baku*, termasuk di tabel masalah per UKE I. Padanan bahasa Inggris dihitung
+  konsisten.
+- Berkas data opsional `tag_dokumen.csv` dan `kamus_tag.csv` beserta data contoh sementara
+  (`tools/generate_sample_tags.py`), dua pemeriksaan data baru (10 pemeriksaan), uji K-25, dan konstanta
+  `AMBANG_KEMIRIPAN_TAG`.
+
 ## [1.5.0] - 2026-10-10
 
 ### Ditambahkan

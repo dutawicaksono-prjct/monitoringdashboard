@@ -25,6 +25,12 @@ export const BATAS_BELUM_DIPERBARUI_BULAN = 12;
 /** Dimensi kualitas dengan skor rata-rata di bawah nilai ini ditandai "Prioritas perbaikan". */
 export const AMBANG_PRIORITAS_DIMENSI = 65;
 
+/**
+ * Kemiripan ejaan (Jaro-Winkler, 0–1) minimal agar dua tag diusulkan sebagai kandidat padanan.
+ * Kandidat tidak pernah digabung otomatis; Tim PIP memverifikasi lalu menambahkannya ke kamus_tag.csv.
+ */
+export const AMBANG_KEMIRIPAN_TAG = 0.92;
+
 /** Tampilkan penanda "Data contoh" di header. Matikan bila data sudah data produksi. */
 export const DATA_CONTOH = true;
 

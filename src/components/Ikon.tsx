@@ -30,6 +30,8 @@ import {
   RefreshCw,
   Route,
   ScanText,
+  Tag,
+  Tags,
   ShieldCheck,
   Sparkles,
   Stamp,
@@ -70,6 +72,7 @@ export const IKON = {
   belum_diperbarui_12_bulan: CalendarClock,
   kandidat_duplikat: Copy,
   file_tidak_terbaca: ScanText,
+  tag_tidak_baku: Tags,
   // Sumber data
   entri: FileText,
   // Bagian
@@ -87,6 +90,7 @@ export const IKON = {
   bebanPic: Users,
   tautan: Link2,
   matriks: Table2,
+  tag: Tag,
 } satisfies Record<string, LucideIcon>;
 
 export type NamaIkon = keyof typeof IKON;

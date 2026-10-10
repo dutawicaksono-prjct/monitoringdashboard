@@ -8,6 +8,7 @@ import {
   TARGET_PUBLIKASI_PERSEN,
 } from '../config';
 import { persen, rataRata, rataRataSkor } from './angka';
+import { hitungTag, periksaTag, siapkanTag, type IndeksTag } from './tag';
 import { akhirBulanLalu, akhirHariWib, bulanWib, hariKerja, kurangiBulan, tanggalWib } from './tanggal';
 import {
   STATUS_ENTRI,
@@ -63,6 +64,8 @@ export interface Konteks {
   dokumen: DokumenSiap[];
   /** Jumlah kemunculan tiap hash_konten di seluruh KOMENS (dasar kandidat duplikat). */
   jumlahHash: ReadonlyMap<string, number>;
+  /** null bila tag_dokumen.csv tidak tersedia. */
+  tag: IndeksTag | null;
   pemeriksaan: PemeriksaanData;
 }
 
@@ -80,7 +83,7 @@ export function siapkan(ds: Dataset, opsi: Partial<Opsi> & { tanggalData: string
   });
   const jumlahHash = new Map<string, number>();
   for (const d of ds.dokumen) jumlahHash.set(d.hash_konten, (jumlahHash.get(d.hash_konten) ?? 0) + 1);
-  return { ds, opsi: o, libur, dokumen, jumlahHash, pemeriksaan: periksaData(ds, o.tanggalData) };
+  return { ds, opsi: o, libur, dokumen, jumlahHash, tag: siapkanTag(ds), pemeriksaan: periksaData(ds, o.tanggalData) };
 }
 
 // ------------------------------------------------------------------ pemeriksaan data (bagian 8.2)
@@ -94,6 +97,8 @@ export const LABEL_PEMERIKSAAN: Record<keyof PemeriksaanData, string> = {
   riwayat_sesuai_status: 'Status terakhir pada riwayat sama dengan status saat ini',
   tanggal_logis: 'Tanggal status terakhir tidak sebelum tanggal dibuat dan tidak melewati tanggal data',
   snapshot_persamaan_total: 'Persamaan total terpenuhi pada setiap snapshot bulanan',
+  tag_dokumen_ada_di_dokumen: 'Setiap dokumen di tag_dokumen.csv ada di dokumen.csv',
+  kamus_tag_valid: 'Kamus tag: jenis sah, satu bentuk baku per varian, dan setiap bentuk baku terdaftar',
 };
 
 export function periksaData(ds: Dataset, tanggalData: string): PemeriksaanData {
@@ -136,6 +141,7 @@ export function periksaData(ds: Dataset, tanggalData: string): PemeriksaanData {
     snapshot_persamaan_total: ds.snapshot.every(
       (s) => s.total_aset === s.terpublikasi + s.dalam_proses_entri + s.tidak_tayang,
     ),
+    ...periksaTag(ds),
   };
 }
 
@@ -225,6 +231,7 @@ export function predikatMasalah(ctx: Konteks): Record<keyof Kualitas['masalah'],
     belum_diperbarui_12_bulan: (d) => d.tgl_pembaruan_terakhir.slice(0, 10) < batas,
     kandidat_duplikat: (d) => (ctx.jumlahHash.get(d.hash_konten) ?? 0) > 1,
     file_tidak_terbaca: (d) => !d.ocr_berhasil,
+    tag_tidak_baku: (d) => !!ctx.tag?.perDokumen.get(d.dokumen_id)?.some((p) => p.status === 'varian'),
   };
 }
 
@@ -249,8 +256,10 @@ function hitungKualitas(ctx: Konteks, sel: DokumenSiap[]): Kualitas {
       belum_diperbarui_12_bulan: hitung(pred.belum_diperbarui_12_bulan),
       kandidat_duplikat: hitung(pred.kandidat_duplikat),
       file_tidak_terbaca: hitung(pred.file_tidak_terbaca),
+      tag_tidak_baku: hitung(pred.tag_tidak_baku),
     },
     ambang_kelengkapan: ctx.opsi.ambangKelengkapan,
+    tag: ctx.tag ? hitungTag(ctx.tag, sel.map((d) => d.dokumen_id)) : null,
   };
 }
 

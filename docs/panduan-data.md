@@ -14,6 +14,8 @@ Dasbor membaca lima berkas CSV dari folder `data/`. Versi ini memakai **data con
 | `hari_libur.csv` | satu hari libur nasional / cuti bersama | `tanggal` | Ya |
 | `snapshot_bulanan.csv` | angka total pada akhir satu bulan | `tanggal_snapshot` | Tidak |
 | `meta_data.csv` | tanggal data (cut-off) | `tanggal_data` | Tidak |
+| `tag_dokumen.csv` | satu tag pada satu dokumen, ditulis apa adanya | `dokumen_id` + `tag` | Tidak |
+| `kamus_tag.csv` | satu bentuk tag dan bentuk bakunya (tesaurus) | `tag_varian` | Tidak |
 
 Aturan format:
 
@@ -42,14 +44,31 @@ Nilai acuan semua indikator atas data ini ada di `data/expected_indicators.json`
 Membangkitkan ulang data contoh (butuh Python dan `pandas`):
 
 ```bash
-python tools/generate_sample_data.py && python tools/compute_indicators.py
+python tools/generate_sample_data.py && python tools/generate_sample_tags.py && python tools/compute_indicators.py
 ```
+
+### Tag dan kamus tag
+
+Data contoh tag (10.856 pemakaian pada 4.771 dokumen) dan `kamus_tag.csv` (25 konsep) adalah **rekaan sementara**,
+sampai ekspor tag dari KOMENS dan tesaurus Tim PIP tersedia. Cara mengisi kamus:
+
+| tag_varian | tag_baku | jenis | Artinya |
+| --- | --- | --- | --- |
+| kemiskinan | kemiskinan | baku | bentuk baku konsep "kemiskinan" (wajib satu baris per konsep) |
+| poverty | kemiskinan | bahasa | padanan bahasa Inggris, dihitung konsisten |
+| miskin | kemiskinan | bentuk | bentuk lain, dihitung **tidak baku** |
+| PRK | pembangunan rendah karbon | singkatan | dihitung tidak baku; jenis lain: `ejaan`, `sinonim` |
+
+Huruf besar/kecil, tanda hubung, dan spasi ganda diabaikan, jadi `Kemiskinan` dan `kemiskinan` cukup ditulis
+sekali. Tabel *Kandidat padanan* di Kualitas Aset dapat diunduh sebagai baris kamus, ditinjau, lalu ditempel ke
+`kamus_tag.csv`. Kamus dapat diganti tanpa build ulang.
 
 ## 3. Prosedur pembaruan data bulanan
 
 Lakukan setiap awal bulan, atau sesering yang dibutuhkan.
 
-1. **Ekspor** `dokumen.csv` dan `riwayat_status.csv` dari KOMENS sesuai templat.
+1. **Ekspor** `dokumen.csv` dan `riwayat_status.csv` dari KOMENS sesuai templat, serta `tag_dokumen.csv` bila
+   ekspor tag sudah tersedia.
 2. **Perbarui** `unit_kerja.csv` bila ada perubahan nomenklatur, dan `hari_libur.csv` bila tahun berganti
    atau ada SKB baru.
 3. **Setel tanggal data** di `data/meta_data.csv` (kolom `tanggal_data`, format `YYYY-MM-DD`) ke tanggal ekspor.

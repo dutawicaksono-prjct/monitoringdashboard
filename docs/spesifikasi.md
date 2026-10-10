@@ -1,6 +1,6 @@
 # Spesifikasi Fungsional Dasbor Monitoring Aset Pengetahuan KOMENS
 
-> **Status: DISETUJUI, versi 1.3 (10 Oktober 2026).**
+> **Status: DISETUJUI, versi 1.4 (10 Oktober 2026).**
 > Disusun pengembang dari `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, data contoh, dan mockup
 > `reference/mockup_v2.dc.html`, lalu ditinjau dan disetujui pemilik kebutuhan (Tim PIP, Pusdatinrenbang).
 > Butir bertanda **[usulan]** adalah keputusan rancangan yang telah disetujui pada versi ini. Butir **masih
@@ -11,7 +11,8 @@
 > (bagian 5.6) atas permintaan pemilik kebutuhan. 1.2 (9 Okt 2026), warna angka utama (bagian 5.7) atas
 > permintaan pemilik kebutuhan. 1.3 (10 Okt 2026), indikator pendukung keputusan (bagian 4.8), tautan berfilter
 > (5.3), tanggal data dari `meta_data.csv` (3.3), dan penamaan ulang dimensi 6, atas persetujuan pemilik kebutuhan
-> terhadap rekomendasi peningkatan dasbor.
+> terhadap rekomendasi peningkatan dasbor. 1.4 (10 Okt 2026), konsistensi tagging (3.3, 4.4, 5.2, 8.2, K-25) atas
+> permintaan pemilik kebutuhan; kamus tag pada data contoh bersifat sementara sampai tesaurus Tim PIP selesai.
 
 ## 1. Tujuan dan pengguna
 
@@ -69,6 +70,13 @@ dengan zona waktu (contoh: `2026-09-10T09:59:18+07:00`). Seluruh perhitungan tan
 - `meta_data.csv` (`tanggal_data`): tanggal data (cut-off) dalam format `YYYY-MM-DD`. Opsional; bila tidak ada atau
   tidak valid, dipakai `TANGGAL_DATA` di `src/config.ts`. Dengan berkas ini, pembaruan data bulanan tidak memerlukan
   build ulang. **[1.3]**
+- `tag_dokumen.csv` (`dokumen_id, tag`): satu baris per tag pada satu dokumen, ditulis apa adanya seperti input
+  pengguna. Opsional; tanpa berkas ini bagian konsistensi tagging dan masalah *Tag tidak baku* tidak ditampilkan.
+  **[1.4]**
+- `kamus_tag.csv` (`tag_varian, tag_baku, jenis`): kamus padanan tag (tesaurus). Setiap konsep punya satu baris
+  `jenis` = `baku` (`tag_varian` = `tag_baku`); bentuk lain mengacu ke bentuk bakunya dengan `jenis` `ejaan`,
+  `singkatan`, `sinonim`, `bentuk`, atau `bahasa` (padanan bahasa Inggris). Opsional; dapat diganti tanpa build
+  ulang. **[1.4]**
 
 ## 4. Indikator dan rumus
 
@@ -123,6 +131,19 @@ statusnya kembali ke Draft.
   - *Kandidat duplikat*: `hash_konten` muncul lebih dari sekali di seluruh KOMENS. Setiap anggota pasangan
     dihitung.
   - *File tidak terbaca (OCR gagal)*: `ocr_berhasil` = false.
+  - *Tag tidak baku* **[1.4]**: dokumen dengan paling sedikit satu tag berstatus tidak baku (lihat di bawah).
+- **Konsistensi tagging** **[1.4]**:
+  - *Bentuk pembanding* tag: huruf kecil, karakter selain huruf/angka menjadi spasi, spasi dirapikan
+    (`Perubahan-Iklim` = `perubahan iklim`). Tag yang sama bentuk pembandingnya dihitung sekali per dokumen.
+  - *Status pemakaian* menurut `kamus_tag.csv`: **baku** (`jenis` = `baku`), **padanan bahasa Inggris**
+    (`jenis` = `bahasa`, diterima karena KOMENS dwibahasa), **tidak baku** (`ejaan`, `singkatan`, `sinonim`,
+    `bentuk`), atau **belum di kamus**.
+  - *Konsistensi tag* = (baku + padanan bahasa Inggris) ÷ (baku + padanan bahasa Inggris + tidak baku) × 100%,
+    satu desimal; tag belum di kamus tidak masuk penyebut. Dihitung juga per konsep.
+  - *Kandidat padanan*: bentuk yang belum di kamus dan (a) merupakan singkatan/kepanjangan bentuk lain (huruf awal
+    kata, kata sambung dilewati) atau (b) mirip ejaannya (Jaro-Winkler ≥ `AMBANG_KEMIRIPAN_TAG` = 0,92, kedua bentuk
+    minimal 5 huruf). Kandidat tidak pernah digabung otomatis.
+  - Semua angka tag mengikuti filter aktif.
 
 ### 4.5 Tren dan Menu Program
 
@@ -197,7 +218,11 @@ isi tampilan; peringatan data bila ada; definisi indikator dan ringkasan pemerik
    tabel ketepatan waktu per UKE I yang dapat dibuka ke UKE II (tombol Buka semua / Tutup semua), dengan kolom
    lebih dari 20 hari kerja.
 3. **Kualitas Aset**: skor dan tujuh dimensi; sebaran skor; lima masalah kualitas, masing-masing dengan
-   daftar dokumen yang dapat diunduh sebagai CSV; masalah kualitas per UKE I (4.8).
+   daftar dokumen yang dapat diunduh sebagai CSV; masalah kualitas per UKE I (4.8). **[1.4]** Masalah keenam
+   *Tag tidak baku* dan bagian *Konsistensi tagging*: konsistensi tag, pemakaian tag, bentuk tidak baku, belum di
+   kamus, dokumen tanpa tag; bar bertumpuk per status; tabel *seluruh tag yang diinput* (satu baris per konsep
+   dengan semua bentuk penulisannya, dapat dicari dan disaring, dengan daftar dokumen); tabel kandidat padanan
+   yang dapat diunduh sebagai baris kamus.
 
 Setiap blok memuat *catatan analis* yang disusun otomatis dari angka, bukan teks tetap.
 
@@ -293,7 +318,7 @@ pemeriksaan data. Tombol, filter, dan dialog tidak ikut tercetak. Nama berkas us
 ## 7. Parameter yang dapat diubah (`src/config.ts`)
 
 Tanggal data, batas tertahan (5 HK), ambang *Mendekati batas* (4), target (95%), ambang kelengkapan (60),
-batas belum diperbarui (12 bulan), ambang dimensi prioritas (65), penanda data contoh.
+batas belum diperbarui (12 bulan), ambang dimensi prioritas (65), ambang kemiripan tag (0,92), penanda data contoh.
 
 ## 8. Mutu data
 
@@ -313,16 +338,18 @@ Selama data adalah data contoh, header menampilkan "Data contoh · ilustrasi" (`
 | `riwayat_sesuai_status` | Status terakhir di riwayat = `status_saat_ini`, dan riwayat hanya untuk dokumen entri |
 | `tanggal_logis` | `tgl_status_terakhir` ≥ `tgl_dibuat` dan tidak melewati T |
 | `snapshot_persamaan_total` | Persamaan total terpenuhi di setiap baris snapshot |
+| `tag_dokumen_ada_di_dokumen` | **[1.4]** Setiap `dokumen_id` di `tag_dokumen.csv` ada di `dokumen.csv` |
+| `kamus_tag_valid` | **[1.4]** `jenis` sah; setiap bentuk mengacu ke satu bentuk baku; setiap `tag_baku` punya baris `jenis` = `baku` |
 
 Bila ada yang tidak terpenuhi, muncul peringatan teks di atas isi tampilan yang menyebut pemeriksaan yang gagal.
-Ringkasan "*n* dari 8 terpenuhi" selalu tersedia di bagian definisi.
+Ringkasan "*n* dari 10 terpenuhi" selalu tersedia di bagian definisi.
 
 ## 9. Kriteria penerimaan
 
 | No | Kriteria |
 | --- | --- |
 | K-01 | Semua nilai `data/expected_indicators.json` dihasilkan identik oleh modul indikator (uji otomatis). |
-| K-02 | Kedelapan pemeriksaan 8.2 bernilai benar pada data contoh. Bila data dirusak, pemeriksaan terkait gagal dan peringatan teks tampil. |
+| K-02 | Kesepuluh pemeriksaan 8.2 bernilai benar pada data contoh. Bila data dirusak, pemeriksaan terkait gagal dan peringatan teks tampil. |
 | K-03 | Persamaan kontrol ditampilkan dan terpenuhi pada data contoh (5.063 = 2.687 + 1.202 + 1.174). |
 | K-04 | HK mengikuti (a, b], tanpa akhir pekan dan tanggal `hari_libur.csv`. Tidak ada tanggal libur di kode sumber. |
 | K-05 | Status ketepatan waktu mengikuti ambang 4/5 dan selalu tampil sebagai teks. |
@@ -345,3 +372,4 @@ Ringkasan "*n* dari 8 terpenuhi" selalu tersedia di bagian definisi.
 | K-22 | **[1.3]** Indikator 4.8 diuji otomatis: jalan menuju target (1.202 + 921 = 2.123; 76,8%), tren kekurangan dari snapshot (2.115, 2.088, 2.173, 2.123), sebaran umur dan beban PIC menjumlah ke angka acuan. |
 | K-23 | **[1.3]** Filter dan tab tercermin di URL; membuka tautan berfilter menampilkan filter yang sama. |
 | K-24 | **[1.3]** Tanggal data dibaca dari `meta_data.csv` bila ada, tanpa build ulang. |
+| K-25 | **[1.4]** Kualitas Aset menampilkan konsistensi tag, masalah *Tag tidak baku*, seluruh tag beserta bentuk penulisannya (dapat dicari), dan kandidat padanan, sesuai `expected_indicators.json` (data contoh: 94,6%; 518 dokumen; 4 kandidat). |
