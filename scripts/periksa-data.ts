@@ -27,6 +27,7 @@ const baca = (f: string) => readFileSync(resolve(folder, f), 'utf-8');
 const opsional = (f: string) => (existsSync(resolve(folder, f)) ? baca(f) : null);
 
 let ds;
+const teksPemetaan = opsional('pemetaan_tag.csv');
 try {
   ds = bacaDataset({
     dokumen: baca('dokumen.csv'),
@@ -36,7 +37,7 @@ try {
     snapshot_bulanan: opsional('snapshot_bulanan.csv'),
     tag_dokumen: opsional('tag_dokumen.csv'),
     kamus_tag: opsional('kamus_tag.csv'),
-    pemetaan_tag: opsional('pemetaan_tag.csv'),
+    pemetaan_tag: teksPemetaan,
   });
 } catch (e) {
   console.error(`GAGAL MEMBACA DATA: ${(e as Error).message}`);
@@ -118,7 +119,7 @@ if (!ds.snapshot.some((s) => s.tanggal_snapshot === akhirBulanLalu(tanggal))) {
 const tanpaSkor = ds.dokumen.filter((d) => Number.isNaN(d.skor_metadata) || d.skor_dimensi.some(Number.isNaN)).length;
 if (tanpaSkor) peringatan.push(`${tanpaSkor} dokumen memiliki skor kosong atau bukan angka.`);
 if (!ds.tagDokumen) peringatan.push('tag_dokumen.csv tidak ada; bagian konsistensi tag tidak ditampilkan.');
-else if (!ds.pemetaanTag.length) peringatan.push('pemetaan_tag.csv tidak ada; tag di luar daftar baku tidak dipetakan menurut makna. Jalankan: python tools/petakan_tag.py');
+else if (teksPemetaan == null) peringatan.push('pemetaan_tag.csv tidak ada; tag di luar daftar baku tidak dipetakan menurut makna. Jalankan: python tools/petakan_tag.py');
 if (tanggal !== TANGGAL_DATA) peringatan.push(`Tanggal yang diperiksa (${tanggal}) berbeda dengan tanggal data (meta_data.csv atau src/config.ts: ${TANGGAL_DATA}).`);
 
 console.log(`\nRingkasan: ${ind.ringkasan.total_aset} dokumen (entri ${ind.ringkasan.entri}, Menu Program ${ind.ringkasan.menu_program}), ` +
