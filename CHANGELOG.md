@@ -23,6 +23,12 @@ tampilan atau fitur baru, PATCH untuk perbaikan.
   padanan (*makna mirip*). Pemeriksaan data `pemetaan_tag_valid` (11 pemeriksaan) dan konstanta
   `AMBANG_PEMETAAN_OTOMATIS`, `AMBANG_KANDIDAT_MAKNA`. Tampilan tidak berubah.
 
+### Diperbaiki
+- `tools/petakan_tag.py` tidak lagi memetakan salah ketik dan kepanjangan singkatan menurut makna (model embedding
+  keliru pada kasus ini, mis. "pendidkan" → perdesaan); tag seperti itu tetap diusulkan dasbor sebagai kandidat
+  *ejaan mirip*/*singkatan*. Singkatan pendek (RPJMN, UKM, EBT, dst.) tidak lagi dipakai sebagai sasaran pemetaan
+  makna. Pemetaan pada data contoh dijalankan; pasangan keliru dicatat di `data/pengecualian_pemetaan.csv`.
+
 ## [1.5.0] - 2026-10-10
 
 ### Ditambahkan
