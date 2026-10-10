@@ -2,7 +2,7 @@
 // Pemakaian: npm run periksa-data [-- --data folder] [--tanggal YYYY-MM-DD]
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { TANGGAL_DATA } from '../src/config';
+import { tanggalDataFolder } from './tanggal-data';
 import {
   FILTER_AWAL,
   LABEL_PEMERIKSAAN,
@@ -21,6 +21,7 @@ const arg = (nama: string, bawaan: string) => {
   return i > -1 ? process.argv[i + 1] : bawaan;
 };
 const folder = resolve(arg('--data', 'data'));
+const TANGGAL_DATA = tanggalDataFolder(folder);
 const tanggal = arg('--tanggal', TANGGAL_DATA);
 const baca = (f: string) => readFileSync(resolve(folder, f), 'utf-8');
 const opsional = (f: string) => (existsSync(resolve(folder, f)) ? baca(f) : null);
@@ -103,7 +104,7 @@ if (!ds.snapshot.some((s) => s.tanggal_snapshot === akhirBulanLalu(tanggal))) {
 }
 const tanpaSkor = ds.dokumen.filter((d) => Number.isNaN(d.skor_metadata) || d.skor_dimensi.some(Number.isNaN)).length;
 if (tanpaSkor) peringatan.push(`${tanpaSkor} dokumen memiliki skor kosong atau bukan angka.`);
-if (tanggal !== TANGGAL_DATA) peringatan.push(`Tanggal yang diperiksa (${tanggal}) berbeda dengan TANGGAL_DATA di src/config.ts (${TANGGAL_DATA}).`);
+if (tanggal !== TANGGAL_DATA) peringatan.push(`Tanggal yang diperiksa (${tanggal}) berbeda dengan tanggal data (meta_data.csv atau src/config.ts: ${TANGGAL_DATA}).`);
 
 console.log(`\nRingkasan: ${ind.ringkasan.total_aset} dokumen (entri ${ind.ringkasan.entri}, Menu Program ${ind.ringkasan.menu_program}), ` +
   `${ds.riwayat.length} baris riwayat, ${ds.unitKerja.length} UKE II, ${ds.hariLibur.length} hari libur, ${ds.snapshot.length} snapshot.`);

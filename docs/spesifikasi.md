@@ -1,6 +1,6 @@
 # Spesifikasi Fungsional Dasbor Monitoring Aset Pengetahuan KOMENS
 
-> **Status: DISETUJUI, versi 1.2 (9 Oktober 2026).**
+> **Status: DISETUJUI, versi 1.3 (10 Oktober 2026).**
 > Disusun pengembang dari `CLAUDE.md`, implementasi acuan `tools/compute_indicators.py`, data contoh, dan mockup
 > `reference/mockup_v2.dc.html`, lalu ditinjau dan disetujui pemilik kebutuhan (Tim PIP, Pusdatinrenbang).
 > Butir bertanda **[usulan]** adalah keputusan rancangan yang telah disetujui pada versi ini. Butir **masih
@@ -9,7 +9,9 @@
 >
 > Riwayat: 1.0 (8 Okt 2026), disetujui tanpa perubahan dari rancangan. 1.1 (9 Okt 2026), penambahan ikon
 > (bagian 5.6) atas permintaan pemilik kebutuhan. 1.2 (9 Okt 2026), warna angka utama (bagian 5.7) atas
-> permintaan pemilik kebutuhan.
+> permintaan pemilik kebutuhan. 1.3 (10 Okt 2026), indikator pendukung keputusan (bagian 4.8), tautan berfilter
+> (5.3), tanggal data dari `meta_data.csv` (3.3), dan penamaan ulang dimensi 6, atas persetujuan pemilik kebutuhan
+> terhadap rekomendasi peningkatan dasbor.
 
 ## 1. Tujuan dan pengguna
 
@@ -48,7 +50,7 @@ dengan zona waktu (contoh: `2026-09-10T09:59:18+07:00`). Seluruh perhitungan tan
 | `status_saat_ini` | Entri: `DRAFT`, `OPERATOR_KONTEN`, `PIC_UKE`, `TERVALIDASI`, `PUBLISH`, `DITOLAK_OPERATOR`, `DITOLAK_PIC`, `UNPUBLISH`. Menu Program: `PUBLISH`, `UNPUBLISH` |
 | `tgl_dibuat`, `tgl_status_terakhir`, `tgl_publish` | Cap waktu |
 | `skor_metadata` | Skor kualitas metadata 0–100 (rata-rata tujuh dimensi) |
-| `skor_dimensi_1` … `skor_dimensi_7` | Kelengkapan, Akurasi, Asal-usul (provenance), Kesesuaian standar, Konsistensi logis, Ketepatan waktu, Aksesibilitas |
+| `skor_dimensi_1` … `skor_dimensi_7` | Kelengkapan, Akurasi, Asal-usul (provenance), Kesesuaian standar, Konsistensi logis, Kemutakhiran isi (ketepatan waktu), Aksesibilitas. **[1.3]** Dimensi 6 diberi label *Kemutakhiran isi (ketepatan waktu)* agar tidak tertukar dengan ketepatan waktu alur kerja (4.3) |
 | `tgl_pembaruan_terakhir` | Tanggal pembaruan isi terakhir |
 | `hash_konten` | Sidik konten (dasar deteksi duplikat) |
 | `ocr_berhasil` | `true`/`false` |
@@ -64,6 +66,9 @@ dengan zona waktu (contoh: `2026-09-10T09:59:18+07:00`). Seluruh perhitungan tan
 - `hari_libur.csv` (`tanggal, keterangan, jenis`): libur nasional dan cuti bersama (SKB 3 Menteri).
   Satu-satunya sumber hari libur; tidak ada tanggal libur di kode.
 - `snapshot_bulanan.csv`: angka total pada akhir setiap bulan (bagian 4.6). Opsional.
+- `meta_data.csv` (`tanggal_data`): tanggal data (cut-off) dalam format `YYYY-MM-DD`. Opsional; bila tidak ada atau
+  tidak valid, dipakai `TANGGAL_DATA` di `src/config.ts`. Dengan berkas ini, pembaruan data bulanan tidak memerlukan
+  build ulang. **[1.3]**
 
 ## 4. Indikator dan rumus
 
@@ -141,7 +146,34 @@ statusnya kembali ke Draft.
 - Snapshot dapat direkonstruksi dari riwayat status (fungsi `rekonstruksiSnapshot`). Dokumen Menu Program
   yang belum publish pada tanggal snapshot dihitung tidak tayang.
 
-### 4.7 Pembulatan dan format
+### 4.8 Indikator pendukung keputusan **[1.3]**
+
+Indikator ini tidak mengubah rumus 4.1–4.7 dan tidak masuk `expected_indicators.json`; diuji di
+`tests/indicators.test.ts` (fungsi murni di `src/indicators/keputusan.ts`).
+
+- **Jalan menuju target**: kekurangan menuju target dipecah menjadi (a) *dapat ditutup lewat alur kerja* =
+  MIN(dalam proses entri, kekurangan) dan (b) *perlu keputusan* = kekurangan − (a), yang hanya dapat datang dari
+  dokumen tidak tayang. *Capaian maksimal lewat alur* = (terpublikasi + dalam proses) ÷ total. Rincian tidak tayang:
+  entri ditolak, entri UnPublish, Menu Program UnPublish, dan Menu Program dengan UnPublish terbanyak.
+  Pada data contoh: 2.123 = 1.202 lewat alur + 921 perlu keputusan; capaian maksimal lewat alur 76,8%; JDIH 962.
+- **Tren capaian dan proyeksi**: persen publish dan kekurangan pada setiap snapshot akhir bulan (bagian 4.6) ditambah
+  posisi tanggal data. *Laju per bulan* = (nilai snapshot terakhir − nilai snapshot pertama) ÷ jumlah selang, memakai
+  paling banyak 4 snapshot akhir bulan terakhir (3 selang). Bila laju kekurangan negatif, *perkiraan tercapai* =
+  bulan tanggal data + CEILING(kekurangan ÷ |laju|) bulan; bila tidak negatif, ditulis bahwa target tidak tercapai bila
+  laju berlanjut. Hanya untuk seluruh periode tanpa filter (snapshot hanya berisi angka total).
+- **Arus masuk dan keluar**: pada grafik bulanan, di samping dokumen entri baru (4.5) ditampilkan dokumen entri
+  berstatus Publish menurut bulan `tgl_publish` (WIB). Catatan analis menyebut selisih masuk − keluar pada bulan lengkap.
+- **Kekurangan per UKE I**: MAX(0, CEILING(0,95 × total UKE I) − publish UKE I), ditampilkan di capaian per UKE I;
+  catatan analis menyebut UKE I dengan kekurangan terbanyak.
+- **Sebaran umur tertahan**: dokumen dalam proses dikelompokkan ≤ 5, 6–10, 11–20, > 20 hari kerja. Tabel UKE I/UKE II
+  menambah kolom *Di antaranya lebih dari 20 hari kerja*.
+- **Beban per PIC UKE**: dokumen berstatus `PIC_UKE` per `pic_uke`: jumlah, > 5 HK, terlama; diurutkan dari > 5 HK
+  terbanyak. Dokumen di tahap PIC UKE dengan `pic_uke` kosong dilaporkan terpisah (*tertahan tanpa pemilik*).
+  Pada data contoh: 31 dokumen.
+- **Masalah kualitas per UKE I**: jumlah dokumen entri per UKE I untuk setiap masalah 4.4; nilai terbesar per kolom
+  ditandai dengan ikon dan teks pada label aksesibel.
+
+### 4.9 Pembulatan dan format
 
 - Pembulatan satu desimal mengikuti implementasi acuan: nilai yang tepat di tengah dibulatkan ke genap.
 - Format angka `id-ID`: titik ribuan, koma desimal (`5.063`, `53,1%`, `10,9`). Nilai tidak tersedia: "—".
@@ -157,13 +189,15 @@ isi tampilan; peringatan data bila ada; definisi indikator dan ringkasan pemerik
 
 1. **Ringkasan Pimpinan**: tiga kartu *Perlu perhatian* (alur kerja, target, kualitas) yang menautkan ke
    tampilan terkait; lima KPI (total aset, terpublikasi dengan bar target 95%, dalam proses, tertahan
-   > 5 HK, skor kualitas); capaian per UKE I terhadap target; rekapitulasi per sumber data (bar bertumpuk
-   terpublikasi / dalam proses / tidak tayang); dokumen baru per bulan; dokumen per Menu Program.
+   > 5 HK, skor kualitas); jalan menuju target dan tren capaian (4.8); capaian per UKE I terhadap target dengan
+   kekurangan per UKE I; rekapitulasi per sumber data (bar bertumpuk terpublikasi / dalam proses / tidak tayang);
+   dokumen baru dan dipublikasikan per bulan; dokumen per Menu Program.
 2. **Kontrol Alur Kerja**: lima tahap (Draft → Operator Konten → PIC UKE → Tervalidasi → Publish) dengan
-   status; jalur keluar (ditolak, UnPublish); tiga aksi cepat dengan daftar dokumen; tabel ketepatan waktu
-   per UKE I yang dapat dibuka ke UKE II (tombol Buka semua / Tutup semua).
+   status; jalur keluar (ditolak, UnPublish); tiga aksi cepat dengan daftar dokumen; beban per PIC UKE (4.8);
+   tabel ketepatan waktu per UKE I yang dapat dibuka ke UKE II (tombol Buka semua / Tutup semua), dengan kolom
+   lebih dari 20 hari kerja.
 3. **Kualitas Aset**: skor dan tujuh dimensi; sebaran skor; lima masalah kualitas, masing-masing dengan
-   daftar dokumen yang dapat diunduh sebagai CSV.
+   daftar dokumen yang dapat diunduh sebagai CSV; masalah kualitas per UKE I (4.8).
 
 Setiap blok memuat *catatan analis* yang disusun otomatis dari angka, bukan teks tetap.
 
@@ -175,6 +209,10 @@ Setiap blok memuat *catatan analis* yang disusun otomatis dari angka, bukan teks
 | UKE I | Semua; 12 UKE I | Hanya entri yang dihitung; Menu Program dikeluarkan (tanpa atribusi) |
 | UKE II | Semua; UKE II dari UKE I terpilih (atau semua) | Memilih UKE II mengisi UKE I induknya |
 | Sumber data | Entri + Menu Program; Entri; Menu Program | Menu Program menyembunyikan blok yang bergantung pada entri dan menonaktifkan filter UKE |
+
+**[1.3]** Tab dan filter aktif tercermin di URL (`?periode=2026&uke1=…&uke2=…&sumber=ENTRI#alur`), sehingga tampilan dapat
+dibagikan atau disimpan sebagai penanda. Tombol *Salin tautan tampilan ini* menyalin URL tersebut. Nilai yang tidak
+dikenal (misalnya nama unit lama) diabaikan saat data dimuat.
 
 ### 5.4 Warna
 
@@ -304,3 +342,6 @@ Ringkasan "*n* dari 8 terpenuhi" selalu tersedia di bagian definisi.
 | K-19 | Ambang kelengkapan dan parameter lain berupa konstanta yang mudah diubah. |
 | K-20 | Setiap KPI, kartu masalah, aksi cepat, tahap alur, dan label status memiliki ikon sesuai 5.6, memakai warna sesuai 5.6/5.7, dan tidak terbaca oleh pembaca layar. |
 | K-21 | Kelima angka utama memiliki warna berbeda sesuai 5.7, dengan kontras angka terhadap latar minimal 4,5:1. |
+| K-22 | **[1.3]** Indikator 4.8 diuji otomatis: jalan menuju target (1.202 + 921 = 2.123; 76,8%), tren kekurangan dari snapshot (2.115, 2.088, 2.173, 2.123), sebaran umur dan beban PIC menjumlah ke angka acuan. |
+| K-23 | **[1.3]** Filter dan tab tercermin di URL; membuka tautan berfilter menampilkan filter yang sama. |
+| K-24 | **[1.3]** Tanggal data dibaca dari `meta_data.csv` bila ada, tanpa build ulang. |

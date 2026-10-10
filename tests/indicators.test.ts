@@ -10,6 +10,13 @@ import {
   pilihDokumen,
   rekonstruksiSnapshot,
   siapkan,
+  jalanMenujuTarget,
+  trenCapaian,
+  sebaranUmur,
+  bebanPic,
+  masalahPerUke1,
+  kurangMenujuTarget,
+  bacaTanggalData,
 } from '../src/indicators';
 import { TANGGAL_DATA } from '../src/config';
 
@@ -110,5 +117,64 @@ describe('validasi berkas', () => {
         hari_libur: baca('hari_libur.csv'),
       }),
     ).toThrow('dokumen.csv: kolom wajib tidak ditemukan: hash_konten.');
+  });
+});
+
+describe('indikator pendukung keputusan (spesifikasi 4.8)', () => {
+  const sel = pilihDokumen(ctx, FILTER_AWAL);
+  it('jalan menuju target: alur saja tidak cukup', () => {
+    const j = jalanMenujuTarget(sel, hasil.ringkasan, 95);
+    expect(j.target_dokumen).toBe(4810);
+    expect(j.kekurangan).toBe(2123);
+    expect(j.dari_alur).toBe(1202);
+    expect(j.perlu_keputusan).toBe(921);
+    expect(j.persen_maks_via_alur).toBe(76.8);
+    expect(j.ditolak_entri + j.unpublish_entri + j.unpublish_menu_program).toBe(hasil.ringkasan.tidak_tayang);
+    expect(j.unpublish_menu_teratas).toEqual({ nama: 'JDIH', jumlah: 962 });
+  });
+  it('tren capaian dari snapshot akhir bulan', () => {
+    const t = trenCapaian(ds.snapshot, expected.tanggal_data, hasil.ringkasan, 95);
+    expect(t.titik.map((x) => x.tanggal)).toEqual(['2026-07-31', '2026-08-31', '2026-09-30', '2026-10-08']);
+    expect(t.titik.map((x) => x.kekurangan)).toEqual([2115, 2088, 2173, 2123]);
+    expect(t.laju_kekurangan_per_bulan).toBe(29);
+    expect(t.perkiraan_tercapai).toBeNull();
+  });
+  it('proyeksi bila kekurangan menyempit', () => {
+    const snap = [
+      { tanggal_snapshot: '2026-08-31', total_aset: 1000, terpublikasi: 500, dalam_proses_entri: 0, tidak_tayang: 500, tertahan_lebih_dari_5_hk: 0 },
+      { tanggal_snapshot: '2026-09-30', total_aset: 1000, terpublikasi: 600, dalam_proses_entri: 0, tidak_tayang: 400, tertahan_lebih_dari_5_hk: 0 },
+    ];
+    const r = { ...hasil.ringkasan, total_aset: 1000, terpublikasi: 650, persen_publish: 65, kekurangan_menuju_target: 300 };
+    const t = trenCapaian(snap, '2026-10-08', r, 95);
+    expect(t.laju_kekurangan_per_bulan).toBe(-100);
+    expect(t.bulan_menuju_target).toBe(3);
+    expect(t.perkiraan_tercapai).toBe('2027-01');
+  });
+  it('sebaran umur menjumlah ke dalam proses', () => {
+    const s = sebaranUmur(sel, 5);
+    expect(s.dalam_batas + s.hk_6_10 + s.hk_11_20 + s.hk_lebih_20).toBe(hasil.ringkasan.dalam_proses_entri);
+    expect(s.hk_6_10 + s.hk_11_20 + s.hk_lebih_20).toBe(hasil.ringkasan.tertahan_lebih_dari_5_hk);
+  });
+  it('beban per PIC menjumlah ke tahap PIC UKE', () => {
+    const b = bebanPic(sel);
+    expect(b.baris.reduce((a, x) => a + x.jumlah, 0) + b.tanpa_pic.length).toBe(hasil.tahap.PIC_UKE.jumlah);
+    expect(b.tanpa_pic.length).toBe(31);
+  });
+  it('masalah per UKE I menjumlah ke total entri', () => {
+    const m = masalahPerUke1(ctx, sel);
+    expect(m.length).toBe(12);
+    expect(m.reduce((a, x) => a + x.masalah.tanpa_pic, 0)).toBe(hasil.kualitas.masalah.tanpa_pic);
+  });
+  it('kurang menuju target', () => {
+    expect(kurangMenujuTarget(5063, 2687, 95)).toBe(2123);
+    expect(kurangMenujuTarget(10, 10, 95)).toBe(0);
+  });
+});
+
+describe('meta_data.csv', () => {
+  it('membaca tanggal data yang valid dan menolak yang tidak valid', () => {
+    expect(bacaTanggalData(baca('meta_data.csv'))).toBe(expected.tanggal_data);
+    expect(bacaTanggalData('tanggal_data\n')).toBeNull();
+    expect(bacaTanggalData('tanggal_data\n08/10/2026\n')).toBeNull();
   });
 });

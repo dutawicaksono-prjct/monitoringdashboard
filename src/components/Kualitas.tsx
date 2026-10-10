@@ -1,8 +1,8 @@
 import { AMBANG_PRIORITAS_DIMENSI, BATAS_BELUM_DIPERBARUI_BULAN } from '../config';
 import { angka, desimal, rasio } from '../format';
-import { predikatMasalah, type DokumenSiap, type Indikator, type Konteks, type Kualitas as TKualitas, type Filter } from '../indicators';
+import { masalahPerUke1, predikatMasalah, type DokumenSiap, type Indikator, type Konteks, type Kualitas as TKualitas, type Filter } from '../indicators';
 import type { PermintaanDaftar } from './Umum';
-import { JudulIkon, KotakIkon } from './Ikon';
+import { Ikon, JudulIkon, KotakIkon } from './Ikon';
 
 /** Tujuh dimensi kualitas metadata (Bruce & Hillman), urut sesuai skor_dimensi_1..7. */
 export const NAMA_DIMENSI = [
@@ -11,7 +11,7 @@ export const NAMA_DIMENSI = [
   'Asal-usul (provenance)',
   'Kesesuaian standar',
   'Konsistensi logis',
-  'Ketepatan waktu',
+  'Kemutakhiran isi (ketepatan waktu)',
   'Aksesibilitas',
 ];
 
@@ -167,6 +167,105 @@ export function Kualitas({ ind, ctx, filter, dokumen, onDaftar }: Props) {
           ))}
         </div>
       </section>
+
+      {filter.sumber !== 'MENU_PROGRAM' && <MatriksUke1 ctx={ctx} dokumen={dokumen} daftar={daftarMasalah} pred={pred} onDaftar={onDaftar} />}
     </div>
+  );
+}
+
+interface ItemMasalah {
+  k: KunciMasalah;
+  label: string;
+  ket: string;
+  nilai: (d: DokumenSiap) => string;
+}
+
+function MatriksUke1({
+  ctx,
+  dokumen,
+  daftar,
+  pred,
+  onDaftar,
+}: {
+  ctx: Konteks;
+  dokumen: DokumenSiap[];
+  daftar: ItemMasalah[];
+  pred: ReturnType<typeof predikatMasalah>;
+  onDaftar: (p: PermintaanDaftar) => void;
+}) {
+  const baris = masalahPerUke1(ctx, dokumen).map((b) => ({ ...b, jumlah: daftar.reduce((a, m) => a + b.masalah[m.k], 0) }));
+  baris.sort((a, b) => b.jumlah - a.jumlah || a.uke1.localeCompare(b.uke1, 'id'));
+  if (!baris.length) return null;
+  const maks: Record<string, number> = Object.fromEntries(daftar.map((m) => [m.k, Math.max(1, ...baris.map((b) => b.masalah[m.k]))]));
+  const teratas = baris[0];
+  const totalSemua = baris.reduce((a, b) => a + b.jumlah, 0);
+  return (
+    <section className="kartu" aria-labelledby="judul-matriks">
+      <div>
+        <JudulIkon nama="matriks" id="judul-matriks">
+          Masalah kualitas per UKE I
+        </JudulIkon>
+        <div className="kartu-sub">
+          Dokumen entri · diurutkan dari jumlah masalah terbanyak · angka terbesar di setiap kolom ditandai · klik angka untuk melihat
+          daftarnya
+        </div>
+      </div>
+      <div className="gulir" tabIndex={0} aria-label="Tabel masalah kualitas per UKE I, dapat digulir ke samping">
+        <table className="tabel-dok tabel-matriks">
+          <thead>
+            <tr>
+              <th scope="col">UKE I</th>
+              <th scope="col">Dokumen entri</th>
+              {daftar.map((m) => (
+                <th key={m.k} scope="col">
+                  {m.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {baris.map((b) => (
+              <tr key={b.uke1}>
+                <th scope="row">{b.uke1}</th>
+                <td>{angka(b.total)}</td>
+                {daftar.map((m) => {
+                  const n = b.masalah[m.k];
+                  const puncak = n > 0 && n === maks[m.k];
+                  return (
+                    <td key={m.k}>
+                      <button
+                        type="button"
+                        className={`sel-matriks${puncak ? ' puncak' : ''}`}
+                        disabled={!n}
+                        aria-label={`${m.label}, ${b.uke1}: ${n} dokumen${puncak ? ', terbanyak' : ''}`}
+                        onClick={() =>
+                          onDaftar({
+                            judul: `${m.label}: ${b.uke1}`,
+                            catatan: m.ket,
+                            dokumen: dokumen.filter((d) => d.sumber === 'ENTRI' && d.uke1 === b.uke1 && pred[m.k](d)),
+                            labelKeterangan: 'Keterangan',
+                            keterangan: m.nilai,
+                          })
+                        }
+                      >
+                        {puncak && <Ikon nama="masalah" ukuran={13} />}
+                        {angka(n)}
+                      </button>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {teratas.jumlah > 0 && (
+        <div className="catatan">
+          <b>Catatan analis:</b> {teratas.uke1} menyumbang masalah kualitas terbanyak ({angka(teratas.jumlah)} temuan,{' '}
+          {rasio(teratas.jumlah, totalSemua)} dari seluruh temuan pada dokumen entri). Satu dokumen dapat memiliki lebih dari satu
+          masalah.
+        </div>
+      )}
+    </section>
   );
 }

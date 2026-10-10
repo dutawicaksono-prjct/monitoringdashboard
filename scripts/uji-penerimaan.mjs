@@ -142,7 +142,11 @@ await uji('K-07', 'Tabel UKE I/UKE II dapat dibuka, terurut, dan sesuai acuan', 
     const e = expected.uke1[nama];
     pastikan(e, `UKE I tidak dikenal: ${nama}`);
     const harap = [fmt(e.total), pct(e.persen_publish), fmt(e.dalam_proses), fmt(e.lebih_dari_5_hk), `${pct(e.rata_rata_tertahan_hk).replace('%', '')} hari`, e.status];
-    pastikan(JSON.stringify(b.slice(1)) === JSON.stringify(harap), `${nama}: ${b.slice(1)} ≠ ${harap}`);
+    // Kolom ke-5 ("lebih dari 20 hari kerja", spesifikasi 4.8) tidak ada di acuan; diperiksa terpisah di bawah.
+    const sel = b.slice(1);
+    const lebih20 = Number(sel.splice(4, 1)[0].replace(/\./g, ''));
+    pastikan(JSON.stringify(sel) === JSON.stringify(harap), `${nama}: ${sel} ≠ ${harap}`);
+    pastikan(lebih20 >= 0 && lebih20 <= e.lebih_dari_5_hk, `${nama}: lebih dari 20 HK (${lebih20}) melebihi tertahan > 5 HK`);
     pastikan(e.lebih_dari_5_hk <= urut, 'urutan tidak menurun');
     urut = e.lebih_dari_5_hk;
   }

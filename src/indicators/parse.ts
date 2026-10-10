@@ -97,3 +97,10 @@ export function bacaDataset(t: TeksCsv): Dataset {
     snapshot: t.snapshot_bulanan ? bacaSnapshot(t.snapshot_bulanan) : [],
   };
 }
+
+/** Tanggal data dari meta_data.csv (kolom `tanggal_data`, YYYY-MM-DD); null bila kosong atau tidak valid. */
+export function bacaTanggalData(teks: string): string | null {
+  const hasil = Papa.parse<Baris>(teks.replace(/^﻿/, ''), { header: true, skipEmptyLines: true });
+  const t = (hasil.data[0]?.tanggal_data ?? '').trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(t) && !Number.isNaN(Date.parse(`${t}T00:00:00Z`)) ? t : null;
+}

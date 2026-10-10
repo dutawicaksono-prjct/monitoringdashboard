@@ -4,6 +4,25 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/); pe
 [Semantic Versioning](https://semver.org/lang/id/): MAYOR untuk perubahan rumus/definisi indikator, MINOR untuk
 tampilan atau fitur baru, PATCH untuk perbaikan.
 
+## [1.3.0] - 2026-10-10
+
+### Ditambahkan
+- Ringkasan Pimpinan: kartu *Jalan menuju target 95%* yang memisahkan kekurangan yang dapat ditutup lewat alur kerja
+  dari yang perlu keputusan (dokumen tidak tayang, terutama Menu Program UnPublish).
+- Ringkasan Pimpinan: *Tren capaian terhadap target* dari snapshot akhir bulan, dengan laju per bulan dan proyeksi.
+- Grafik bulanan menampilkan dokumen baru (masuk) berdampingan dengan dokumen yang dipublikasikan (keluar).
+- Capaian per UKE I menampilkan kekurangan dokumen menuju 95% dan UKE I dengan kekurangan terbanyak.
+- Kontrol Alur Kerja: *Beban per PIC UKE*, termasuk dokumen di tahap PIC UKE tanpa PIC.
+- Tabel UKE I/UKE II: kolom tertahan lebih dari 20 hari kerja.
+- Kualitas Aset: tabel *Masalah kualitas per UKE I* yang dapat diklik ke daftar dokumen.
+- Filter dan tab tersimpan di URL; tombol *Salin tautan tampilan ini*.
+- `data/meta_data.csv` untuk tanggal data, sehingga pembaruan data bulanan tidak perlu build ulang. Peringatan bila
+  data nyata lebih lama dari 35 hari.
+- Modul `src/indicators/keputusan.ts` beserta uji; spesifikasi 1.3 (bagian 4.8, K-22 sampai K-24).
+
+### Diubah
+- Dimensi kualitas 6 berlabel *Kemutakhiran isi (ketepatan waktu)*.
+
 ## [1.2.0] - 2026-10-09
 
 ### Ditambahkan
