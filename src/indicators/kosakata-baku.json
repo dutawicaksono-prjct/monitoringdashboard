@@ -1,6 +1,6 @@
 [
   {
-    "baku": "Hubungan Masyarkat",
+    "baku": "Hubungan Masyarakat",
     "padanan": [
       {
         "tag": "Public Relations",
@@ -30,7 +30,7 @@
     "baku": "SDM",
     "padanan": [
       {
-        "tag": "Human Resource",
+        "tag": "Human Resources",
         "jenis": "bahasa"
       }
     ]
@@ -178,14 +178,19 @@
     "baku": "Fiskal",
     "padanan": [
       {
-        "tag": "Prosecutor",
+        "tag": "Fiscal",
         "jenis": "bahasa"
       }
     ]
   },
   {
     "baku": "Moneter",
-    "padanan": []
+    "padanan": [
+      {
+        "tag": "Monetary",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
     "baku": "Sektor Keuangan",
@@ -198,7 +203,12 @@
   },
   {
     "baku": "Hilirisasi",
-    "padanan": []
+    "padanan": [
+      {
+        "tag": "Downstreaming",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
     "baku": "Kerjasama Ekonomi Internasional",
@@ -402,7 +412,7 @@
     "baku": "Ekonomi Digital",
     "padanan": [
       {
-        "tag": "Economy Digital",
+        "tag": "Digital Economy",
         "jenis": "bahasa"
       }
     ]
@@ -472,13 +482,18 @@
   },
   {
     "baku": "Ideologi",
-    "padanan": []
+    "padanan": [
+      {
+        "tag": "Ideology",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
     "baku": "Kebangsaan",
     "padanan": [
       {
-        "tag": "Natioanlity",
+        "tag": "Nationality",
         "jenis": "bahasa"
       }
     ]
@@ -532,7 +547,7 @@
     "baku": "Pemasyarakatan",
     "padanan": [
       {
-        "tag": "Corretions",
+        "tag": "Corrections",
         "jenis": "bahasa"
       }
     ]
@@ -568,7 +583,7 @@
     "baku": "Transformasi Birokrasi",
     "padanan": [
       {
-        "tag": "Bureucratic Transformation",
+        "tag": "Bureaucratic Transformation",
         "jenis": "bahasa"
       }
     ]
@@ -682,10 +697,10 @@
     ]
   },
   {
-    "baku": "Menengah",
+    "baku": "Pendidikan Menengah",
     "padanan": [
       {
-        "tag": "Intermediate",
+        "tag": "Secondary Education",
         "jenis": "bahasa"
       }
     ]
@@ -728,7 +743,12 @@
   },
   {
     "baku": "Pengasuhan",
-    "padanan": []
+    "padanan": [
+      {
+        "tag": "Parenting",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
     "baku": "Perempuan",
@@ -770,7 +790,7 @@
     "baku": "Pemuda",
     "padanan": [
       {
-        "tag": "youth",
+        "tag": "Youth",
         "jenis": "bahasa"
       }
     ]
@@ -864,7 +884,7 @@
     "baku": "Konservasi Sumber Daya Air",
     "padanan": [
       {
-        "tag": "Convervation of Water Resources",
+        "tag": "Conservation of Water Resources",
         "jenis": "bahasa"
       }
     ]
@@ -900,7 +920,7 @@
     "baku": "Infrastruktur Logistik",
     "padanan": [
       {
-        "tag": "Infrastructure Logistics",
+        "tag": "Logistics Infrastructure",
         "jenis": "bahasa"
       }
     ]
@@ -927,7 +947,7 @@
     "baku": "Kawasan Permukiman",
     "padanan": [
       {
-        "tag": "Residental Areas",
+        "tag": "Residential Areas",
         "jenis": "bahasa"
       }
     ]
@@ -981,7 +1001,7 @@
     "baku": "Investasi Pembangunan",
     "padanan": [
       {
-        "tag": "Development Invesment",
+        "tag": "Development Investment",
         "jenis": "bahasa"
       }
     ]
@@ -1125,7 +1145,7 @@
     "baku": "Investigasi",
     "padanan": [
       {
-        "tag": "Research",
+        "tag": "Investigation",
         "jenis": "bahasa"
       }
     ]
