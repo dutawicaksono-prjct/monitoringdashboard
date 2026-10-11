@@ -37,6 +37,7 @@ const ds = bacaDataset({
   hari_libur: baca('hari_libur.csv'),
   snapshot_bulanan: baca('snapshot_bulanan.csv'),
   tag_dokumen: baca('tag_dokumen.csv'),
+  pemetaan_tag: baca('pemetaan_tag.csv'),
 });
 const ctx = siapkan(ds, { tanggalData: expected.tanggal_data });
 const hasil = hitungIndikator(ctx, FILTER_AWAL);
@@ -213,17 +214,17 @@ describe('konsistensi tagging (spesifikasi 1.4)', () => {
   });
   it('kamus_tag.csv hanya menambah padanan, tidak bisa mengubah tag baku', () => {
     const tambah = bacaKamusTag(
-      'tag_varian,tag_baku,jenis\nRencana Pembangunan Jangka Menengah Nasional,rpjmn,singkatan\n',
+      'tag_varian,tag_baku,jenis\nRencana Pembangunan Jangka Menengah Nasional,perencanaan,sinonim\n',
     );
     expect(periksaTag({ ...ds, kamusTag: tambah }).kamus_tag_valid).toBe(true);
     const t = hitungIndikator(siapkan({ ...ds, kamusTag: tambah }, { tanggalData: expected.tanggal_data }), FILTER_AWAL).kualitas.tag!;
-    expect(t.per_konsep.RPJMN.bentuk['rencana pembangunan jangka menengah nasional'].status).toBe('varian');
+    expect(t.per_konsep.Perencanaan.bentuk['rencana pembangunan jangka menengah nasional'].status).toBe('varian');
     expect(t.penggunaan.varian).toBe(hasil.kualitas.tag!.penggunaan.varian + 75);
     for (const csv of [
-      'tag_varian,tag_baku,jenis\nPRK,kemiskinan,singkatan\n', // varian bawaan dialihkan ke konsep lain
+      'tag_varian,tag_baku,jenis\nPoverty Alleviation,kesehatan,sinonim\n', // padanan bawaan dialihkan ke konsep lain
       'tag_varian,tag_baku,jenis\nkemaritiman,kemaritiman,baku\n', // menambah tag baku
       'tag_varian,tag_baku,jenis\nmaritim,kemaritiman,sinonim\n', // tag_baku bukan tag baku bawaan
-      'tag_varian,tag_baku,jenis\nmiskin sekali,kemiskinan,typo\n', // jenis tidak sah
+      'tag_varian,tag_baku,jenis\nmiskin sekali,penanggulangan kemiskinan,typo\n', // jenis tidak sah
     ]) {
       expect(periksaTag({ ...ds, kamusTag: bacaKamusTag(csv) }).kamus_tag_valid).toBe(false);
     }
@@ -232,22 +233,22 @@ describe('konsistensi tagging (spesifikasi 1.4)', () => {
     const pemetaan = bacaPemetaanTag(
       'tag,tag_baku,jenis,skor\n' +
         'usaha mikro kecil dan menengah,UMKM,makna,0.93\n' +
-        'kemaritiman,ekonomi hijau,bahasa,0.88\n' +
-        'statistik,evaluasi kinerja,makna,0.74\n' +
-        'kemiskinan,stunting,makna,0.99\n', // sudah di kamus: diabaikan
+        'kemaritiman,kelautan,bahasa,0.88\n' +
+        'statistik,data,makna,0.74\n' +
+        'kesehatan,pangan,makna,0.99\n', // sudah di kamus: diabaikan
     );
     const c = siapkan({ ...ds, pemetaanTag: pemetaan }, { tanggalData: expected.tanggal_data });
     expect(c.pemeriksaan.pemetaan_tag_valid).toBe(true);
     const t = hitungIndikator(c, FILTER_AWAL).kualitas.tag!;
-    const awal = hasil.kualitas.tag!;
+    const awal = hitungIndikator(siapkan({ ...ds, pemetaanTag: [] }, { tanggalData: expected.tanggal_data }), FILTER_AWAL).kualitas.tag!;
     expect(t.per_konsep.UMKM.bentuk['usaha mikro kecil dan menengah']).toMatchObject({ status: 'varian', jenis: 'makna' });
-    expect(t.per_konsep['ekonomi hijau'].bentuk.kemaritiman).toMatchObject({ status: 'padanan_bahasa', jenis: 'bahasa' });
+    expect(t.per_konsep.Kelautan.bentuk.kemaritiman).toMatchObject({ status: 'padanan_bahasa', jenis: 'bahasa' });
     expect(t.penggunaan.varian).toBe(awal.penggunaan.varian + 37);
     expect(t.penggunaan.padanan_bahasa).toBe(awal.penggunaan.padanan_bahasa + 265);
     expect(t.penggunaan.baku).toBe(awal.penggunaan.baku);
     expect(t.kandidat_padanan.find((k) => k.tag === 'usaha mikro kecil dan menengah')).toBeUndefined();
     expect(t.kandidat_padanan.find((k) => k.tag === 'statistik')).toEqual({
-      tag: 'statistik', usulan_baku: 'evaluasi kinerja', alasan: 'makna mirip', kemiripan: 0.74, dokumen: 193,
+      tag: 'statistik', usulan_baku: 'Data', alasan: 'makna mirip', kemiripan: 0.74, dokumen: 193,
     });
     const salah = bacaPemetaanTag('tag,tag_baku,jenis,skor\nmaritim,kemaritiman,makna,0.9\nx,UMKM,makna,1.2\n');
     expect(periksaTag({ ...ds, pemetaanTag: salah }).pemetaan_tag_valid).toBe(false);
