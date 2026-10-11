@@ -53,8 +53,10 @@ python tools/generate_sample_data.py && python tools/generate_sample_tags.py && 
 Data contoh tag (10.856 pemakaian pada 4.771 dokumen) adalah **rekaan sementara** sampai ekspor tag dari KOMENS
 tersedia.
 
-**Daftar tag baku** tertanam di dasbor: `src/indicators/kosakata-baku.json` (25 konsep contoh, sampai tesaurus Tim
-PIP selesai). Setiap konsep:
+**Daftar tag baku** tertanam di dasbor: `src/indicators/kosakata-baku.json`, diimpor dari Controlled Vocabulary Tim PIP
+(lembar Boarder Term: 129 istilah, padanan bahasa Inggris berjenis `bahasa`; Narrower Term belum dipakai) dengan
+`python tools/impor_kosakata.py "Controlled Vocabulary.xlsx"`. Tag contoh di `tag_dokumen.csv` masih memakai 25
+konsep lama, sehingga sebagian besar baru terhubung lewat pemetaan makna. Setiap konsep:
 
 ```json
 { "baku": "kemiskinan", "padanan": [ { "tag": "poverty", "jenis": "bahasa" }, { "tag": "miskin", "jenis": "bentuk" } ] }

@@ -3,7 +3,8 @@
 
 Menghasilkan data/tag_dokumen.csv (satu baris per pasangan dokumen-tag, ditulis apa adanya seperti input pengguna).
 Daftar tag baku dan padanannya TIDAK lagi berupa CSV: tertanam di dasbor (src/indicators/kosakata-baku.json).
-Skrip ini memeriksa bahwa KONSEP di bawah (bentuk dengan masuk_kamus=True) sama dengan daftar bawaan itu.
+KONSEP di bawah adalah 25 konsep contoh lama; daftar bawaan kini diimpor dari Controlled Vocabulary Tim PIP
+(tools/impor_kosakata.py), sehingga tag contoh sengaja tidak selalu sama dengan daftar baku (uji pemetaan makna).
 
 Membaca data/dokumen.csv. Hasil deterministik (seed tetap). Jalankan setelah generate_sample_data.py.
 
@@ -103,11 +104,7 @@ with open(DATA / "tag_dokumen.csv", "w", newline="", encoding="utf-8") as f:
     w.writeheader()
     w.writerows(baris)
 
-# Bentuk yang ditandai masuk_kamus harus sama dengan daftar tag baku bawaan dasbor.
-harap = [{"baku": k, "padanan": [{"tag": b, "jenis": j} for b, j, _, masuk in lain if masuk]} for k, (_, lain) in KONSEP.items()]
 bawaan = json.loads((ROOT / "src" / "indicators" / "kosakata-baku.json").read_text(encoding="utf-8"))
-if harap != bawaan:
-    raise SystemExit("KONSEP tidak sama dengan src/indicators/kosakata-baku.json; samakan keduanya.")
 
 print(f"tag_dokumen.csv: {len(baris)} baris, {len({b['dokumen_id'] for b in baris})} dokumen bertag")
-print(f"daftar baku bawaan: {len(bawaan)} konsep (cocok dengan KONSEP)")
+print(f"daftar baku bawaan: {len(bawaan)} konsep; tag contoh dari {len(KONSEP)} konsep lama")

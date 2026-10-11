@@ -504,16 +504,16 @@ await uji('K-25', 'Konsistensi tagging di Kualitas Aset', async () => {
   const semua = Object.keys(t.per_konsep).length;
   await p.getByRole('button', { name: `Tampilkan semua ${fmt(semua)} tag` }).click();
   const baris = await p.locator('.tabel-tag tbody tr').count();
-  await p.getByLabel('Cari tag').fill('rendah karbon');
+  await p.getByLabel('Cari tag').fill('kemiskinan');
   const cari = await p.locator('.tabel-tag tbody tr').allInnerTexts();
   await p.close();
   pastikan(isi.includes(pct(t.persen_konsistensi)), `konsistensi ${pct(t.persen_konsistensi)} tidak tampil`);
   pastikan(isi.includes(fmt(t.penggunaan_tag)), 'jumlah pemakaian tag tidak tampil');
   pastikan(kartu === fmt(expected.kualitas.masalah.tag_tidak_baku), `kartu Tag tidak baku ${kartu}`);
   pastikan(baris === semua, `tabel memuat ${baris} dari ${semua} tag`);
-  pastikan(cari.length === 1 && cari[0].includes('PRK') && cari[0].includes('low carbon development'), `pencarian: ${cari.length} baris`);
+  pastikan(cari.length === 1 && cari[0].includes('Penanggulangan Kemiskinan') && cari[0].includes('poverty'), `pencarian: ${cari.length} baris`);
   for (const k of t.kandidat_padanan) pastikan(isi.includes(k.usulan_baku), `kandidat ${k.tag} tidak tampil`);
-  return `Konsistensi ${pct(t.persen_konsistensi)} dari ${fmt(t.penggunaan_tag)} pemakaian; kartu Tag tidak baku ${kartu} dokumen; tabel memuat seluruh ${semua} tag beserta bentuknya; pencarian "rendah karbon" menemukan baku, singkatan (PRK), dan padanan bahasa Inggris; ${t.kandidat_padanan.length} kandidat padanan tampil.`;
+  return `Konsistensi ${pct(t.persen_konsistensi)} dari ${fmt(t.penggunaan_tag)} pemakaian; kartu Tag tidak baku ${kartu} dokumen; tabel memuat seluruh ${semua} tag beserta bentuknya; pencarian "kemiskinan" menemukan tag baku Penanggulangan Kemiskinan beserta bentuk yang dipetakan menurut makna (kemiskinan, poverty); ${t.kandidat_padanan.length} kandidat padanan tampil.`;
 });
 
 await browser.close();

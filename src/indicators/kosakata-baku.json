@@ -1,104 +1,646 @@
 [
   {
-    "baku": "pembangunan rendah karbon",
+    "baku": "Hubungan Masyarkat",
     "padanan": [
       {
-        "tag": "PRK",
-        "jenis": "singkatan"
-      },
-      {
-        "tag": "low carbon development",
+        "tag": "Public Relations",
         "jenis": "bahasa"
-      },
-      {
-        "tag": "pembangunan rendah emisi",
-        "jenis": "sinonim"
       }
     ]
   },
   {
-    "baku": "kemiskinan",
+    "baku": "Kearsipan",
     "padanan": [
       {
-        "tag": "poverty",
+        "tag": "Archives",
         "jenis": "bahasa"
-      },
-      {
-        "tag": "miskin",
-        "jenis": "bentuk"
       }
     ]
   },
   {
-    "baku": "stunting",
+    "baku": "Tata Usaha Pimpinan",
     "padanan": [
       {
-        "tag": "tengkes",
-        "jenis": "sinonim"
-      },
-      {
-        "tag": "gagal tumbuh",
-        "jenis": "sinonim"
+        "tag": "Executive Administration",
+        "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "RPJMN",
+    "baku": "SDM",
+    "padanan": [
+      {
+        "tag": "Human Resource",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Hukum",
+    "padanan": [
+      {
+        "tag": "Law",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perencanaan",
+    "padanan": [
+      {
+        "tag": "Planning",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Organisasi",
+    "padanan": [
+      {
+        "tag": "Organization",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Tata Laksana",
+    "padanan": [
+      {
+        "tag": "Governance",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Umum",
+    "padanan": [
+      {
+        "tag": "General",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembinaan",
+    "padanan": [
+      {
+        "tag": "Development",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pendidikan",
+    "padanan": [
+      {
+        "tag": "Education",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pelatihan SDM",
+    "padanan": [
+      {
+        "tag": "HR Training",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Sistem",
+    "padanan": [
+      {
+        "tag": "System",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Data",
     "padanan": []
   },
   {
-    "baku": "SDGs",
+    "baku": "Informasi",
     "padanan": [
       {
-        "tag": "TPB",
-        "jenis": "singkatan"
-      },
-      {
-        "tag": "tujuan pembangunan berkelanjutan",
+        "tag": "Information",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "transformasi digital",
+    "baku": "Analisis Kebijakan",
     "padanan": [
       {
-        "tag": "digitalisasi",
-        "jenis": "sinonim"
-      },
-      {
-        "tag": "digital transformation",
+        "tag": "Policy Analysis",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "ketahanan pangan",
+    "baku": "Analisis Kinerja",
     "padanan": [
       {
-        "tag": "food security",
+        "tag": "Performance Analysis",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "perubahan iklim",
+    "baku": "Kesekretariatan",
     "padanan": [
       {
-        "tag": "climate change",
+        "tag": "Secretariat",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "infrastruktur",
+    "baku": "Ekonomi Makro",
     "padanan": [
       {
-        "tag": "infrastuktur",
-        "jenis": "ejaan"
-      },
+        "tag": "Macroeconomics",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pengembangan Model Pembangunan",
+    "padanan": [
       {
-        "tag": "infrastructure",
+        "tag": "Development Model",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Fiskal",
+    "padanan": [
+      {
+        "tag": "Prosecutor",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Moneter",
+    "padanan": []
+  },
+  {
+    "baku": "Sektor Keuangan",
+    "padanan": [
+      {
+        "tag": "Financial Sector",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Hilirisasi",
+    "padanan": []
+  },
+  {
+    "baku": "Kerjasama Ekonomi Internasional",
+    "padanan": [
+      {
+        "tag": "International Economic Cooperation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Produktivitas",
+    "padanan": [
+      {
+        "tag": "Productivity",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembangunan Tematik",
+    "padanan": [
+      {
+        "tag": "Thematic Development",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Sinergi",
+    "padanan": [
+      {
+        "tag": "Synergy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Tata Kelola Perencanaan Pembangunan",
+    "padanan": [
+      {
+        "tag": "Development Planning Governance",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pemerintahan",
+    "padanan": [
+      {
+        "tag": "Government",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Keuangan Daerah",
+    "padanan": [
+      {
+        "tag": "Regional Finance",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Transfer ke Daerah",
+    "padanan": [
+      {
+        "tag": "Transfer to Regions",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perdesaan",
+    "padanan": [
+      {
+        "tag": "Rural",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Daerah Afirmasi",
+    "padanan": [
+      {
+        "tag": "Affirmation Areas",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Transmigrasi",
+    "padanan": [
+      {
+        "tag": "Transmigration",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Tata Ruang",
+    "padanan": [
+      {
+        "tag": "Spatial Planning",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perkotaan",
+    "padanan": [
+      {
+        "tag": "Urban",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pertanahan",
+    "padanan": [
+      {
+        "tag": "Land",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Penanggulangan Bencana",
+    "padanan": [
+      {
+        "tag": "Disaster Management",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Indonesia Barat",
+    "padanan": [
+      {
+        "tag": "Western Indonesia",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Indonesia Timur",
+    "padanan": [
+      {
+        "tag": "Eastern Indonesia",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Industri",
+    "padanan": [
+      {
+        "tag": "Industry",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perdagangan",
+    "padanan": [
+      {
+        "tag": "Trade",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Peningkatan Investasi",
+    "padanan": [
+      {
+        "tag": "Increased Investment",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pariwisata",
+    "padanan": [
+      {
+        "tag": "Tourism",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ekonomi Kreatif",
+    "padanan": [
+      {
+        "tag": "Creative Economy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ekonomi Digital",
+    "padanan": [
+      {
+        "tag": "Economy Digital",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ekonomi Syariah",
+    "padanan": [
+      {
+        "tag": "Sharia Economics",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "BUMN",
+    "padanan": [
+      {
+        "tag": "SOEs",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Infrastruktur",
+    "padanan": [
+      {
+        "tag": "Infrastructure",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ekosistem",
+    "padanan": [
+      {
+        "tag": "Ecosystem",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Keamanan Digital",
+    "padanan": [
+      {
+        "tag": "Digital Security",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Data Pembangunan",
+    "padanan": [
+      {
+        "tag": "Development Data",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pemerintah Digital",
+    "padanan": [
+      {
+        "tag": "Digital Government",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ideologi",
+    "padanan": []
+  },
+  {
+    "baku": "Kebangsaan",
+    "padanan": [
+      {
+        "tag": "Natioanlity",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Politik",
+    "padanan": [
+      {
+        "tag": "Politics",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Demokrasi",
+    "padanan": [
+      {
+        "tag": "Democracy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembangunan Hukum",
+    "padanan": [
+      {
+        "tag": "Legal Development",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "HAM",
+    "padanan": [
+      {
+        "tag": "Human Rights",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Imigrasi",
+    "padanan": [
+      {
+        "tag": "Immigration",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pemasyarakatan",
+    "padanan": [
+      {
+        "tag": "Corretions",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pertahanan",
+    "padanan": [
+      {
+        "tag": "Defense",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Keamanan",
+    "padanan": [
+      {
+        "tag": "Security",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Hubungan Luar Negeri",
+    "padanan": [
+      {
+        "tag": "Foreign Relations",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Transformasi Birokrasi",
+    "padanan": [
+      {
+        "tag": "Bureucratic Transformation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Penanggulangan Kemiskinan",
+    "padanan": [
+      {
+        "tag": "Poverty Alleviation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kesejahteraan Sosial",
+    "padanan": [
+      {
+        "tag": "Social Welfare",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ketenagakerjaan",
+    "padanan": [
+      {
+        "tag": "Employment",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kependudukan",
+    "padanan": [
+      {
+        "tag": "Population",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Jaminan Sosial",
+    "padanan": [
+      {
+        "tag": "Social Security",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kemandirian Sosial",
+    "padanan": [
+      {
+        "tag": "Social Independence",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ekonomi",
+    "padanan": [
+      {
+        "tag": "Economy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Koperasi",
+    "padanan": [
+      {
+        "tag": "Cooperatives",
         "jenis": "bahasa"
       }
     ]
@@ -107,121 +649,485 @@
     "baku": "UMKM",
     "padanan": [
       {
-        "tag": "UKM",
-        "jenis": "sinonim"
-      }
-    ]
-  },
-  {
-    "baku": "pendidikan",
-    "padanan": [
-      {
-        "tag": "education",
+        "tag": "MSMEs",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "kesehatan",
+    "baku": "Kesehatan",
     "padanan": [
       {
-        "tag": "health",
+        "tag": "Health",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "ekonomi hijau",
+    "baku": "Gizi Masyarakat",
     "padanan": [
       {
-        "tag": "green economy",
+        "tag": "Community Nutrition",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "energi baru terbarukan",
+    "baku": "Pendidikan Dasar",
     "padanan": [
       {
-        "tag": "EBT",
-        "jenis": "singkatan"
-      },
-      {
-        "tag": "renewable energy",
+        "tag": "Basic Education",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "perdesaan",
+    "baku": "Menengah",
     "padanan": [
       {
-        "tag": "pedesaan",
-        "jenis": "ejaan"
-      }
-    ]
-  },
-  {
-    "baku": "tata kelola",
-    "padanan": [
-      {
-        "tag": "tatakelola",
-        "jenis": "ejaan"
-      },
-      {
-        "tag": "governance",
+        "tag": "Intermediate",
         "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "reformasi birokrasi",
+    "baku": "Pendidikan Tinggi",
     "padanan": [
       {
-        "tag": "RB",
-        "jenis": "singkatan"
+        "tag": "Higher Education",
+        "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "IKN",
+    "baku": "Ilmu Pengetahuan",
     "padanan": [
       {
-        "tag": "Ibu Kota Nusantara",
-        "jenis": "singkatan"
-      },
-      {
-        "tag": "ibukota nusantara",
-        "jenis": "ejaan"
+        "tag": "Science",
+        "jenis": "bahasa"
       }
     ]
   },
   {
-    "baku": "pariwisata",
+    "baku": "Teknologi",
+    "padanan": [
+      {
+        "tag": "Technology",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Keluarga",
+    "padanan": [
+      {
+        "tag": "Family",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pengasuhan",
     "padanan": []
   },
   {
-    "baku": "gender",
+    "baku": "Perempuan",
+    "padanan": [
+      {
+        "tag": "Women",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Anak",
+    "padanan": [
+      {
+        "tag": "Children",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Agama",
+    "padanan": [
+      {
+        "tag": "Religion",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kebudayaan",
+    "padanan": [
+      {
+        "tag": "Culture",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pemuda",
+    "padanan": [
+      {
+        "tag": "youth",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Olahraga",
+    "padanan": [
+      {
+        "tag": "Sports",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pangan",
+    "padanan": [
+      {
+        "tag": "Food",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pertanian",
+    "padanan": [
+      {
+        "tag": "Agriculture",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kelautan",
+    "padanan": [
+      {
+        "tag": "Maritime",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perikanan",
+    "padanan": [
+      {
+        "tag": "Fishery",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Sumber Daya Energi",
+    "padanan": [
+      {
+        "tag": "Energy Resources",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Mineral",
     "padanan": []
   },
   {
-    "baku": "air minum dan sanitasi",
-    "padanan": []
+    "baku": "Pertambangan",
+    "padanan": [
+      {
+        "tag": "Mining",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
-    "baku": "ketenagakerjaan",
-    "padanan": []
+    "baku": "Lingkungan Hidup",
+    "padanan": [
+      {
+        "tag": "Environment",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
-    "baku": "investasi",
-    "padanan": []
+    "baku": "Kehutanan",
+    "padanan": [
+      {
+        "tag": "Forestry",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
-    "baku": "perlindungan sosial",
-    "padanan": []
+    "baku": "Konservasi Sumber Daya Air",
+    "padanan": [
+      {
+        "tag": "Convervation of Water Resources",
+        "jenis": "bahasa"
+      }
+    ]
   },
   {
-    "baku": "evaluasi kinerja",
-    "padanan": []
+    "baku": "Kemitraan",
+    "padanan": [
+      {
+        "tag": "Partnerships",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Keterpaduan Pembangunan Infrastruktur",
+    "padanan": [
+      {
+        "tag": "Integration of Infrastructure Development",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Konektivitas",
+    "padanan": [
+      {
+        "tag": "Connectivity",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Infrastruktur Logistik",
+    "padanan": [
+      {
+        "tag": "Infrastructure Logistics",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Sumber Daya Air",
+    "padanan": [
+      {
+        "tag": "Water Resources",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Perumahan",
+    "padanan": [
+      {
+        "tag": "Housing",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kawasan Permukiman",
+    "padanan": [
+      {
+        "tag": "Residental Areas",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Transmisi",
+    "padanan": [
+      {
+        "tag": "Transmission",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Ketenagalistrikan",
+    "padanan": [
+      {
+        "tag": "Electricity",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kedirgantaraan",
+    "padanan": [
+      {
+        "tag": "Aerospace",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Antariksa",
+    "padanan": [
+      {
+        "tag": "Space",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Strategi Pembiayaan",
+    "padanan": [
+      {
+        "tag": "Financing Strategy",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Investasi Pembangunan",
+    "padanan": [
+      {
+        "tag": "Development Invesment",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Alokasi Anggaran Pembangunan Pusat",
+    "padanan": [
+      {
+        "tag": "Central Development Budget Allocation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Alokasi Anggaran Pembangunan Daerah",
+    "padanan": [
+      {
+        "tag": "Regional Development Budget Allocation",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembiayaan",
+    "padanan": [
+      {
+        "tag": "Financing",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Hibah Luar Negeri",
+    "padanan": [
+      {
+        "tag": "Overseas Grants",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Hibah Dalam Negeri",
+    "padanan": [
+      {
+        "tag": "Domestic Grants",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembiayaan Strategis",
+    "padanan": [
+      {
+        "tag": "Strategic Financing",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pembiayaan Inovatif",
+    "padanan": [
+      {
+        "tag": "Innovative Financing",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Manajemen Risiko",
+    "padanan": [
+      {
+        "tag": "Risk Management",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Pengendalian",
+    "padanan": [
+      {
+        "tag": "Control",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Evaluasi Kebijakan Strategis I",
+    "padanan": [
+      {
+        "tag": "Strategic Policy Evaluation I",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Evaluasi Kebijakan Strategis II",
+    "padanan": [
+      {
+        "tag": "Strategic Policy Evaluation II",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Evaluasi Kebijakan Strategis III",
+    "padanan": [
+      {
+        "tag": "Strategic Policy Evaluation III",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Evaluasi Kebijakan Strategis IV",
+    "padanan": [
+      {
+        "tag": "Strategic Policy Evaluation IV",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Akuntabilitas Keuangan",
+    "padanan": [
+      {
+        "tag": "Financial Accountability",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Kinerja Kelembagaan",
+    "padanan": [
+      {
+        "tag": "Institutional Performance",
+        "jenis": "bahasa"
+      }
+    ]
+  },
+  {
+    "baku": "Investigasi",
+    "padanan": [
+      {
+        "tag": "Research",
+        "jenis": "bahasa"
+      }
+    ]
   }
 ]
